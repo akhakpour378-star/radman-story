@@ -4,7 +4,7 @@ import MemoryChapter from "@/components/MemoryChapter/MemoryChapter";
 import TimeChapter from "@/components/TimeChapter/TimeChapter";
 import StorySection from "@/components/StorySection/StorySection";
 import FinalChapter from "@/components/FinalChapter/FinalChapter";
-import RadmanSceneSection from "@/components/RadmanScene/RadmanSceneSection";
+import MemoryJourney from "@/components/RadmanScene/MemoryJourney";
 
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
     <main className="bg-black">
       <CinematicHero />
 
-      <RadmanSceneSection />
+      <MemoryJourney />
 
       <ImmersiveScene />
 

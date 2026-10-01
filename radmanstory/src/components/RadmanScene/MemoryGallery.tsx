@@ -13,30 +13,30 @@ export default function MemoryGallery() {
   useFrame((state) => {
     if (!groupRef.current) return;
 
-    const targetX = state.pointer.x * 0.18;
-    const targetY = state.pointer.y * 0.08;
+    const mouseX = state.pointer.x;
+    const mouseY = state.pointer.y;
 
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
-      targetX,
-      0.025,
+      mouseX * 0.12,
+      0.035,
     );
 
     groupRef.current.rotation.x = THREE.MathUtils.lerp(
       groupRef.current.rotation.x,
-      -targetY,
-      0.025,
+      -mouseY * 0.05,
+      0.035,
     );
 
     camera.position.x = THREE.MathUtils.lerp(
       camera.position.x,
-      state.pointer.x * 0.12,
+      mouseX * 0.18,
       0.025,
     );
 
     camera.position.y = THREE.MathUtils.lerp(
       camera.position.y,
-      state.pointer.y * 0.08,
+      mouseY * 0.12,
       0.025,
     );
 
@@ -46,85 +46,89 @@ export default function MemoryGallery() {
   return (
     <group ref={groupRef}>
 
-      {/* MAIN MEMORY */}
+      {/* MEMORY 01 — MAIN */}
 
       <MemoryFrame
         image="/memory/radman-main.jpg"
-        position={[0, 0.25, 0]}
+        position={[0, 0.35, 0]}
         rotation={[0, 0, 0]}
-        width={2.65}
+        width={2.7}
         label="Radman"
         index="01"
       />
 
-      {/* SECOND MEMORY */}
+      {/* MEMORY 02 — LEFT */}
 
       <MemoryFrame
         image="/memory/radman-second.jpg"
-        position={[-3.35, 0.4, -1.2]}
-        rotation={[0, 0.32, -0.035]}
+        position={[-3.6, 0.25, -1.5]}
+        rotation={[0, 0.28, -0.035]}
         width={2.25}
         label="Memory"
         index="02"
       />
 
-      {/* THIRD PLACEHOLDER */}
+      {/* MEMORY 03 — RIGHT */}
 
-      <group
-        position={[3.35, 0.25, -1.7]}
-        rotation={[0, -0.35, 0.04]}
-      >
-        <mesh>
-          <boxGeometry args={[2.35, 2.95, 0.08]} />
+      <MemoryFrame
+        image="/memory/radman-main.jpg"
+        position={[3.6, 0.1, -2]}
+        rotation={[0, -0.3, 0.035]}
+        width={2.15}
+        label="Forever"
+        index="03"
+      />
 
-          <meshStandardMaterial
-            color="#11100e"
-            roughness={0.65}
-            metalness={0.35}
-          />
-        </mesh>
+      {/* DISTANT FRAME */}
 
-        <mesh
-          position={[0, 0, 0.06]}
-        >
-          <planeGeometry args={[2.1, 2.7]} />
+      <MemoryFrame
+        image="/memory/radman-second.jpg"
+        position={[0, -2.1, -3.8]}
+        rotation={[0.08, 0, 0]}
+        width={1.75}
+        label="14:15"
+        index="04"
+      />
 
-          <meshBasicMaterial
-            color="#d8b77a"
-            transparent
-            opacity={0.035}
-          />
-        </mesh>
-      </group>
+      {/* PARTICLES */}
 
-      {/* FLOATING MEMORY DOTS */}
+      {Array.from({ length: 60 }).map((_, index) => {
+        const angle = (index / 60) * Math.PI * 2;
+        const radius = 4.5 + (index % 5) * 0.25;
 
-      {Array.from({ length: 22 }).map((_, index) => {
-        const angle =
-          (index / 22) * Math.PI * 2;
+        const x = Math.cos(angle) * radius;
+        const y =
+          Math.sin(angle * 2.3) * 1.8 +
+          ((index % 4) - 2) * 0.15;
 
-        const radius = 4 + (index % 3) * 0.35;
+        const z =
+          Math.sin(angle) * radius - 2;
 
         return (
           <mesh
             key={index}
-            position={[
-              Math.cos(angle) * radius,
-              Math.sin(angle * 1.7) * 1.7,
-              Math.sin(angle) * radius - 1,
-            ]}
-            scale={0.025 + (index % 3) * 0.01}
+            position={[x, y, z]}
+            scale={0.018 + (index % 3) * 0.009}
           >
             <sphereGeometry args={[1, 8, 8]} />
 
             <meshBasicMaterial
               color="#d8b77a"
               transparent
-              opacity={0.25}
+              opacity={0.25 + (index % 4) * 0.04}
             />
           </mesh>
         );
       })}
+
+      {/* CENTRAL MEMORY LIGHT */}
+
+      <pointLight
+        position={[0, 0, 1]}
+        intensity={2.5}
+        color="#d8b77a"
+        distance={6}
+      />
     </group>
   );
 }
