@@ -1,0 +1,111 @@
+.opening__radman {
+  position: absolute;
+  inset: 0;
+
+  z-index: 18;
+
+  pointer-events: none;
+}
+
+.radman-presence {
+  position: absolute;
+
+  left: 50%;
+  bottom: -2%;
+
+  width: min(42vw, 680px);
+  height: min(78vh, 820px);
+
+  transform:
+    translateX(-50%);
+
+  will-change:
+    transform,
+    opacity;
+}
+
+.radman-presence__halo {
+  position: absolute;
+
+  left: 50%;
+  top: 34%;
+
+  width: 60%;
+  height: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(194, 185, 143, 0.14),
+      transparent 68%
+    );
+
+  filter: blur(30px);
+}
+
+.radman-presence__figure {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.92) 17%,
+      black 42%,
+      black 76%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.92) 17%,
+      black 42%,
+      black 76%,
+      transparent 100%
+    );
+}
+
+.radman-presence__image {
+  object-fit: contain;
+  object-position: center bottom;
+
+  filter:
+    brightness(0.48)
+    contrast(1.18)
+    saturate(0.4);
+
+  opacity: 0.82;
+
+  mix-blend-mode: screen;
+}
+
+.radman-presence__mist {
+  position: absolute;
+  inset: 35% -20% 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(170, 181, 164, 0.16),
+      transparent
+    );
+
+  filter: blur(20px);
+}
+
+@media (max-width: 900px) {
+  .radman-presence {
+    width: 74vw;
+    height: 68vh;
+    bottom: 1%;
+  }
+}

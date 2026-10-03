@@ -6,146 +6,160 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 type MemoryFrameProps = {
-    position: [number, number, number];
-    rotation?: [number, number, number];
-    image: string;
-    width?: number;
-    label?: string;
-    index?: string;
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  image: string;
+  width?: number;
+  label?: string;
+  index?: string;
 };
 
 export default function MemoryFrame({
-    position,
-    rotation = [0, 0, 0],
-    image,
-    width = 2.8,
-    label = "Memory",
-    index = "01",
+  position,
+  rotation = [0, 0, 0],
+  image,
+  width = 3,
+  label = "Memory",
+  index = "01",
 }: MemoryFrameProps) {
-    const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
-    const targetRotation = useRef(
-        new THREE.Euler(
-            rotation[0],
-            rotation[1],
-            rotation[2],
-        ),
-    );
+  const height = width * 1.25;
 
-    useFrame((state) => {
-        if (!groupRef.current) return;
+  useFrame((state) => {
+    if (!groupRef.current) return;
 
-        const mouseX = state.pointer.x;
-        const mouseY = state.pointer.y;
+    const mx = state.pointer.x;
+    const my = state.pointer.y;
 
-        groupRef.current.rotation.y = THREE.MathUtils.lerp(
-            groupRef.current.rotation.y,
-            targetRotation.current.y + mouseX * 0.035,
+    groupRef.current.position.x =
+      THREE.MathUtils.lerp(
+        groupRef.current.position.x,
+        position[0] + mx * 0.025,
+        0.025,
+      );
+
+    groupRef.current.position.y =
+      THREE.MathUtils.lerp(
+        groupRef.current.position.y,
+        position[1] + my * 0.015,
+        0.025,
+      );
+  });
+
+  return (
+    <group
+      ref={groupRef}
+      position={position}
+      rotation={rotation}
+    >
+
+      {/* BACK SHADOW */}
+
+      <mesh position={[0, -0.02, -0.12]}>
+        <planeGeometry
+          args={[
+            width + 0.24,
+            height + 0.24,
+          ]}
+        />
+
+        <meshBasicMaterial
+          color="#000000"
+          transparent
+          opacity={0.5}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* DARK FRAME */}
+
+      <mesh position={[0, 0, -0.08]}>
+        <boxGeometry
+          args={[
+            width + 0.14,
+            height + 0.14,
+            0.12,
+          ]}
+        />
+
+        <meshBasicMaterial
+          color="#11100e"
+        />
+      </mesh>
+
+      {/* GOLD HAIRLINE */}
+
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry
+          args={[
+            width + 0.035,
+            height + 0.035,
             0.035,
-        );
+          ]}
+        />
 
-        groupRef.current.rotation.x = THREE.MathUtils.lerp(
-            groupRef.current.rotation.x,
-            targetRotation.current.x - mouseY * 0.02,
-            0.035,
-        );
-    });
+        <meshBasicMaterial
+          color="#b89a63"
+        />
+      </mesh>
 
-    const height = width * 1.25;
+      {/* PHOTO */}
 
-    return (
-        <group
-            ref={groupRef}
-            position={position}
-            rotation={rotation}
-            userData={{
-                label,
-                index,
-            }}
+      <DreiImage
+        url={image}
+        position={[0, 0, 0.045]}
+        scale={[width, height]}
+        toneMapped={false}
+      />
+
+      {/* SUBTLE TOP REFLECTION */}
+
+      <mesh
+        position={[
+          0,
+          height * 0.46,
+          0.075,
+        ]}
+      >
+        <planeGeometry
+          args={[
+            width * 0.88,
+            0.008,
+          ]}
+        />
+
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.06}
+        />
+      </mesh>
+
+      {/* LABEL */}
+
+      <group
+        position={[
+          -width / 2,
+          -height / 2 - 0.22,
+          0,
+        ]}
+      >
+
+        <mesh
+          position={[-0.04, 0.02, 0]}
         >
+          <sphereGeometry
+            args={[0.025, 8, 8]}
+          />
 
-            <group
-                name={`memory-${index}`}
-            >
-                {/* OUTER FRAME */}
+          <meshBasicMaterial
+            color="#c7a66d"
+          />
+        </mesh>
 
-                <mesh position={[0, 0, -0.06]}>
-                    <boxGeometry
-                        args={[
-                            width + 0.16,
-                            height + 0.16,
-                            0.08,
-                        ]}
-                    />
+      </group>
 
-                    <meshStandardMaterial
-                        color="#181512"
-                        roughness={0.55}
-                        metalness={0.5}
-                    />
-                </mesh>
-
-                {/* GOLD INNER BORDER */}
-
-                <mesh position={[0, 0, -0.01]}>
-                    <boxGeometry
-                        args={[
-                            width + 0.045,
-                            height + 0.045,
-                            0.045,
-                        ]}
-                    />
-
-                    <meshStandardMaterial
-                        color="#d8b77a"
-                        roughness={0.32}
-                        metalness={0.7}
-                    />
-                </mesh>
-
-                {/* PHOTO */}
-
-                <DreiImage
-                    url={image}
-                    position={[0, 0, 0.035]}
-                    scale={[width, height]}
-                    transparent
-                />
-
-                {/* GLASS */}
-
-                <mesh position={[0, 0, 0.07]}>
-                    <planeGeometry args={[width, height]} />
-
-                    <meshPhysicalMaterial
-                        color="#ffffff"
-                        transparent
-                        opacity={0.045}
-                        roughness={0.05}
-                        metalness={0.1}
-                        transmission={0.2}
-                    />
-                </mesh>
-
-                {/* LIGHT */}
-
-                <pointLight
-                    position={[0, 0, 0.8]}
-                    intensity={0.25}
-                    color="#d8b77a"
-                    distance={3}
-                />
-            </group>
-
-            {/* LABEL */}
-
-            <group position={[-width / 2, -height / 2 - 0.18, 0]}>
-                <mesh>
-                    <boxGeometry args={[0.02, 0.02, 0.02]} />
-
-                    <meshBasicMaterial color="#d8b77a" />
-                </mesh>
-            </group>
-        </group>
-    );
+    </group>
+  );
 }

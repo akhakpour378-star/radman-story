@@ -102,3 +102,59 @@ button {
   opacity: 0.035;
   mix-blend-mode: soft-light;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #080706;
+}
+
+::selection {
+  background: rgba(200, 167, 106, 0.25);
+  color: #ffffff;
+}
+
+.nav-scrolled {
+  backdrop-filter: blur(18px);
+  background: rgba(8, 7, 6, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+html {
+  background: #050505;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #f3f0e9;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(200, 167, 106, 0.25);
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 167, 106, 0.45);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 167, 106, 0.75);
+}

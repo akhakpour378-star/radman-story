@@ -1,407 +1,232 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Canvas } from "@react-three/fiber";
+import Image from "next/image";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import RadmanScene from "./RadmanScene";
+import AmbientScene from "./AmbientScene";
+import StorySection from "./StorySection";
+
+import MemoryExperience from "./MemoryExperience";
+import { main } from "framer-motion/client";
+
+import RadmanOpening from "../RadmanOpening/RadmanOpening";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function MemoryJourney() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const sceneRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroImageRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const scene = sceneRef.current;
+  useLayoutEffect(() => {
+    const page = pageRef.current;
 
-    if (!section || !scene) return;
+    if (!page) return;
 
-    const context = gsap.context(() => {
-      const cameraProxy = {
-        x: 0,
-        y: 0,
-        z: 7,
-        rotateY: 0,
-      };
+    const ctx = gsap.context(() => {
+      const hero = heroRef.current;
 
-      const timeline = gsap.timeline({
+      if (!hero) return;
+
+      const heroImage = heroImageRef.current;
+
+      const heroTimeline = gsap.timeline();
+
+      heroTimeline
+        .fromTo(
+          ".radman-nav",
+          {
+            y: -20,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+          },
+        )
+        .fromTo(
+          ".hero-eyebrow",
+          {
+            opacity: 0,
+            y: 25,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+          },
+          "-=0.5",
+        )
+        .fromTo(
+          ".hero-title-line",
+          {
+            opacity: 0,
+            y: 80,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.1,
+            stagger: 0.12,
+          },
+          "-=0.45",
+        )
+        .fromTo(
+          ".hero-description",
+          {
+            opacity: 0,
+            y: 25,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+          },
+          "-=0.5",
+        )
+        .fromTo(
+          heroImage,
+          {
+            opacity: 0,
+            scale: 1.08,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.5,
+            ease: "power2.out",
+          },
+          "-=1",
+        );
+
+      /* HERO SCROLL */
+
+      gsap.to(".hero-copy", {
+        y: -120,
+        opacity: 0,
+        ease: "none",
         scrollTrigger: {
-          trigger: section,
+          trigger: hero,
           start: "top top",
-          end: "+=3200",
-          scrub: 1.2,
-          pin: scene,
-          anticipatePin: 1,
+          end: "bottom top",
+          scrub: true,
         },
       });
 
-      timeline
+      gsap.to(heroImage, {
+        y: -80,
+        scale: 1.08,
+        ease: "none",
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
 
-        /* -------------------------------------------------
-           CHAPTER 01
-        ------------------------------------------------- */
+      gsap.to(".hero-scroll", {
+        opacity: 0,
+        y: 30,
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "top 30%",
+          scrub: true,
+        },
+      });
 
-        .to(
-          "[data-journey-title]",
-          {
-            opacity: 0,
-            y: -80,
-            scale: 0.85,
-            duration: 0.8,
-          },
-          0,
-        )
+      /* NAV */
 
-        .to(
-          "[data-journey-meta]",
-          {
-            opacity: 0,
-            y: -40,
-            duration: 0.5,
-          },
-          0,
-        )
+      ScrollTrigger.create({
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        onUpdate: (self) => {
+          const nav = document.querySelector(".radman-nav");
 
-        /* -------------------------------------------------
-           CAMERA MOVE
-        ------------------------------------------------- */
+          if (!nav) return;
 
-        .to(
-          cameraProxy,
-          {
-            x: -0.8,
-            y: 0.1,
-            z: 5.4,
-            duration: 1.2,
-            onUpdate: () => {
-              scene.style.setProperty(
-                "--camera-x",
-                `${cameraProxy.x}px`,
-              );
+          if (self.progress > 0.08) {
+            nav.classList.add("nav-scrolled");
+          } else {
+            nav.classList.remove("nav-scrolled");
+          }
+        },
+      });
+    }, page);
 
-              scene.style.setProperty(
-                "--camera-y",
-                `${cameraProxy.y}px`,
-              );
-
-              scene.style.setProperty(
-                "--camera-z",
-                `${cameraProxy.z}px`,
-              );
-            },
-          },
-          0.25,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 01
-        ------------------------------------------------- */
-
-        .to(
-          "[data-memory-01]",
-          {
-            scale: 1.15,
-            x: 30,
-            duration: 0.8,
-          },
-          0.3,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 02
-        ------------------------------------------------- */
-
-        .fromTo(
-          "[data-memory-02]",
-          {
-            opacity: 0,
-            x: -180,
-            scale: 0.7,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 1,
-          },
-          0.7,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 01 LEAVES
-        ------------------------------------------------- */
-
-        .to(
-          "[data-memory-01]",
-          {
-            opacity: 0.2,
-            scale: 0.72,
-            x: 100,
-            duration: 0.8,
-          },
-          1.25,
-        )
-
-        /* -------------------------------------------------
-           SECOND CAMERA MOVE
-        ------------------------------------------------- */
-
-        .to(
-          cameraProxy,
-          {
-            x: 0.9,
-            y: 0.2,
-            z: 4.7,
-            duration: 1.2,
-            onUpdate: () => {
-              scene.style.setProperty(
-                "--camera-x",
-                `${cameraProxy.x}px`,
-              );
-
-              scene.style.setProperty(
-                "--camera-y",
-                `${cameraProxy.y}px`,
-              );
-
-              scene.style.setProperty(
-                "--camera-z",
-                `${cameraProxy.z}px`,
-              );
-            },
-          },
-          1.35,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 03
-        ------------------------------------------------- */
-
-        .fromTo(
-          "[data-memory-03]",
-          {
-            opacity: 0,
-            x: 200,
-            scale: 0.7,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 1,
-          },
-          1.65,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 02 LEAVES
-        ------------------------------------------------- */
-
-        .to(
-          "[data-memory-02]",
-          {
-            opacity: 0.18,
-            scale: 0.75,
-            x: -100,
-            duration: 0.8,
-          },
-          2.15,
-        )
-
-        /* -------------------------------------------------
-           MEMORY 03 LEAVES
-        ------------------------------------------------- */
-
-        .to(
-          "[data-memory-03]",
-          {
-            opacity: 0.25,
-            scale: 0.7,
-            x: 100,
-            duration: 0.8,
-          },
-          2.35,
-        )
-
-        /* -------------------------------------------------
-           FINAL MEMORY
-        ------------------------------------------------- */
-
-        .fromTo(
-          "[data-memory-04]",
-          {
-            opacity: 0,
-            y: 180,
-            scale: 0.55,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1,
-          },
-          2.45,
-        )
-
-        /* -------------------------------------------------
-           DARKEN
-        ------------------------------------------------- */
-
-        .to(
-          "[data-journey-dark]",
-          {
-            opacity: 0.92,
-            duration: 0.8,
-          },
-          2.8,
-        )
-
-        /* -------------------------------------------------
-           FINAL MESSAGE
-        ------------------------------------------------- */
-
-        .to(
-          "[data-journey-message]",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-          },
-          3,
-        );
-
-      return () => {
-        timeline.scrollTrigger?.kill();
-        timeline.kill();
-      };
-    }, section);
-
-    return () => context.revert();
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative h-[3400px] bg-[#020202]"
-    >
+
       <div
-        ref={sceneRef}
-        className="relative h-screen w-full overflow-hidden"
+        ref={pageRef}
+        className="relative overflow-hidden bg-[#080706] text-white"
       >
-        <RadmanScene />
+        {/* =====================================================
+          GLOBAL AMBIENT BACKGROUND
+      ====================================================== */}
 
-        {/* TOP META */}
-
-        <div
-          data-journey-meta
-          className="pointer-events-none absolute left-7 top-7 z-30 text-[8px] uppercase tracking-[0.6em] text-white/30"
-        >
-          Memory Journey
+        <div className="pointer-events-none fixed inset-0 z-0">
+          <Canvas
+            dpr={[1, 1.5]}
+            camera={{
+              position: [0, 0, 7],
+              fov: 42,
+              near: 0.1,
+              far: 30,
+            }}
+            gl={{
+              antialias: true,
+              alpha: true,
+            }}
+          >
+            <AmbientScene />
+          </Canvas>
         </div>
 
-        <div className="pointer-events-none absolute right-7 top-7 z-30 text-[8px] uppercase tracking-[0.6em] text-white/20">
-          03
+        {/* =====================================================
+          HERO
+      ====================================================== */}
+
+      <RadmanOpening />
+
+        {/* =====================================================
+          STORY
+      ====================================================== */}
+
+        <div className="relative z-10">
+          <StorySection />
         </div>
 
-        {/* INTRO TITLE */}
+        {/* =====================================================
+          NEXT SECTION PLACEHOLDER
+      ====================================================== */}
 
-        <div
-          data-journey-title
-          className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center text-center"
-        >
-          <div>
-            <p className="text-[8px] uppercase tracking-[0.7em] text-[#d8b77a]/60">
-              Enter the memories
-            </p>
-
-            <h2 className="mt-7 text-5xl font-light tracking-[-0.06em] sm:text-7xl">
-              One moment.
-              <br />
-              Then another.
-            </h2>
-          </div>
+        <div className="relative z-10">
+          <MemoryExperience />
         </div>
 
-        {/* MEMORY LABELS */}
-
-        <div
-          data-memory-01
-          className="pointer-events-none absolute left-[50%] top-[72%] z-30 -translate-x-1/2 text-center"
+        <section
+          id="forever"
+          className="relative z-10 flex min-h-[70vh] items-center justify-center bg-[#080706] px-6"
         >
-          <p className="text-[8px] uppercase tracking-[0.55em] text-white/25">
-            Memory 01
-          </p>
-        </div>
-
-        <div
-          data-memory-02
-          className="pointer-events-none absolute left-[12%] top-[25%] z-30 text-[8px] uppercase tracking-[0.55em] text-white/25"
-        >
-          Memory 02
-        </div>
-
-        <div
-          data-memory-03
-          className="pointer-events-none absolute right-[12%] top-[28%] z-30 text-[8px] uppercase tracking-[0.55em] text-white/25"
-        >
-          Memory 03
-        </div>
-
-        <div
-          data-memory-04
-          className="pointer-events-none absolute bottom-[18%] left-1/2 z-30 -translate-x-1/2 text-center"
-        >
-          <p className="text-[8px] uppercase tracking-[0.55em] text-[#d8b77a]/50">
-            14 : 15
-          </p>
-        </div>
-
-        {/* DARK TRANSITION */}
-
-        <div
-          data-journey-dark
-          className="pointer-events-none absolute inset-0 z-40 bg-black opacity-0"
-        />
-
-        {/* FINAL MESSAGE */}
-
-        <div
-          data-journey-message
-          className="pointer-events-none absolute inset-0 z-50 flex translate-y-16 items-center justify-center px-6 text-center opacity-0"
-        >
-          <div>
-            <p className="text-[8px] uppercase tracking-[0.7em] text-[#d8b77a]/60">
+          <div className="text-center">
+            <p className="text-[8px] uppercase tracking-[0.65em] text-[#c8a76a]/50">
               Forever
             </p>
 
-            <h3 className="mt-8 max-w-4xl text-5xl font-light leading-[0.95] tracking-[-0.06em] sm:text-7xl lg:text-8xl">
-              You became
-              <br />
-              the reason
-              <br />
-              my story never ended.
-            </h3>
-
-            <div className="mx-auto mt-12 h-px w-16 bg-[#d8b77a]/50" />
-
-            <p className="mt-8 text-[9px] uppercase tracking-[0.55em] text-white/25">
-              Forever, my son.
-            </p>
+            <h2 className="mt-8 text-[clamp(3rem,7vw,7rem)] font-light leading-none tracking-[-0.07em]">
+              Always remembered.
+            </h2>
           </div>
-        </div>
-
-        {/* SCROLL INDICATOR */}
-
-        <div className="pointer-events-none absolute bottom-8 left-1/2 z-30 -translate-x-1/2 text-center">
-          <div className="mx-auto mb-4 h-8 w-px bg-gradient-to-b from-transparent via-[#d8b77a]/50 to-transparent" />
-
-          <p className="text-[7px] uppercase tracking-[0.5em] text-white/20">
-            Scroll
-          </p>
-        </div>
+        </section>
       </div>
-    </section>
   );
 }
