@@ -33,7 +33,7 @@ export default function MemoryJourney() {
         });
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-journey-copy]").forEach((item) {
+      gsap.utils.toArray<HTMLElement>("[data-journey-copy]").forEach((item) => {
         gsap.fromTo(
           item,
           { opacity: 0, y: 45 },
