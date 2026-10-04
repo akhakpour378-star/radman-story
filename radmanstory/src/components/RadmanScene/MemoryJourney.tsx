@@ -19,7 +19,21 @@ export default function MemoryJourney() {
     if (!root) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>("[data-journey-copy]").forEach((item) => {
+      gsap.utils.toArray<HTMLElement>(".journey-chapter__image").forEach((image) => {
+        gsap.to(image, {
+          yPercent: -9,
+          scale: 1.12,
+          ease: "none",
+          scrollTrigger: {
+            trigger: image.closest(".journey-chapter") as HTMLElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.4,
+          },
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>("[data-journey-copy]").forEach((item) {
         gsap.fromTo(
           item,
           { opacity: 0, y: 45 },
