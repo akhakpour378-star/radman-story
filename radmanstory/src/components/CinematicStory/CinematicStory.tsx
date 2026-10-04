@@ -96,10 +96,10 @@ export default function CinematicStory() {
   return (
     <main ref={root} className="archive-site">
       <header className="archive-nav">
-        <a href="#top" className="archive-nav__brand">RADMAN<span>.</span></a>
-        <div className="archive-nav__center">A LIFE IN FRAMES</div>
-        <a href="#timeline" className="archive-nav__link">THE ARCHIVE ↓</a>
-      </header>
+  <a href="#top" className="archive-nav__brand">R.</a>
+  <nav><a href="#bio">BIOGRAPHY</a><a href="#archive">ARCHIVE</a><a href="#film">FILM</a></nav>
+  <a href="#archive" className="archive-nav__index">01—05</a>
+</header>
 
       <section id="top" className="archive-intro">
         <div className="archive-intro__noise" />
@@ -123,13 +123,16 @@ export default function CinematicStory() {
         <div className="hero-archive__coordinates">35°41′N / 51°23′E<br />MEMORY / MOTION / TIME</div>
       </section>
 
-      <section className="manifesto" data-reveal>
-        <span className="archive-kicker">WHY THIS EXISTS</span>
-        <h2>هر عکس فقط یک عکس نیست.<br /><em>یک تکه از زمان است.</em></h2>
-        <p>این سایت قرار نیست فقط گالری باشد. قرار است مسیر زندگی رادمان را روایت کند؛ از نخستین قاب‌ها تا سال‌هایی که هنوز نرسیده‌اند.</p>
-      </section>
+      <section id="bio" className="manifesto">
+  <div className="manifesto__year">2025—</div>
+  <div>
+    <span className="archive-kicker">A BIOGRAPHY IN MOTION</span>
+    <h2>Radman is<br/><em>still becoming.</em></h2>
+    <p>یک زندگی را نمی‌شود در یک قاب خلاصه کرد. اینجا روایت رادمان است؛ از اولین روز تا تمام روزهایی که هنوز نرسیده‌اند.</p>
+  </div>
+</section>
 
-      <section id="timeline" className="archive">
+      <section id="archive" className="archive">
         <div className="archive__header" data-reveal>
           <div><span className="archive-kicker">THE LIFE ARCHIVE</span><h2>Radman,<br /><em>in time.</em></h2></div>
           <p>هر فصل با تصویر، فیلم و چند خط از همان روزها ثبت می‌شود.</p>
@@ -140,7 +143,7 @@ export default function CinematicStory() {
         </div>
       </section>
 
-      <section className="film-room" data-reveal>
+      <section id="film" className="film-room" data-reveal>
         <div className="film-room__copy">
           <span className="archive-kicker">MOVING MEMORY</span>
           <h2>بعضی خاطره‌ها<br /><em>باید حرکت کنند.</em></h2>
@@ -155,7 +158,7 @@ export default function CinematicStory() {
         </div>
       </section>
 
-      <section className="contact-sheet" data-reveal>
+      <section className="contact-sheet" id="gallery" data-reveal>
         <div className="contact-sheet__heading"><span className="archive-kicker">CONTACT SHEET</span><h2>More moments.<br /><em>More years.</em></h2></div>
         <div className="contact-sheet__grid">
           {[
