@@ -35,7 +35,7 @@ export const memoryItems: MemoryItem[] = [
     subtitle: "The ones that stay.",
     description:
       "The smallest moments often become the memories we return to the most.",
-    image: "/memory/radman-second.JPG",
+    image: "/memories/memory-01.JPG",
     year: "2026",
     time: "—",
     location: "Somewhere remembered",
@@ -48,7 +48,7 @@ export const memoryItems: MemoryItem[] = [
     subtitle: "A moment in time.",
     description:
       "There are certain hours that become more than numbers. They become coordinates of memory.",
-    image: "/memory/radman-main.JPG",
+    image: "/memories/memory-02.JPG",
     year: "2026",
     time: "14 : 15",
     location: "Forever",
@@ -61,7 +61,7 @@ export const memoryItems: MemoryItem[] = [
     subtitle: "In every memory.",
     description:
       "Distance changes many things. Memory is one of the things that refuses to disappear.",
-    image: "/memory/radman-second.JPG",
+    image: "/memories/memory-03.JPG",
     year: "2026",
     time: "—",
     location: "Always",
