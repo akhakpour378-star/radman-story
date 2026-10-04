@@ -1,6 +1,6 @@
 .journey{position:relative;overflow:clip;background:#030403;color:#f3f0e8}
 .journey-chapter{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#030403}
-.journey-chapter__image{position:absolute;inset:-8%;background:linear-gradient(90deg,rgba(0,0,0,.5),transparent 48%,rgba(0,0,0,.3)),url("/memory/world/radman-forest-cinematic.jpg") center/cover no-repeat;filter:saturate(.88) brightness(.72);transform:scale(1.06)}
+.journey-chapter__image{position:absolute;inset:-8%;background:linear-gradient(90deg,rgba(0,0,0,.58),transparent 48%,rgba(0,0,0,.35)),url("/memory/radman-main.JPG") center/cover no-repeat;filter:saturate(.88) brightness(.72);transform:scale(1.06)}
 .journey-chapter__veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.38),transparent 28%,rgba(0,0,0,.72)),radial-gradient(circle at 55% 50%,transparent 18%,rgba(0,0,0,.45) 92%)}
 .journey-chapter__content{position:relative;z-index:2;width:min(850px,calc(100% - 12vw));margin-left:7.5vw}
 .journey-chapter__content p,.journey-finale__content p{color:#c8a76a;font-size:8px;letter-spacing:.55em}
@@ -19,3 +19,8 @@
 .journey-finale__content small{display:block;margin-top:70px;color:rgba(255,255,255,.2);font-size:8px;letter-spacing:.65em}
 @media(max-width:900px){.journey-chapter__content{width:calc(100% - 44px);margin-left:22px}.journey-chapter__content h2,.journey-finale__content h2{font-size:clamp(3.2rem,14vw,6rem)}.journey-chapter__content--split{display:block}.journey-chapter__content--split>span{margin-top:40px}}
 @media(prefers-reduced-motion:reduce){.journey-chapter__image{transform:none}}
+.journey-chapter__image--two{background-image:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.18) 55%,rgba(0,0,0,.52)),url("/memory/radman-second.JPG");background-position:center 38%;background-size:cover;}
+.journey-chapter__veil--two{background:linear-gradient(to bottom,rgba(3,4,3,.58),transparent 28%,rgba(3,4,3,.78)),radial-gradient(circle at 50% 48%,transparent 15%,rgba(0,0,0,.5) 92%)}
+.journey-chapter--two{min-height:100svh;overflow:hidden;}
+.journey-chapter--two .journey-chapter__content{position:relative;z-index:3}
+.journey-chapter--one::after,.journey-chapter--two::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(200,167,106,.05),transparent 35%,transparent 70%,rgba(200,167,106,.025));mix-blend-mode:screen}
