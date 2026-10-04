@@ -54,6 +54,7 @@ export default function RadmanUltimate() {
       q.forEach((node)=>gsap.fromTo(node,{y:70,opacity:0},{y:0,opacity:1,duration:1.05,ease:"power4.out",scrollTrigger:{trigger:node,start:"top 88%"}}));
       gsap.from(".u-hero__title .word span",{yPercent:120,opacity:0,duration:1.2,stagger:.1,ease:"power4.out",delay:.2});
       gsap.from(".u-hero__meta > *",{opacity:0,y:20,stagger:.12,duration:.8,delay:.55});
+      gsap.from(".u-hero__panelTop,.u-hero__panelBottom,.u-hero__cta",{opacity:0,y:18,stagger:.08,duration:.8,delay:.45});
       gsap.to(".u-hero__photo img",{scale:1.2,yPercent:9,ease:"none",scrollTrigger:{trigger:".u-hero",start:"top top",end:"bottom top",scrub:1.4}});
       gsap.to(".u-hero__photo",{yPercent:12,ease:"none",scrollTrigger:{trigger:".u-hero",start:"top top",end:"bottom top",scrub:1}});
       gsap.to(".u-hero__copy",{yPercent:-32,opacity:0,ease:"none",scrollTrigger:{trigger:".u-hero",start:"top top",end:"65% top",scrub:1}});
@@ -84,17 +85,24 @@ export default function RadmanUltimate() {
       <button onClick={toggle}>{sound?<Volume2 size={14}/>:<VolumeX size={14}/>} {sound?"SOUND ON":"SOUND"}</button>
     </nav>
 
-    <section id="top" className="u-hero">
-      <div className="u-hero__photo"><img src={asset(memory[0].src)} alt="Radman and his father"/></div>
-      <div className="u-hero__wash"/>
-      <div className="u-orb"/>
-      <div className="u-grain"/>
-      <div className="u-hero__copy">
-        <p className="u-kicker"><span/>A VISUAL BIOGRAPHY / 2026</p>
-        <h1 className="u-hero__title"><span className="word"><span>RADMAN</span></span><span className="word"><em>A LIFE</em> IN FRAMES</span></h1>
-        <p className="u-hero__lead">یک آرشیو زنده از تولد، کودکی، خنده‌ها، رشد کردن و تمام لحظه‌هایی که نباید فراموش شوند.</p>
+    <section id="top" className="u-hero u-hero--editorial">
+      <div className="u-hero__frame">
+        <div className="u-hero__photo"><img src={asset("/memory/radman-and-me.png")} alt="Radman and his father"/></div>
+        <div className="u-hero__photoShade"/>
+        <div className="u-hero__frameNo">01 <i/> 20</div>
       </div>
-      <div className="u-hero__meta"><div><small>ARCHIVE</small><b>20</b><span>ORIGINAL FRAMES</span></div><div><small>CHAPTERS</small><b>04</b><span>ONE STORY</span></div></div>
+      <div className="u-hero__panel">
+        <div className="u-hero__panelTop"><span>RADMAN</span><span>VISUAL BIOGRAPHY</span></div>
+        <div className="u-hero__copy">
+          <p className="u-kicker"><span/>THE ARCHIVE / 2026</p>
+          <h1 className="u-hero__title"><span className="word"><span>RADMAN</span></span><span className="word"><em>A LIFE</em><br/>IN FRAMES</span></h1>
+          <p className="u-hero__lead">از اولین نفس تا تمام سال‌هایی که هنوز نیامده‌اند؛ یک روایت تصویری از رشد، خنده، خانواده و خاطراتی که زمان نمی‌تواند پاکشان کند.</p>
+          <div className="u-hero__cta"><span>ENTER THE ARCHIVE</span><ArrowDown size={14}/></div>
+        </div>
+        <div className="u-hero__meta"><div><small>ORIGINAL FRAMES</small><b>20</b></div><div><small>CHAPTERS</small><b>04</b></div><div><small>FORMAT</small><b>∞</b></div></div>
+        <div className="u-hero__panelBottom"><span>MEMORY / 001</span><span>ARCHIVE / 2026</span></div>
+      </div>
+      <div className="u-hero__wash"/><div className="u-orb"/><div className="u-grain"/>
       <div className="u-scroll"><ArrowDown size={14}/><span>SCROLL TO ENTER</span></div>
     </section>
 
