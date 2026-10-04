@@ -52,6 +52,7 @@ export function useForestSound() {
     }
 
     setEnabled(true);
+    window.setTimeout(() => breath(true), 420);
   };
 
   const noise = (duration: number, frequency: number, gainValue: number) => {
