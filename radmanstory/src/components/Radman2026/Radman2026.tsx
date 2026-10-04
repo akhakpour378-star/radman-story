@@ -30,7 +30,7 @@ const chapters = [
 ];
 
 export default function Radman2026() {
-  const root = useRef<main>(null);
+  const root = useRef<HTMLElement>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
   const [sound, setSound] = useState(false);
   const [archiveFrames, setArchiveFrames] = useState(frames);
