@@ -7,6 +7,7 @@ export function useForestSound() {
   const masterRef = useRef<GainNode | null>(null);
   const lastStepRef = useRef(-1);
   const [enabled, setEnabled] = useState(false);
+  const ambientStartedRef = useRef(false);
 
   const init = () => {
     if (typeof window === "undefined") return;
@@ -20,6 +21,36 @@ export function useForestSound() {
     }
     const ctx = ctxRef.current;
     if (ctx.state === "suspended") void ctx.resume();
+
+    if (!ambientStartedRef.current && masterRef.current) {
+      ambientStartedRef.current = true;
+
+      const length = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * 0.18;
+
+      const wind = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const windGain = ctx.createGain();
+      wind.buffer = buffer;
+      wind.loop = true;
+      filter.type = "lowpass";
+      filter.frequency.value = 720;
+      filter.Q.value = 0.35;
+      windGain.gain.value = 0.035;
+      wind.connect(filter).connect(windGain).connect(masterRef.current);
+      wind.start();
+
+      const drone = ctx.createOscillator();
+      const droneGain = ctx.createGain();
+      drone.type = "sine";
+      drone.frequency.value = 42;
+      droneGain.gain.value = 0.012;
+      drone.connect(droneGain).connect(masterRef.current);
+      drone.start();
+    }
+
     setEnabled(true);
   };
 
