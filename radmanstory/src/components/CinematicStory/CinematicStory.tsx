@@ -184,7 +184,7 @@ export default function CinematicStory() {
         <span className="cinematic__hud-line"><i style={{ transform: `scaleX(${Math.max(0.04, progress)})` }} /></span>
         <span className="cinematic__hud-time">14:15</span>
       </div>
-      <button className="cinematic__soundbar" type="button" onClick={() => { setMuted(v => !v); soundRef.current.setMuted?.(!muted); }} aria-label="Toggle ambient sound">
+      <button className="cinematic__soundbar" type="button" onClick={() => { setMuted(v => !v); if (!muted) soundRef.current.init(); }} aria-label="Toggle ambient sound">
         <span>{muted ? "SOUND OFF" : "SOUND ON"}</span><i className={muted ? "" : "is-live"} />
       </button>
       <audio ref={baba} src="/memory/memory-audio.mp3" preload="auto" />
