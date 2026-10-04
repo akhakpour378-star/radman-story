@@ -1,1 +1,8 @@
-.forest-backdrop{position:absolute;inset:0;overflow:hidden;background:#050806}.forest-backdrop__svg{position:absolute;inset:-2%;width:104%;height:104%;display:block}.forest-backdrop__mist{position:absolute;left:-20%;width:140%;height:22%;border-radius:50%;background:radial-gradient(ellipse,rgba(213,220,207,.12),rgba(213,220,207,.025) 45%,transparent 72%);filter:blur(28px)}.forest-backdrop__mist--one{top:49%;animation:mistA 13s ease-in-out infinite alternate}.forest-backdrop__mist--two{top:67%;opacity:.58;animation:mistB 17s ease-in-out infinite alternate}.forest-backdrop__vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,transparent 25%,rgba(0,0,0,.18) 58%,rgba(0,0,0,.72) 100%),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 32%,rgba(0,0,0,.38)}@keyframes mistA{from{transform:translateX(-3%)}to{transform:translate(8%,-4%) scale(1.08)}}@keyframes mistB{from{transform:translateX(8%)}to{transform:translate(-7%,-5%)}}
+.forest-backdrop{position:absolute;inset:0;overflow:hidden;background:#050806}
+.forest-backdrop__svg{position:absolute;inset:-2%;width:104%;height:104%;display:block}
+.forest-backdrop__mist{position:absolute;left:-20%;width:140%;height:22%;border-radius:50%;background:radial-gradient(ellipse,rgba(213,220,207,.12),rgba(213,220,207,.025) 45%,transparent 72%);filter:blur(28px)}
+.forest-backdrop__mist--one{top:49%;animation:mistA 13s ease-in-out infinite alternate}
+.forest-backdrop__mist--two{top:67%;opacity:.58;animation:mistB 17s ease-in-out infinite alternate}
+.forest-backdrop__vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,transparent 25%,rgba(0,0,0,.18) 58%,rgba(0,0,0,.72) 100%),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 32%,rgba(0,0,0,.38))}
+@keyframes mistA{from{transform:translateX(-3%)}to{transform:translate(8%,-4%) scale(1.08)}}
+@keyframes mistB{from{transform:translateX(8%)}to{transform:translate(-7%,-5%)}}
