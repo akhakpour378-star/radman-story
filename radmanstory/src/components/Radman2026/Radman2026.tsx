@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Volume2, VolumeX, ArrowDown, ArrowUpRight } from "lucide-react";
@@ -30,9 +30,9 @@ const chapters = [
 export default function Radman2026() {
   const root = useRef<main>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const [sound, setSound] = useState(false);
+  const [sound, setSound] = useState(false);\n  const [archiveFrames, setArchiveFrames] = useState(frames);
 
-  useLayoutEffect(() => {
+  useEffect(() => {\n    let alive = true;\n    fetch("/api/memory").then((response) => response.json()).then((data: { images?: string[] }) => {\n      if (!alive || !Array.isArray(data.images) || data.images.length === 0) return;\n      const known = new Map(frames.map((frame) => [frame.src, frame]));\n      const dynamic = data.images.map((src, index) => known.get(src) ?? ({ src, label: "MEMORY " + String(index + 1).padStart(2, "0"), chapter: "ARCHIVE" }));\n      setArchiveFrames(dynamic);\n    }).catch(() => {});\n    return () => { alive = false; };\n  }, []);\n\n  useLayoutEffect(() => {
     const el = root.current;
     if (!el) return;
     const ctx = gsap.context(() => {
@@ -144,7 +144,7 @@ export default function Radman2026() {
 
       <section className="r26-chapters">
         {chapters.map((chapter) => {
-          const frame = frames[chapter.frame];
+          const frame = archiveFrames[chapter.frame] ?? frames[chapter.frame];
           return (
             <article className="r26-chapter" key={chapter.n}>
               <div className="r26-chapter__number">{chapter.n}</div>
@@ -166,7 +166,7 @@ export default function Radman2026() {
           <h2>Every frame<br/><i>has a place.</i></h2>
         </div>
         <div className="r26-archive__track">
-          {frames.map((frame, index) => (
+          {archiveFrames.map((frame, index) => (
             <figure key={frame.src} className={"r26-card r26-card--" + ((index % 5) + 1)}>
               <div><img src={frame.src} alt={frame.label} loading="lazy" /></div>
               <figcaption><span>0{index + 1}</span><b>{frame.label}</b><small>{frame.chapter}</small></figcaption>
