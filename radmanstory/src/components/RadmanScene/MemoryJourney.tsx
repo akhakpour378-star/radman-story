@@ -1,232 +1,123 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import AmbientScene from "./AmbientScene";
-import StorySection from "./StorySection";
-
-import MemoryExperience from "./MemoryExperience";
-import { main } from "framer-motion/client";
-
 import RadmanOpening from "../RadmanOpening/RadmanOpening";
+import MemoryExperience from "./MemoryExperience";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function MemoryJourney() {
-  const pageRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const page = pageRef.current;
-
-    if (!page) return;
+    const root = rootRef.current;
+    if (!root) return;
 
     const ctx = gsap.context(() => {
-      const hero = heroRef.current;
-
-      if (!hero) return;
-
-      const heroImage = heroImageRef.current;
-
-      const heroTimeline = gsap.timeline();
-
-      heroTimeline
-        .fromTo(
-          ".radman-nav",
-          {
-            y: -20,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-          },
-        )
-        .fromTo(
-          ".hero-eyebrow",
-          {
-            opacity: 0,
-            y: 25,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-          },
-          "-=0.5",
-        )
-        .fromTo(
-          ".hero-title-line",
-          {
-            opacity: 0,
-            y: 80,
-          },
+      gsap.utils.toArray<HTMLElement>("[data-journey-copy]").forEach((item) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 55 },
           {
             opacity: 1,
             y: 0,
             duration: 1.1,
-            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 82%",
+              once: true,
+            },
           },
-          "-=0.45",
-        )
-        .fromTo(
-          ".hero-description",
-          {
-            opacity: 0,
-            y: 25,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-          },
-          "-=0.5",
-        )
-        .fromTo(
-          heroImage,
-          {
-            opacity: 0,
-            scale: 1.08,
-          },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1.5,
-            ease: "power2.out",
-          },
-          "-=1",
         );
-
-      /* HERO SCROLL */
-
-      gsap.to(".hero-copy", {
-        y: -120,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
       });
-
-      gsap.to(heroImage, {
-        y: -80,
-        scale: 1.08,
-        ease: "none",
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
-      gsap.to(".hero-scroll", {
-        opacity: 0,
-        y: 30,
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "top 30%",
-          scrub: true,
-        },
-      });
-
-      /* NAV */
-
-      ScrollTrigger.create({
-        trigger: hero,
-        start: "top top",
-        end: "bottom top",
-        onUpdate: (self) => {
-          const nav = document.querySelector(".radman-nav");
-
-          if (!nav) return;
-
-          if (self.progress > 0.08) {
-            nav.classList.add("nav-scrolled");
-          } else {
-            nav.classList.remove("nav-scrolled");
-          }
-        },
-      });
-    }, page);
+    }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-
-      <div
-        ref={pageRef}
-        className="relative overflow-hidden bg-[#080706] text-white"
-      >
-        {/* =====================================================
-          GLOBAL AMBIENT BACKGROUND
-      ====================================================== */}
-
-        <div className="pointer-events-none fixed inset-0 z-0">
-          <Canvas
-            dpr={[1, 1.5]}
-            camera={{
-              position: [0, 0, 7],
-              fov: 42,
-              near: 0.1,
-              far: 30,
-            }}
-            gl={{
-              antialias: true,
-              alpha: true,
-            }}
-          >
-            <AmbientScene />
-          </Canvas>
-        </div>
-
-        {/* =====================================================
-          HERO
-      ====================================================== */}
-
+    <div ref={rootRef} className="relative overflow-hidden bg-[#050605] text-white">
       <RadmanOpening />
 
-        {/* =====================================================
-          STORY
-      ====================================================== */}
-
-        <div className="relative z-10">
-          <StorySection />
-        </div>
-
-        {/* =====================================================
-          NEXT SECTION PLACEHOLDER
-      ====================================================== */}
-
-        <div className="relative z-10">
-          <MemoryExperience />
-        </div>
-
-        <section
-          id="forever"
-          className="relative z-10 flex min-h-[70vh] items-center justify-center bg-[#080706] px-6"
-        >
-          <div className="text-center">
-            <p className="text-[8px] uppercase tracking-[0.65em] text-[#c8a76a]/50">
-              Forever
+      <section className="relative min-h-[88svh] bg-[#050605] px-6 py-32 sm:px-10 sm:py-44">
+        <div className="mx-auto max-w-6xl">
+          <div data-journey-copy className="max-w-3xl">
+            <p className="text-[9px] uppercase tracking-[0.62em] text-[#c8a76a]/70">
+              Chapter 01 — The beginning
             </p>
 
-            <h2 className="mt-8 text-[clamp(3rem,7vw,7rem)] font-light leading-none tracking-[-0.07em]">
-              Always remembered.
+            <h2 className="mt-9 text-[clamp(3.3rem,7.5vw,7.5rem)] font-light leading-[0.9] tracking-[-0.065em]">
+              Before the world
+              <br />
+              became a memory.
+            </h2>
+
+            <div className="mt-10 h-px w-20 bg-[#c8a76a]/55" />
+
+            <p className="mt-8 max-w-xl text-sm leading-8 text-white/40 sm:text-base">
+              There are moments that do not need to be loud to become
+              unforgettable. They simply remain.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#070806] px-6 py-32 sm:px-10 sm:py-44">
+        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+          <div data-journey-copy>
+            <p className="text-[9px] uppercase tracking-[0.62em] text-[#c8a76a]/70">
+              Chapter 02 — A little life
+            </p>
+            <h2 className="mt-8 text-4xl font-light leading-[0.96] tracking-[-0.045em] sm:text-6xl">
+              Small hands.
+              <br />
+              Big memories.
             </h2>
           </div>
-        </section>
-      </div>
+
+          <div data-journey-copy className="max-w-xl lg:justify-self-end">
+            <p className="text-lg leading-9 text-white/48 sm:text-2xl sm:leading-10">
+              A photograph keeps the light.
+              <br />
+              A memory keeps everything else.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <MemoryExperience />
+
+      <section className="relative flex min-h-[78svh] items-center justify-center overflow-hidden bg-[#030403] px-6 text-center">
+        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(200,167,106,0.12),transparent_68%)] blur-3xl" />
+
+        <div data-journey-copy className="relative z-10 max-w-3xl">
+          <p className="text-[9px] uppercase tracking-[0.7em] text-[#c8a76a]/60">
+            Forever
+          </p>
+
+          <h2 className="mt-10 text-[clamp(3.2rem,7vw,7rem)] font-light leading-[0.92] tracking-[-0.06em]">
+            You became
+            <br />
+            the reason
+            <br />
+            my story never ended.
+          </h2>
+
+          <div className="mx-auto my-12 h-px w-20 bg-[#c8a76a]/50" />
+
+          <p className="text-sm tracking-wide text-white/30">
+            Forever, my son.
+          </p>
+
+          <p className="mt-16 text-[8px] uppercase tracking-[0.62em] text-white/15">
+            14 : 15
+          </p>
+        </div>
+      </section>
+    </div>
   );
 }
