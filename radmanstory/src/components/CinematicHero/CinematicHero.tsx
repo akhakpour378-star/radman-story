@@ -1,103 +1,114 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import "./CinematicHero.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function CinematicHero() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const section = sectionRef.current;
-
     if (!section) return;
 
     const context = gsap.context(() => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       const intro = gsap.timeline({
-        defaults: {
-          ease: "power3.out",
-        },
+        defaults: { ease: "power3.out" },
       });
 
       intro
-        .from("[data-hero-image]", {
-          scale: 1.18,
-          opacity: 0,
-          duration: 2.2,
-        })
-        .from(
-          "[data-hero-eyebrow]",
-          {
-            opacity: 0,
-            y: 30,
-            duration: 1,
-          },
-          "-=1.3",
+        .fromTo(
+          "[data-hero-image]",
+          { opacity: 0, scale: 1.035 },
+          { opacity: 1, scale: 1, duration: 2.2 },
         )
-        .from(
-          "[data-hero-title]",
-          {
-            opacity: 0,
-            y: 70,
-            duration: 1.4,
-          },
-          "-=0.8",
+        .fromTo(
+          "[data-hero-atmosphere]",
+          { opacity: 0 },
+          { opacity: 1, duration: 1.8 },
+          "-=1.6",
         )
-        .from(
-          "[data-hero-line]",
-          {
-            scaleX: 0,
-            transformOrigin: "left",
-            duration: 1,
-          },
-          "-=0.8",
-        )
-        .from(
-          "[data-hero-subtitle]",
-          {
-            opacity: 0,
-            y: 25,
-            duration: 1,
-          },
-          "-=0.5",
+        .fromTo(
+          "[data-hero-copy] > *",
+          { opacity: 0, y: 32 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.1 },
+          "-=1.25",
         );
 
-      gsap.timeline({
+      if (reduceMotion) {
+        gsap.set(
+          "[data-hero-image], [data-hero-copy], [data-hero-forest], [data-hero-fog], [data-hero-light], [data-hero-scroll]",
+          { clearProps: "all" },
+        );
+        return;
+      }
+
+      const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=1800",
-          scrub: 1,
-          pin: true,
+          end: "bottom top",
+          pin: "[data-hero-frame]",
+          scrub: 1.15,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
-      })
+      });
+
+      timeline
+        .to(
+          "[data-hero-background]",
+          {
+            scale: 1.1,
+            yPercent: 4,
+            ease: "none",
+          },
+          0,
+        )
+        .to(
+          "[data-hero-forest-back]",
+          {
+            xPercent: -3,
+            yPercent: -2,
+            scale: 1.05,
+            ease: "none",
+          },
+          0,
+        )
+        .to(
+          "[data-hero-forest-front]",
+          {
+            xPercent: 5,
+            yPercent: -5,
+            scale: 1.1,
+            ease: "none",
+          },
+          0,
+        )
+        .to(
+          "[data-hero-fog]",
+          {
+            xPercent: 8,
+            yPercent: -8,
+            scale: 1.12,
+            ease: "none",
+          },
+          0,
+        )
         .to(
           "[data-hero-image]",
           {
-            scale: 1.08,
-            yPercent: -7,
-            ease: "none",
-          },
-          0,
-        )
-        .to(
-          "[data-hero-overlay]",
-          {
-            opacity: 0.75,
-            ease: "none",
-          },
-          0,
-        )
-        .to(
-          "[data-hero-title]",
-          {
-            yPercent: -35,
-            scale: 0.78,
-            opacity: 0.18,
+            yPercent: -8,
+            scale: 1.06,
             ease: "none",
           },
           0,
@@ -105,29 +116,37 @@ export default function CinematicHero() {
         .to(
           "[data-hero-copy]",
           {
-            yPercent: -70,
+            yPercent: -42,
             opacity: 0,
             ease: "none",
           },
-          0.12,
-        )
-        .to(
-          "[data-hero-orb]",
-          {
-            scale: 2.2,
-            opacity: 0.04,
-            ease: "none",
-          },
-          0,
+          0.08,
         )
         .to(
           "[data-hero-scroll]",
           {
             opacity: 0,
-            y: 30,
+            y: 24,
             ease: "none",
           },
           0,
+        )
+        .to(
+          "[data-hero-exit]",
+          {
+            opacity: 1,
+            y: 0,
+            ease: "none",
+          },
+          0.62,
+        )
+        .to(
+          "[data-hero-vignette]",
+          {
+            opacity: 0.9,
+            ease: "none",
+          },
+          0.58,
         );
     }, section);
 
@@ -135,110 +154,96 @@ export default function CinematicHero() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative h-screen min-h-[700px] overflow-hidden bg-[#020202] text-white"
-    >
-      {/* BACKGROUND IMAGE */}
+    <section ref={sectionRef} className="cinematic-hero">
+      <div data-hero-frame className="cinematic-hero__frame">
+        <div data-hero-background className="cinematic-hero__background">
+          <div className="cinematic-hero__sky" />
+          <div data-hero-forest className="cinematic-hero__forest">
+            <div
+              data-hero-forest-back
+              className="cinematic-hero__forest-layer cinematic-hero__forest-layer--back"
+            />
+            <div
+              className="cinematic-hero__forest-layer cinematic-hero__forest-layer--middle"
+            />
+            <div
+              data-hero-forest-front
+              className="cinematic-hero__forest-layer cinematic-hero__forest-layer--front"
+            />
+          </div>
 
-      <div className="absolute inset-[-8%]">
-        <Image
-          src="/memory/radman-main.jpg"
-          alt="Radman"
-          fill
-          priority
-          sizes="100vw"
-          data-hero-image
-          className="object-cover object-center"
-        />
-      </div>
+          <div data-hero-light className="cinematic-hero__light">
+            <span />
+            <span />
+            <span />
+          </div>
 
-      {/* DARK CINEMATIC GRADING */}
+          <div data-hero-image className="cinematic-hero__portrait-wrap">
+            <div className="cinematic-hero__portrait-glow" />
+            <Image
+              src="/memory/radman-main.JPG"
+              alt="Radman"
+              fill
+              priority
+              sizes="(max-width: 700px) 92vw, 52vw"
+              className="cinematic-hero__portrait"
+            />
+          </div>
 
-      <div
-        data-hero-overlay
-        className="absolute inset-0 bg-black/35"
-      />
+          <div data-hero-fog className="cinematic-hero__fog cinematic-hero__fog--one" />
+          <div className="cinematic-hero__fog cinematic-hero__fog--two" />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black" />
+          <div className="cinematic-hero__particles" aria-hidden="true">
+            {Array.from({ length: 22 }).map((_, index) => (
+              <span key={index} />
+            ))}
+          </div>
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_15%,rgba(0,0,0,0.72)_100%)]" />
+          <div data-hero-atmosphere className="cinematic-hero__grading" />
+          <div data-hero-vignette className="cinematic-hero__vignette" />
+        </div>
 
-      {/* GOLD LIGHT */}
+        <header className="cinematic-hero__nav">
+          <div className="cinematic-hero__brand">
+            <span>R</span>
+            <strong>RADMAN</strong>
+          </div>
+          <div className="cinematic-hero__chapter">A MEMORY / 01</div>
+        </header>
 
-      <div
-        data-hero-orb
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d8b77a]/10 blur-[120px]"
-      />
-
-      {/* CONTENT */}
-
-      <div
-        data-hero-copy
-        className="absolute inset-0 z-20 flex items-center justify-center px-6"
-      >
-        <div className="w-full max-w-6xl text-center">
-
-          <p
-            data-hero-eyebrow
-            className="text-[9px] uppercase tracking-[0.75em] text-[#d8b77a]/75"
-          >
-            A story that never ended
+        <div data-hero-copy className="cinematic-hero__copy">
+          <p className="cinematic-hero__eyebrow">
+            <span />
+            A STORY THAT REMAINS
           </p>
 
-          <h1
-            data-hero-title
-            className="mt-8 text-[clamp(5rem,16vw,13rem)] font-extralight leading-[0.78] tracking-[-0.09em]"
-          >
-            Radman
+          <h1>
+            <span>For</span>
+            <span>Radman.</span>
           </h1>
 
-          <div
-            data-hero-line
-            className="mx-auto mt-12 h-px w-24 bg-[#d8b77a]/60"
-          />
-
-          <p
-            data-hero-subtitle
-            className="mt-8 text-[10px] uppercase tracking-[0.65em] text-white/45"
-          >
-            14 : 15
+          <p className="cinematic-hero__description">
+            Some moments are brief.
+            <br />
+            Some become forever.
           </p>
 
+          <div className="cinematic-hero__signature">
+            <span>14 : 15</span>
+            <i />
+            <span>FOREVER</span>
+          </div>
         </div>
-      </div>
 
-      {/* TOP CORNER */}
+        <div data-hero-scroll className="cinematic-hero__scroll">
+          <span>SCROLL TO ENTER</span>
+          <i />
+        </div>
 
-      <div className="absolute left-7 top-7 z-30 text-[8px] uppercase tracking-[0.5em] text-white/30">
-        RADMAN
-      </div>
-
-      <div className="absolute right-7 top-7 z-30 text-[8px] uppercase tracking-[0.5em] text-white/25">
-        01
-      </div>
-
-      {/* BOTTOM */}
-
-      <div
-        data-hero-scroll
-        className="absolute bottom-8 left-1/2 z-30 -translate-x-1/2 text-center"
-      >
-        <div className="mx-auto mb-4 h-10 w-px bg-gradient-to-b from-transparent via-[#d8b77a]/60 to-transparent" />
-
-        <p className="text-[8px] uppercase tracking-[0.55em] text-white/30">
-          Scroll to remember
-        </p>
-      </div>
-
-      {/* SIDE LABEL */}
-
-      <div className="absolute bottom-8 left-7 z-30 hidden text-[8px] uppercase tracking-[0.45em] text-white/20 sm:block">
-        Forever
-      </div>
-
-      <div className="absolute bottom-8 right-7 z-30 hidden text-[8px] uppercase tracking-[0.45em] text-white/20 sm:block">
-        2026
+        <div data-hero-exit className="cinematic-hero__exit">
+          <span>THE STORY BEGINS</span>
+          <i />
+        </div>
       </div>
     </section>
   );
