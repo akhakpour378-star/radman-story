@@ -1,0 +1,21 @@
+.journey{position:relative;overflow:clip;background:#030403;color:#f3f0e8}
+.journey-chapter{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#030403}
+.journey-chapter__image{position:absolute;inset:-8%;background:linear-gradient(90deg,rgba(0,0,0,.5),transparent 48%,rgba(0,0,0,.3)),url("/memory/world/radman-forest-cinematic.jpg") center/cover no-repeat;filter:saturate(.88) brightness(.72);transform:scale(1.06)}
+.journey-chapter__veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.38),transparent 28%,rgba(0,0,0,.72)),radial-gradient(circle at 55% 50%,transparent 18%,rgba(0,0,0,.45) 92%)}
+.journey-chapter__content{position:relative;z-index:2;width:min(850px,calc(100% - 12vw));margin-left:7.5vw}
+.journey-chapter__content p,.journey-finale__content p{color:#c8a76a;font-size:8px;letter-spacing:.55em}
+.journey-chapter__content h2,.journey-finale__content h2{margin:28px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(4rem,8vw,9rem);font-weight:400;line-height:.86;letter-spacing:-.07em}
+.journey-chapter__content i,.journey-finale__content i{display:block;width:76px;height:1px;margin:34px 0;background:#c8a76a}
+.journey-chapter__content span{display:block;max-width:520px;color:rgba(255,255,255,.48);font-size:14px;line-height:2}
+.journey-chapter__content--split{display:grid;grid-template-columns:1fr .65fr;gap:8vw;align-items:end}
+.journey-chapter__content--split>span{font-size:clamp(1.1rem,2vw,1.65rem);line-height:1.8}
+.journey-chapter__number{position:absolute;right:5vw;bottom:4vw;color:rgba(255,255,255,.25);font-size:8px;letter-spacing:.4em}
+.journey-chapter--two{min-height:72svh;padding:12vw 0;background:radial-gradient(circle at 20% 50%,rgba(200,167,106,.06),transparent 34%),#070806}
+.journey-finale{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;text-align:center;background:#020302}
+.journey-finale__glow{position:absolute;width:70vw;height:70vw;max-width:900px;max-height:900px;border-radius:50%;background:radial-gradient(circle,rgba(200,167,106,.12),transparent 64%);filter:blur(35px)}
+.journey-finale__content{position:relative;z-index:2}
+.journey-finale__content h2{font-size:clamp(3.7rem,7vw,8rem)}
+.journey-finale__content span{color:rgba(255,255,255,.45);font-size:14px}
+.journey-finale__content small{display:block;margin-top:70px;color:rgba(255,255,255,.2);font-size:8px;letter-spacing:.65em}
+@media(max-width:900px){.journey-chapter__content{width:calc(100% - 44px);margin-left:22px}.journey-chapter__content h2,.journey-finale__content h2{font-size:clamp(3.2rem,14vw,6rem)}.journey-chapter__content--split{display:block}.journey-chapter__content--split>span{margin-top:40px}}
+@media(prefers-reduced-motion:reduce){.journey-chapter__image{transform:none}}
