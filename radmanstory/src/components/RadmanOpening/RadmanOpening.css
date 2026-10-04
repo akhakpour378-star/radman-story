@@ -497,5 +497,6 @@
 @media (prefers-reduced-motion: reduce) {
   .opening__scroll i,
   .opening__dust i,
-  .opening__ray { animation: none; }
+  .opening__ray,
+  .opening__plate { animation: none; }
 }
