@@ -19,6 +19,9 @@ export default function CinematicStory() {
   const root = useRef<HTMLElement>(null);
   const baba = useRef<HTMLAudioElement>(null);
   const [soundOn, setSoundOn] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [muted, setMuted] = useState(false);
+
   const sound = useForestSound();
   const soundRef = useRef(sound);
   soundRef.current = sound;
@@ -49,7 +52,10 @@ export default function CinematicStory() {
         trigger: ".scene-forest",
         start: "top top",
         end: "bottom top",
-        onUpdate: (self) => soundRef.current.onTravel(self.progress, self.getVelocity()),
+        onUpdate: (self) => {
+          setProgress(self.progress);
+          soundRef.current.onTravel(self.progress, self.getVelocity());
+        },
       });
 
       gsap.to(".forest__camera", {
@@ -173,6 +179,14 @@ export default function CinematicStory() {
 
   return (
     <main ref={root} className="film" onPointerDown={unlock}>
+      <div className="cinematic__hud" aria-hidden="true">
+        <span className="cinematic__hud-label">RADMAN / A MEMORY IN MOTION</span>
+        <span className="cinematic__hud-line"><i style={{ transform: `scaleX(${Math.max(0.04, progress)})` }} /></span>
+        <span className="cinematic__hud-time">14:15</span>
+      </div>
+      <button className="cinematic__soundbar" type="button" onClick={() => { setMuted(v => !v); soundRef.current.setMuted?.(!muted); }} aria-label="Toggle ambient sound">
+        <span>{muted ? "SOUND OFF" : "SOUND ON"}</span><i className={muted ? "" : "is-live"} />
+      </button>
       <audio ref={baba} src="/memory/memory-audio.mp3" preload="auto" />
 
       <section className="scene-intro">
