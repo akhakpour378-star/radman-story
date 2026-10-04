@@ -1,12 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #f3f0e9;
-  --gold: #d8b77a;
-  --gold-soft: #ead6ad;
-  --muted: rgba(243, 240, 233, 0.52);
-  --line: rgba(243, 240, 233, 0.12);
+  --bg: #050605;
+  --ink: #f3f0e8;
+  --muted: rgba(243, 240, 232, 0.48);
+  --gold: #c8a76a;
+  --line: rgba(243, 240, 232, 0.12);
   --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -15,17 +14,18 @@
 }
 
 html {
-  background: var(--background);
+  background: var(--bg);
   color-scheme: dark;
   scroll-behavior: auto;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -40,8 +40,14 @@ button {
   font: inherit;
 }
 
+img,
+video,
+canvas {
+  display: block;
+}
+
 ::selection {
-  background: rgba(216, 183, 122, 0.28);
+  background: rgba(200, 167, 106, 0.28);
   color: #fff;
 }
 
@@ -50,23 +56,16 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #050605;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(216, 183, 122, 0.42);
+  background: rgba(200, 167, 106, 0.42);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(216, 183, 122, 0.68);
-}
-
-.site-shell {
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  background: #050505;
+  background: rgba(200, 167, 106, 0.7);
 }
 
 .cinematic-text {
