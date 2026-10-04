@@ -44,7 +44,7 @@ export default function MemoryGallery() {
         index="01"
       />
       <MemoryFrame
-        image="/memory/radman-second.JPG"
+        image="/memories/memory-01.JPG"
         position={[-4.15, -0.45, -2.8]}
         rotation={[0, 0.05, -0.012]}
         width={1.75}
@@ -52,7 +52,7 @@ export default function MemoryGallery() {
         index="02"
       />
       <MemoryFrame
-        image="/memory/radman-main.JPG"
+        image="/memories/memory-02.JPG"
         position={[4.15, 0.15, -3.4]}
         rotation={[0, -0.05, 0.012]}
         width={1.6}
@@ -60,7 +60,7 @@ export default function MemoryGallery() {
         index="03"
       />
       <MemoryFrame
-        image="/memory/radman-second.JPG"
+        image="/memories/memory-03.JPG"
         position={[0, -2.65, -5.5]}
         rotation={[0, 0, 0]}
         width={1.25}
