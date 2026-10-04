@@ -71,7 +71,9 @@ export default function MemoryJourney() {
         <div className="journey-chapter__number">01</div>
       </section>
 
-      <section className="journey-chapter journey-chapter--two">\n        <div className="journey-chapter__image journey-chapter__image--two" aria-hidden="true" />\n        <div className="journey-chapter__veil journey-chapter__veil--two" aria-hidden="true" />
+      <section className="journey-chapter journey-chapter--two">
+        <div className="journey-chapter__image journey-chapter__image--two" aria-hidden="true" />
+        <div className="journey-chapter__veil journey-chapter__veil--two" aria-hidden="true" />
         <div className="journey-chapter__content journey-chapter__content--split" data-journey-copy>
           <div>
             <p>CHAPTER 02 · A LITTLE LIFE</p>
