@@ -55,11 +55,11 @@ export default function CinematicStory() {
           scrollTrigger: { trigger: node.closest("[data-chapter]") || node, start: "top bottom", end: "bottom top", scrub: 1.2 },
         });
       });
-      gsap.to(".bio-hero__media img", {
+      gsap.to(".hero-image img", {
         scale: 1.12, yPercent: 7, ease: "none",
         scrollTrigger: { trigger: ".bio-hero", start: "top top", end: "bottom top", scrub: 1.3 },
       });
-      gsap.to(".bio-hero__title", {
+      gsap.to(".hero-copy", {
         yPercent: -22, opacity: .25, ease: "none",
         scrollTrigger: { trigger: ".bio-hero", start: "top top", end: "75% top", scrub: 1 },
       });
@@ -87,14 +87,24 @@ export default function CinematicStory() {
         <span className="bio-nav__counter">A LIFE IN FRAMES</span>
       </header>
 
-      <section id="top" className="bio-opening">
-        <div className="bio-opening__grain" />
-        <div className="bio-opening__content">
-          <span className="micro">A PRIVATE VISUAL BIOGRAPHY</span>
-          <h1>You became<br/><i>the reason</i><br/>my story never ended.</h1>
-          <div className="bio-opening__bottom"><span>RADMAN / 2025—</span><span>SCROLL TO BEGIN ↓</span></div>
-        </div>
-      </section>
+      <section id="top" className="bio-opening bio-hero-premium" aria-label="Radman">
+  <div className="hero-noise"/>
+  <div className="hero-stars"><i/><i/><i/><i/><i/><i/></div>
+  <div className="hero-light hero-light--one"/>
+  <div className="hero-light hero-light--two"/>
+  <div className="hero-image" data-hero-image>
+    <img src="/memory/radman-and-me.png" alt="Radman and his father" />
+  </div>
+  <div className="hero-depth"/>
+  <div className="hero-copy" data-reveal>
+    <span className="hero-eyebrow">A LIFE IN FRAMES · 2025—</span>
+    <h1>Radman<span>.</span></h1>
+    <p>A visual archive of a life, a childhood, and every memory worth keeping.</p>
+  </div>
+  <div className="hero-vertical">SCROLL TO DISCOVER</div>
+  <div className="hero-meta"><span>01</span><span>MEMORY / MOTION / TIME</span><span>01—05</span></div>
+  <div className="hero-line"/>
+</section>
 
       <section className="bio-hero" id="story">
         <div className="bio-hero__orbs"><i/><i/><i/></div>
@@ -173,3 +183,4 @@ export default function CinematicStory() {
     </main>
   );
 }
+
