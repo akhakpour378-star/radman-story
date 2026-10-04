@@ -1,23 +1,9 @@
 .forest-depth {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 52% 40%, rgba(111, 126, 103, 0.18), transparent 32%),
-    linear-gradient(to bottom, #152019 0%, #0b120e 46%, #030504 100%);
-}
-
-.forest-depth__photo {
-  position: absolute;
-  inset: -7%;
-  filter: saturate(0.42) contrast(1.12) brightness(0.52);
-  transform: scale(1.04);
-}
-
-.forest-depth__photo-image {
-  object-fit: cover;
-  object-position: center center;
+  pointer-events: none;
 }
 
 .forest-depth__distant,
@@ -29,20 +15,17 @@
 }
 
 .forest-depth__distant {
-  z-index: 2;
-  opacity: 0.78;
+  opacity: .78;
   background:
-    linear-gradient(to bottom, rgba(2, 7, 4, 0.05), rgba(2, 6, 4, 0.58) 72%, rgba(1, 3, 2, 0.92)),
-    radial-gradient(ellipse at 18% 42%, transparent 0 8%, rgba(2, 7, 4, 0.55) 9% 12%, transparent 13%),
-    radial-gradient(ellipse at 82% 38%, transparent 0 7%, rgba(2, 7, 4, 0.5) 8% 12%, transparent 13%);
+    radial-gradient(ellipse at 18% 42%, transparent 0 7%, rgba(2,7,4,.52) 9% 12%, transparent 13%),
+    radial-gradient(ellipse at 82% 38%, transparent 0 6%, rgba(2,7,4,.48) 8% 12%, transparent 13%);
 }
 
 .forest-depth__near {
-  z-index: 4;
-  opacity: 0.92;
+  opacity: .92;
   background:
-    linear-gradient(90deg, rgba(0, 4, 2, 0.92), transparent 18%, transparent 80%, rgba(0, 4, 2, 0.95)),
-    linear-gradient(to bottom, transparent 38%, rgba(0, 4, 2, 0.16) 60%, rgba(0, 2, 1, 0.95) 100%);
+    linear-gradient(90deg, rgba(0,4,2,.86), transparent 18%, transparent 80%, rgba(0,4,2,.9)),
+    linear-gradient(to bottom, transparent 38%, rgba(0,4,2,.16) 60%, rgba(0,2,1,.9) 100%);
 }
 
 .forest-depth__near::before,
@@ -52,27 +35,19 @@
   bottom: -8%;
   width: 24vw;
   height: 78%;
-  background: linear-gradient(90deg, rgba(0, 2, 1, 0.9), rgba(0, 3, 2, 0.22), transparent);
-  filter: blur(1px);
+  background: linear-gradient(90deg, rgba(0,2,1,.82), rgba(0,3,2,.18), transparent);
 }
 
-.forest-depth__near::before {
-  left: -5%;
-  transform: skewX(-7deg);
-}
-
-.forest-depth__near::after {
-  right: -5%;
-  transform: scaleX(-1) skewX(-7deg);
-}
+.forest-depth__near::before { left: -5%; transform: skewX(-7deg); }
+.forest-depth__near::after { right: -5%; transform: scaleX(-1) skewX(-7deg); }
 
 .forest-depth__mist {
   position: absolute;
   inset: 35% -15% -5%;
   z-index: 7;
   background:
-    radial-gradient(ellipse at 25% 55%, rgba(191, 203, 190, 0.14), transparent 40%),
-    radial-gradient(ellipse at 74% 45%, rgba(191, 203, 190, 0.11), transparent 42%);
+    radial-gradient(ellipse at 25% 55%, rgba(191,203,190,.13), transparent 40%),
+    radial-gradient(ellipse at 74% 45%, rgba(191,203,190,.1), transparent 42%);
   filter: blur(28px);
 }
 
@@ -81,6 +56,6 @@
   inset: 0;
   z-index: 8;
   background:
-    linear-gradient(to bottom, transparent 48%, rgba(2, 5, 3, 0.24) 67%, rgba(1, 2, 2, 0.96) 100%),
-    radial-gradient(circle at 50% 54%, transparent 0 18%, rgba(0, 0, 0, 0.34) 78%);
+    linear-gradient(to bottom, transparent 48%, rgba(2,5,3,.2) 67%, rgba(1,2,2,.94) 100%),
+    radial-gradient(circle at 50% 54%, transparent 0 18%, rgba(0,0,0,.32) 78%);
 }
