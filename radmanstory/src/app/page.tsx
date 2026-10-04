@@ -1,5 +1,5 @@
-import MemoryJourney from "@/components/RadmanScene/MemoryJourney";
+import CinematicStory from "@/components/CinematicStory/CinematicStory";
 
 export default function Home() {
-  return <MemoryJourney />;
+  return <CinematicStory />;
 }
