@@ -1,5 +1,5 @@
-import Radman2026 from "@/components/Radman2026/Radman2026";
+import RadmanUltimate from "@/components/RadmanUltimate/RadmanUltimate";
 
 export default function Home() {
-  return <Radman2026 />;
+  return <RadmanUltimate />;
 }
