@@ -8,6 +8,8 @@ import "./Radman2026.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const asset = (src: string) => src.startsWith("/memory/") ? `/api/memory?file=${encodeURIComponent(src.slice(1))}` : src;
+
 const frames = [
   { src: "/memory/radman-and-me.png", label: "WITH DAD", chapter: "TOGETHER" },
   { src: "/memory/radman-main.JPG", label: "RADMAN", chapter: "BEGINNING" },
@@ -137,7 +139,7 @@ export default function Radman2026() {
         <div className="r26-hero__orb" />
         <div className="r26-hero__light" />
         <div className="r26-hero__grain" />
-        <div className="r26-hero__image"><img src="/memory/radman-and-me.png" alt="Radman and his father" /></div>
+        <div className="r26-hero__image"><img src={asset("/memory/radman-and-me.png")} alt="Radman and his father" /></div>
         <div className="r26-hero__veil" />
         <div className="r26-hero__copy">
           <p className="r26-hero__kicker"><span />A LIFE IN FRAMES · 2026</p>
@@ -160,7 +162,7 @@ export default function Radman2026() {
           return (
             <article className="r26-chapter" key={chapter.n}>
               <div className="r26-chapter__number">{chapter.n}</div>
-              <div className="r26-chapter__image"><img src={frame.src} alt={frame.label} loading="lazy" /></div>
+              <div className="r26-chapter__image"><img src={asset(frame.src)} alt={frame.label} loading="lazy" /></div>
               <div className="r26-chapter__copy r26-reveal">
                 <span>{frame.chapter} / {frame.label}</span>
                 <h2>{chapter.title}</h2>
@@ -180,7 +182,7 @@ export default function Radman2026() {
         <div className="r26-archive__track">
           {archiveFrames.map((frame, index) => (
             <figure key={frame.src} className={"r26-card r26-card--" + ((index % 5) + 1)}>
-              <div><img src={frame.src} alt={frame.label} loading="lazy" /></div>
+              <div><img src={asset(frame.src)} alt={frame.label} loading="lazy" /></div>
               <figcaption><span>0{index + 1}</span><b>{frame.label}</b><small>{frame.chapter}</small></figcaption>
             </figure>
           ))}
@@ -194,7 +196,7 @@ export default function Radman2026() {
           <p>ویدئو بخشی از آرشیو است؛ حرکت، صدا و لحظه‌هایی که نمی‌شود در یک فریم نگه داشت.</p>
         </div>
         <div className="r26-film__screen r26-reveal">
-          <video src="/memory/memory-video.mp4" controls playsInline preload="metadata" />
+          <video src={asset("/memory/memory-video.mp4")} controls playsInline preload="metadata" />
         </div>
       </section>
 
