@@ -16,7 +16,8 @@ const dust = Array.from({ length: 28 }, (_, i) => ({
 
 export default function RadmanOpening() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [entered, setEntered] = useState(false);\n  const [heroSrc, setHeroSrc] = useState("/memory/world/radman-forest-cinematic.jpg");
+  const [entered, setEntered] = useState(false);
+  const [heroSrc, setHeroSrc] = useState("/memory/world/radman-forest-cinematic.jpg");
   const sound = useForestSound();
   const soundRef = useRef(sound);
   soundRef.current = sound;
