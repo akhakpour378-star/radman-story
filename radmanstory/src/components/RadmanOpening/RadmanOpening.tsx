@@ -67,6 +67,14 @@ export default function RadmanOpening() {
               "-=0.8",
             );
 
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            pin: q(".opening__pin"),
+            anticipatePin: 1,
+          });
+
           const travel = {
             trigger: section,
             start: "top top",
