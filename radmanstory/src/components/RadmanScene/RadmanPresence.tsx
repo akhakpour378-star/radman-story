@@ -4,22 +4,18 @@ import Image from "next/image";
 
 export default function RadmanPresence() {
   return (
-    <div className="radman-presence">
-      <div className="radman-presence__atmosphere" />
-
+    <div className="radman-presence" aria-hidden="true">
       <div className="radman-presence__halo" />
-
       <div className="radman-presence__body">
         <Image
-          src="/memory/radman/radman-main.jpg"
-          alt="Radman"
+          src="/memory/radman-main.JPG"
+          alt=""
           fill
-          sizes="(max-width: 900px) 85vw, 48vw"
-          className="radman-presence__image"
           priority
+          sizes="(max-width: 900px) 92vw, 52vw"
+          className="radman-presence__image"
         />
       </div>
-
       <div className="radman-presence__ground" />
     </div>
   );
