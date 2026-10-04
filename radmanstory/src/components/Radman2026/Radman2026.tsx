@@ -30,9 +30,21 @@ const chapters = [
 export default function Radman2026() {
   const root = useRef<main>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const [sound, setSound] = useState(false);\n  const [archiveFrames, setArchiveFrames] = useState(frames);
+  const [sound, setSound] = useState(false);
+  const [archiveFrames, setArchiveFrames] = useState(frames);
 
-  useEffect(() => {\n    let alive = true;\n    fetch("/api/memory").then((response) => response.json()).then((data: { images?: string[] }) => {\n      if (!alive || !Array.isArray(data.images) || data.images.length === 0) return;\n      const known = new Map(frames.map((frame) => [frame.src, frame]));\n      const dynamic = data.images.map((src, index) => known.get(src) ?? ({ src, label: "MEMORY " + String(index + 1).padStart(2, "0"), chapter: "ARCHIVE" }));\n      setArchiveFrames(dynamic);\n    }).catch(() => {});\n    return () => { alive = false; };\n  }, []);\n\n  useLayoutEffect(() => {
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/memory?list=1").then((response) => response.json()).then((data: { images?: string[] }) => {
+      if (!alive || !Array.isArray(data.images) || data.images.length === 0) return;
+      const known = new Map(frames.map((frame) => [frame.src, frame]));
+      const dynamic = data.images.map((src, index) => known.get(src) ?? ({ src, label: "MEMORY " + String(index + 1).padStart(2, "0"), chapter: "ARCHIVE" }));
+      setArchiveFrames(dynamic);
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  useLayoutEffect(() => {
     const el = root.current;
     if (!el) return;
     const ctx = gsap.context(() => {
@@ -95,7 +107,7 @@ export default function Radman2026() {
 
   const toggleSound = () => {
     if (!audio.current) {
-      audio.current = new Audio("/memory/memory-audio.mp3");
+      audio.current = new Audio("/api/memory?file=memory/memory-audio.mp3");
       audio.current.loop = true;
       audio.current.volume = .25;
     }
