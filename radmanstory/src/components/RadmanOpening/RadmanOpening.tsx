@@ -6,10 +6,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "./RadmanOpening.css";
 import ForestDepth from "../RadmanScene/ForestDepth";
-import FogField from "../RadmanScene/FogField";
 import { ForestSoundButton, useForestSound } from "./CinematicSound";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const dust = Array.from({ length: 34 }, (_, index) => ({
+  id: index,
+  x: (index * 29) % 100,
+  y: (index * 47) % 100,
+  size: 1 + (index % 3),
+  delay: -(index % 9),
+  duration: 9 + (index % 8),
+}));
 
 export default function RadmanOpening() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,89 +46,127 @@ export default function RadmanOpening() {
           };
 
           if (reduce) {
-            gsap.set(q(".opening__content, .opening__meta, .opening__enter"), {
-              opacity: 1,
-              clearProps: "transform",
-            });
+            gsap.set(
+              q(".opening__content, .opening__meta, .opening__enter, .opening__chapter"),
+              { opacity: 1, clearProps: "transform" },
+            );
             return;
           }
 
-          gsap.timeline({ defaults: { ease: "power3.out" } })
-            .fromTo(q(".opening__content"), { opacity: 0, y: 38 }, { opacity: 1, y: 0, duration: 1.5 })
-            .fromTo(q(".opening__meta"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9 }, "-=0.9")
-            .fromTo(q(".opening__enter"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9 }, "-=0.6");
+          const intro = gsap.timeline({
+            defaults: { ease: "power3.out" },
+            delay: 0.15,
+          });
 
-          const travel = {
+          intro
+            .fromTo(q(".opening__chapter"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9 })
+            .fromTo(q(".opening__content"), { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 1.35 }, "-=0.5")
+            .fromTo(q(".opening__rule"), { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.7 }, "-=0.65")
+            .fromTo(q(".opening__copy"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4")
+            .fromTo(q(".opening__enter"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.85 }, "-=0.45");
+
+          const baseTrigger = {
             trigger: section,
             start: "top top",
             end: "bottom top",
-            scrub: desktop ? 1.1 : 0.8,
+            scrub: desktop ? 1.15 : 0.85,
           };
 
           ScrollTrigger.create({
             trigger: section,
             start: "top top",
             end: "bottom top",
-            pin: section.querySelector(".opening__pin") as HTMLElement,
+            pin: q(".opening__pin"),
             anticipatePin: 1,
-            onUpdate: (self) => soundRef.current.onTravel(self.progress),
+            onUpdate: (self) => soundRef.current.onTravel(self.progress, self.getVelocity()),
           });
 
           gsap.to(q(".opening__plate"), {
-            scale: 1.18,
-            yPercent: -5,
+            scale: 1.12,
+            xPercent: -2.5,
+            yPercent: -4,
             ease: "none",
-            scrollTrigger: travel,
+            scrollTrigger: baseTrigger,
           });
 
-          gsap.to(q(".opening__forest"), {
-            scale: 1.08,
-            yPercent: -7,
-            xPercent: desktop ? 2 : 0,
+          gsap.to(q(".opening__image-depth"), {
+            scale: 1.18,
+            xPercent: 4,
+            yPercent: -8,
             ease: "none",
-            scrollTrigger: { ...travel, scrub: desktop ? 0.85 : 0.7 },
+            scrollTrigger: { ...baseTrigger, scrub: desktop ? 1.7 : 1.1 },
+          });
+
+          gsap.to(q(".opening__foreground"), {
+            xPercent: desktop ? -6 : -2,
+            yPercent: -11,
+            scale: 1.08,
+            ease: "none",
+            scrollTrigger: { ...baseTrigger, scrub: desktop ? 0.7 : 0.5 },
           });
 
           gsap.to(q(".opening__fog"), {
-            xPercent: 10,
-            yPercent: -12,
-            scale: 1.08,
+            xPercent: 7,
+            yPercent: -9,
             ease: "none",
-            scrollTrigger: { ...travel, scrub: 1.8 },
+            scrollTrigger: { ...baseTrigger, scrub: 2.2 },
           });
 
           gsap.to(q(".opening__content"), {
-            yPercent: -55,
+            yPercent: -42,
             opacity: 0,
             ease: "none",
             scrollTrigger: {
               trigger: section,
-              start: "10% top",
+              start: "12% top",
               end: "48% top",
               scrub: 1,
             },
           });
 
-          gsap.to(q(".opening__enter"), {
+          gsap.to(q(".opening__chapter"), {
             opacity: 0,
-            y: 30,
+            y: -20,
             ease: "none",
             scrollTrigger: {
               trigger: section,
-              start: "8% top",
-              end: "24% top",
+              start: "14% top",
+              end: "34% top",
               scrub: true,
             },
           });
 
-          gsap.to(q(".opening__sound"), {
+          gsap.to(q(".opening__enter"), {
             opacity: 0,
-            y: -10,
+            y: 28,
             ease: "none",
             scrollTrigger: {
               trigger: section,
-              start: "20% top",
-              end: "38% top",
+              start: "10% top",
+              end: "25% top",
+              scrub: true,
+            },
+          });
+
+          gsap.to(q(".opening__scroll"), {
+            opacity: 0,
+            y: 18,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "6% top",
+              end: "19% top",
+              scrub: true,
+            },
+          });
+
+          gsap.to(q(".opening__ambient-label"), {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "16% top",
+              end: "32% top",
               scrub: true,
             },
           });
@@ -142,28 +188,63 @@ export default function RadmanOpening() {
     <section ref={sectionRef} className="opening">
       <div className="opening__pin">
         <div className="opening__plate" aria-hidden="true" />
-        <div className="opening__forest" aria-hidden="true" />
-        <ForestDepth />
-        <div className="opening__fog" aria-hidden="true">
-          <FogField />
+        <div className="opening__image-depth" aria-hidden="true" />
+
+        <div className="opening__atmosphere" aria-hidden="true">
+          <div className="opening__moon" />
+          <div className="opening__ray opening__ray--one" />
+          <div className="opening__ray opening__ray--two" />
+          <div className="opening__ray opening__ray--three" />
+
+          <div className="opening__dust">
+            {dust.map((particle) => (
+              <i
+                key={particle.id}
+                style={{
+                  left: particle.x + "%",
+                  top: particle.y + "%",
+                  width: particle.size,
+                  height: particle.size,
+                  animationDelay: particle.delay + "s",
+                  animationDuration: particle.duration + "s",
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="opening__light" aria-hidden="true">
-          <span />
-          <span />
-          <span />
+        <ForestDepth />
+
+        <div className="opening__fog" aria-hidden="true">
+          <div className="opening__fog-bank opening__fog-bank--one" />
+          <div className="opening__fog-bank opening__fog-bank--two" />
+          <div className="opening__fog-bank opening__fog-bank--three" />
+        </div>
+
+        <div className="opening__foreground" aria-hidden="true">
+          <span className="opening__tree opening__tree--left" />
+          <span className="opening__tree opening__tree--right" />
+          <span className="opening__branch opening__branch--left" />
+          <span className="opening__branch opening__branch--right" />
         </div>
 
         <div className="opening__veil" aria-hidden="true" />
         <div className="opening__grain" aria-hidden="true" />
+        <div className="opening__vignette" aria-hidden="true" />
 
         <div className="opening__nav opening__meta">
           <span className="opening__mark">R</span>
           <span>RADMAN</span>
           <span className="opening__nav-line" />
-          <span>MY SON · MY FOREVER</span>
+          <span className="opening__nav-caption">MY SON · MY FOREVER</span>
           <ForestSoundButton enabled={sound.enabled} onClick={enterMemory} />
           <span className="opening__menu" aria-hidden="true"><i /><i /><i /></span>
+        </div>
+
+        <div className="opening__chapter">
+          <span>MEMORY 01</span>
+          <i />
+          <span>THE FOREST</span>
         </div>
 
         <div className="opening__content">
@@ -175,11 +256,13 @@ export default function RadmanOpening() {
             <br />
             my world<span>…</span>
           </h1>
+
           <div className="opening__rule" />
+
           <p className="opening__copy">
-            You became the reason
+            Somewhere between the trees,
             <br />
-            my story never ended.
+            I still hear the sound of us walking.
             <br />
             <span>Forever, my son.</span>
           </p>
@@ -187,10 +270,16 @@ export default function RadmanOpening() {
 
         <div className="opening__enter">
           <button type="button" onClick={enterMemory} className={entered ? "is-entered" : ""}>
-            <span>{entered ? "SOUND ON" : "ENTER THE MEMORY"}</span>
+            <span>{entered ? "SOUND ON · ENTER AGAIN" : "ENTER THE MEMORY"}</span>
             <b>↓</b>
           </button>
-          <small>Use headphones for the full experience</small>
+          <small>Turn sound on, then move slowly through the forest</small>
+        </div>
+
+        <div className="opening__ambient-label" aria-hidden="true">
+          <span>THE PATH REMEMBERS</span>
+          <i />
+          <span>14 : 15</span>
         </div>
 
         <div className="opening__scroll" aria-hidden="true">
@@ -198,7 +287,7 @@ export default function RadmanOpening() {
           <i />
         </div>
 
-        <div className="opening__corner opening__corner--left">14 : 15</div>
+        <div className="opening__corner opening__corner--left">RADMAN · ALWAYS WITH ME</div>
         <div className="opening__corner opening__corner--right">ALWAYS TOGETHER</div>
         <div className="opening__counter"><span>01</span><i /><span>04</span></div>
       </div>
