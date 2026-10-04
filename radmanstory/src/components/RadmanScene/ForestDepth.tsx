@@ -1,60 +1,27 @@
 "use client";
 
 import Image from "next/image";
+import "./ForestDepth.css";
 
-type ForestDepthProps = {
-  className?: string;
-};
-
-export default function ForestDepth({
-  className = "",
-}: ForestDepthProps) {
+export default function ForestDepth() {
   return (
-    <div
-      className={`forest-depth ${className}`}
-      aria-hidden="true"
-    >
-      <div className="forest-depth__base">
+    <div className="forest-depth" aria-hidden="true">
+      <div className="forest-depth__photo">
         <Image
-          src="/memory/world/radman-main.jpg"
+          src="/memory/radman-main.JPG"
           alt=""
           fill
+          priority
           sizes="100vw"
-          className="forest-depth__image"
+          className="forest-depth__photo-image"
         />
       </div>
 
-      <div className="forest-depth__back">
-        <Image
-          src="/memory/world/radman-main.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="forest-depth__image"
-        />
-      </div>
+      <div className="forest-depth__distant" />
+      <div className="forest-depth__near" />
 
-      <div className="forest-depth__middle">
-        <Image
-          src="/memory/world/radman-main.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="forest-depth__image"
-        />
-      </div>
-
-      <div className="forest-depth__front">
-        <Image
-          src="/memory/world/radman-main.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="forest-depth__image"
-        />
-      </div>
-
-      <div className="forest-depth__shade" />
+      <div className="forest-depth__mist" />
+      <div className="forest-depth__ground" />
     </div>
   );
 }
