@@ -1,5 +1,5 @@
-import RadmanExperience from "@/components/RadmanExperience/RadmanExperience";
+import Radman2026 from "@/components/Radman2026/Radman2026";
 
 export default function Home() {
-  return <RadmanExperience />;
+  return <Radman2026 />;
 }
