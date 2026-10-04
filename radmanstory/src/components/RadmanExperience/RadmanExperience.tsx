@@ -12,61 +12,44 @@ gsap.registerPlugin(ScrollTrigger);
 const hero = "/memory/radman-and-me.png";
 
 const archive = [
-  ["radman (9).JPG", "01", "THE EARLY YEARS", "A beginning"],
-  ["radman (10).JPG", "02", "THE EARLY YEARS", "First light"],
-  ["radman (11).JPG", "03", "GROWING", "A different day"],
-  ["radman (12).JPG", "04", "GROWING", "Little details"],
-  ["radman (13).JPG", "05", "DISCOVERY", "Outside"],
-  ["radman (14).JPG", "06", "DISCOVERY", "A wider world"],
-  ["radman (15).JPG", "07", "DISCOVERY", "Between moments"],
-  ["radman (16).JPG", "08", "YEARS", "Becoming"],
-  ["radman (17).JPG", "09", "YEARS", "The everyday"],
-  ["radman (18).JPG", "10", "YEARS", "Another memory"],
-  ["radman (19).JPG", "11", "YEARS", "A quiet frame"],
-  ["radman (20).JPG", "12", "YEARS", "Still here"],
-  ["radman-01.JPG", "13", "TOGETHER", "Two silhouettes"],
-  ["radman-02.JPG", "14", "TOGETHER", "Side by side"],
-  ["radman-03.JPG", "15", "TOGETHER", "One afternoon"],
-  ["radman-1.JPG", "16", "MEMORY", "A frame that stayed"],
-  ["radman-2.JPG", "17", "MEMORY", "Unrepeatable"],
-  ["radman.JPG", "18", "MEMORY", "The face of a day"],
-  ["radman1.JPG", "19", "MEMORY", "Time, held still"],
-  ["radman2.JPG", "20", "FOREVER", "The archive continues"],
-].map(([file, number, tag, title]) => ({
-  file: "/memory/" + file,
-  number,
-  tag,
-  title,
-}));
+  ["/memories/memory-01.JPG", "01", "BEGINNING", "The first chapter"],
+  ["/memories/memory-02.JPG", "02", "BEGINNING", "A day to remember"],
+  ["/memories/memory-03.JPG", "03", "GROWING", "Little moments"],
+  ["/memory/radman-main.JPG", "04", "GROWING", "Becoming"],
+  ["/memory/radman-second.JPG", "05", "TOGETHER", "Side by side"],
+  ["/memory/radman-sit.jpeg", "06", "MEMORY", "A quiet frame"],
+  ["/memory/world/radman-forest-cinematic.jpg", "07", "THE WORLD", "Into the light"],
+  ["/memory/radman-and-me.png", "08", "FOREVER", "Us, in one frame"],
+].map(([file, number, tag, title]) => ({ file, number, tag, title }));
 
 const chapters = [
   {
     number: "01",
-    eyebrow: "ORIGIN / THE FIRST CHAPTER",
-    title: "A small beginning can change the scale of an entire life.",
-    copy: "The archive starts before memory has words. Faces, rooms, light and ordinary days become the raw material of a story that keeps unfolding.",
-    images: [archive[0], archive[1], archive[2], archive[3]],
+    eyebrow: "BEGINNING / THE FIRST CHAPTER",
+    title: "Before there were milestones, there were moments.",
+    copy: "The story opens with the ordinary photographs that later become extraordinary simply because they were lived.",
+    images: [archive[0], archive[1]],
   },
   {
     number: "02",
-    eyebrow: "GROWTH / THE WORLD OPENS",
-    title: "Then the world gets bigger — one detail at a time.",
-    copy: "A biography is not only made from milestones. It is made from gestures, expressions, places and the thousand tiny scenes that quietly become permanent.",
-    images: [archive[4], archive[5], archive[6], archive[7]],
+    eyebrow: "GROWING / THE WORLD OPENS",
+    title: "A childhood is built from a thousand small discoveries.",
+    copy: "Faces, places, gestures and tiny details become the visual language of a life as it grows.",
+    images: [archive[2], archive[3]],
   },
   {
     number: "03",
-    eyebrow: "BECOMING / YEARS IN MOTION",
-    title: "Every year leaves a different version behind.",
-    copy: "These frames are deliberately different: some intimate, some distant, some imperfect. Together they show movement rather than a single frozen portrait.",
-    images: [archive[8], archive[9], archive[10], archive[11]],
+    eyebrow: "TOGETHER / TWO PEOPLE",
+    title: "Some photographs are really about the distance between two people.",
+    copy: "The frame becomes a record of connection: where we were, how we stood, and everything that existed between us.",
+    images: [archive[4], archive[5]],
   },
   {
     number: "04",
-    eyebrow: "TOGETHER / THE HUMAN FRAME",
-    title: "Some photographs are really about the distance between two people.",
-    copy: "A shared frame carries more than an image. It carries the place, the season, the relationship and everything that cannot be reconstructed later.",
-    images: [archive[12], archive[13], archive[14], archive[15]],
+    eyebrow: "FOREVER / THE ARCHIVE",
+    title: "The photograph ends. The memory does not.",
+    copy: "The final chapter is deliberately open. New frames can be added without changing the story that came before them.",
+    images: [archive[6], archive[7]],
   },
 ];
 
@@ -96,24 +79,39 @@ export default function RadmanExperience() {
       const q = gsap.utils.selector(el);
 
       gsap.timeline({ defaults: { ease: "power4.out" } })
-        .from(q(".rx-hero__eyebrow"), { y: 28, opacity: 0, duration: 0.9, delay: 0.35 })
+        .from(q(".rx-hero__eyebrow"), { y: 28, opacity: 0, duration: 0.9, delay: 0.25 })
         .from(q(".rx-hero__title .word"), { yPercent: 120, opacity: 0, stagger: 0.08, duration: 1.15 }, "-=.45")
         .from(q(".rx-hero__lead"), { y: 25, opacity: 0, duration: 0.9 }, "-=.65")
         .from(q(".rx-hero__aside"), { x: 35, opacity: 0, duration: 0.9 }, "-=.65")
+        .from(q(".rx-hero__portrait"), { y: 40, opacity: 0, scale: 0.92, duration: 1 }, "-=.7")
         .from(q(".rx-hero__scroll"), { y: 20, opacity: 0, duration: 0.8 }, "-=.5");
 
       gsap.to(q(".rx-hero__media img"), {
-        scale: 1.18, yPercent: 7, ease: "none",
+        scale: 1.16,
+        yPercent: 7,
+        ease: "none",
         scrollTrigger: { trigger: q(".rx-hero"), start: "top top", end: "bottom top", scrub: 1.5 },
       });
 
+      gsap.to(q(".rx-hero__portrait"), {
+        yPercent: -28,
+        xPercent: 7,
+        rotate: 2,
+        ease: "none",
+        scrollTrigger: { trigger: q(".rx-hero"), start: "top top", end: "bottom top", scrub: 1.2 },
+      });
+
       gsap.to(q(".rx-hero__orb"), {
-        xPercent: 45, yPercent: 28, rotation: 80, ease: "none",
+        xPercent: 45,
+        yPercent: 28,
+        rotation: 80,
+        ease: "none",
         scrollTrigger: { trigger: q(".rx-hero"), start: "top top", end: "bottom top", scrub: 1.2 },
       });
 
       gsap.to(q(".rx-hero__title"), {
-        yPercent: -22, ease: "none",
+        yPercent: -22,
+        ease: "none",
         scrollTrigger: { trigger: q(".rx-hero"), start: "top top", end: "bottom top", scrub: 1 },
       });
 
@@ -145,7 +143,8 @@ export default function RadmanExperience() {
       });
 
       gsap.to(q(".rx-memory__rail"), {
-        xPercent: -9, ease: "none",
+        xPercent: -8,
+        ease: "none",
         scrollTrigger: { trigger: q(".rx-memory"), start: "top bottom", end: "bottom top", scrub: 1.2 },
       });
 
@@ -209,7 +208,7 @@ export default function RadmanExperience() {
 
       <header className="rx-nav">
         <a href="#top" className="rx-brand">R<span>.</span></a>
-        <div className="rx-nav__center"><span>RADMAN / VISUAL BIOGRAPHY</span><i /><span>20 FRAMES</span></div>
+        <div className="rx-nav__center"><span>RADMAN / VISUAL BIOGRAPHY</span><i /><span>8 ORIGINAL FRAMES</span></div>
         <button className="rx-sound" onClick={toggleSound}>
           {sound ? <Volume2 size={14} /> : <VolumeX size={14} />}
           <span>{sound ? "SOUND ON" : "SOUND"}</span>
@@ -224,7 +223,7 @@ export default function RadmanExperience() {
         <div className="rx-hero__grain" />
 
         <div className="rx-hero__eyebrow">
-          <span>THE LIFE OF RADMAN</span><span>ARCHIVE / 2026</span><span>20 ORIGINAL FRAMES</span>
+          <span>THE LIFE OF RADMAN</span><span>ARCHIVE / 2026</span><span>ORIGINAL PHOTOGRAPHS</span>
         </div>
 
         <div className="rx-hero__content">
@@ -232,8 +231,13 @@ export default function RadmanExperience() {
             <span className="word">A LIFE</span>
             <span className="word"><em>IN</em> FRAMES.</span>
           </div>
-          <p className="rx-hero__lead">A cinematic biography built from real photographs, moving memory and the quiet details that make a person impossible to replace.</p>
+          <p className="rx-hero__lead">A visual biography built from real photographs, moving memory and the quiet details that make a life impossible to reduce to a single portrait.</p>
         </div>
+
+        <figure className="rx-hero__portrait">
+          <img src="/memory/radman-second.JPG" alt="Radman — archive portrait" />
+          <figcaption><span>ARCHIVE / 05</span><b>ONE LIFE, MANY FRAMES</b></figcaption>
+        </figure>
 
         <div className="rx-hero__aside">
           <span>RADMAN</span>
@@ -245,15 +249,15 @@ export default function RadmanExperience() {
       </section>
 
       <section className="rx-manifesto">
-        <div className="rx-manifesto__ghost">20</div>
+        <div className="rx-manifesto__ghost">08</div>
         <div className="rx-manifesto__label rx-reveal">THE ARCHIVE / 01</div>
         <div className="rx-manifesto__copy rx-reveal">
           <h2>Not a gallery.<br /><em>A living archive.</em></h2>
-          <p>Twenty photographs are now treated as one visual language. Instead of repeating the hero, the story opens into a changing field of images, scale, depth, light and movement.</p>
+          <p>Every frame has its own place in the story. The page changes scale, rhythm and depth so the photographs never feel like a repeated grid.</p>
         </div>
         <div className="rx-manifesto__stats rx-reveal">
-          <span><b>20</b> ORIGINAL PHOTOGRAPHS</span>
-          <span><b>01</b> CONTINUOUS STORY</span>
+          <span><b>08</b> ORIGINAL FRAMES</span>
+          <span><b>04</b> STORY CHAPTERS</span>
           <span><b>∞</b> MEMORIES</span>
         </div>
       </section>
@@ -268,9 +272,9 @@ export default function RadmanExperience() {
               <div className="rx-mosaic__main"><img src={chapter.images[0].file} alt={chapter.images[0].title} /><span>{chapter.images[0].number}</span></div>
               <div className="rx-mosaic__stack">
                 <figure><img src={chapter.images[1].file} alt={chapter.images[1].title} /><span>{chapter.images[1].number}</span></figure>
-                <figure><img src={chapter.images[2].file} alt={chapter.images[2].title} /><span>{chapter.images[2].number}</span></figure>
+                <figure><img src={chapter.images[0].file} alt={chapter.images[0].title} /><span>DETAIL</span></figure>
               </div>
-              <div className="rx-mosaic__wide"><img src={chapter.images[3].file} alt={chapter.images[3].title} /><span>{chapter.images[3].number}</span></div>
+              <div className="rx-mosaic__wide"><img src={chapter.images[1].file} alt={chapter.images[1].title} /><span>{chapter.images[1].number}</span></div>
             </div>
             <div className="rx-chapter__copy">
               <span className="rx-kicker">{chapter.eyebrow}</span>
@@ -284,15 +288,15 @@ export default function RadmanExperience() {
 
       <section className="rx-memory">
         <div className="rx-memory__head">
-          <span className="rx-kicker">THE MEMORY FIELD / 20 FRAMES</span>
+          <span className="rx-kicker">THE MEMORY FIELD / 08 FRAMES</span>
           <h2>Every image has<br /><em>its own gravity.</em></h2>
-          <p>Hover. Slow down. Let the frames separate from one another.</p>
+          <p>The complete 20-photo archive can drop into this field as soon as the remaining twelve files are committed to GitHub. No image is duplicated here.</p>
         </div>
         <div className="rx-memory__rail">
           {archive.map((item, i) => (
             <figure className={"rx-memory-card rx-memory-card--" + ((i % 4) + 1)} key={item.number}>
               <div className="rx-memory-card__image">
-                <img src={item.file} alt={item.title} loading={i < 8 ? "eager" : "lazy"} />
+                <img src={item.file} alt={item.title} loading={i < 4 ? "eager" : "lazy"} />
                 <div className="rx-memory-card__shine" />
                 <span className="rx-memory-card__number">{item.number}</span>
               </div>
@@ -304,7 +308,7 @@ export default function RadmanExperience() {
 
       <section className="rx-film">
         <div className="rx-film__copy rx-reveal">
-          <span className="rx-kicker">MOVING MEMORY / 21</span>
+          <span className="rx-kicker">MOVING MEMORY / FILM</span>
           <h2>Still frames<br /><em>start breathing.</em></h2>
           <p>The photographs hold the years. The film holds the movement between them.</p>
         </div>
@@ -323,14 +327,14 @@ export default function RadmanExperience() {
         <div className="rx-ending__copy rx-reveal">
           <span className="rx-kicker">THE ARCHIVE CONTINUES</span>
           <h2>There is no<br /><em>final frame.</em></h2>
-          <p>New photographs will change the archive. The story does not need to end for the memory to stay.</p>
+          <p>New photographs can change the archive without changing what came before.</p>
           <a href="#top">RETURN TO BEGINNING <ArrowUpRight size={15} /></a>
         </div>
         <div className="rx-ending__mark">R<span>.</span></div>
       </section>
 
       <footer className="rx-footer">
-        <strong>RADMAN<span>.</span></strong><span>VISUAL BIOGRAPHY / 20 FRAMES / 2026</span><small>FOREVER, MY SON.</small>
+        <strong>RADMAN<span>.</span></strong><span>VISUAL BIOGRAPHY / 2026</span><small>FOREVER, MY SON.</small>
       </footer>
     </main>
   );
