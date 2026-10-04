@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import "./RadmanScene.css";
 
 export default function FogField() {
   const rootRef = useRef<HTMLDivElement>(null);
