@@ -8,118 +8,118 @@ type SoundState = {
   enabled: boolean;
 };
 
+function createNoiseBuffer(ctx: AudioContext, seconds: number) {
+  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i += 1) {
+    data[i] = Math.random() * 2 - 1;
+  }
+  return buffer;
+}
+
 export function useForestSound(): SoundState {
   const ctxRef = useRef<AudioContext | null>(null);
   const masterRef = useRef<GainNode | null>(null);
-  const windGainRef = useRef<GainNode | null>(null);
+  const windRef = useRef<GainNode | null>(null);
+  const startedRef = useRef(false);
   const lastStepRef = useRef(-1);
   const lastBreathRef = useRef(-1);
   const [enabled, setEnabled] = useState(false);
-  const startedRef = useRef(false);
 
-  const noise = (duration: number, frequency: number, gainValue: number, type: BiquadFilterType = "bandpass") => {
+  const burst = (
+    duration: number,
+    frequency: number,
+    volume: number,
+    filterType: BiquadFilterType = "bandpass",
+  ) => {
     const ctx = ctxRef.current;
     const master = masterRef.current;
     if (!ctx || !master) return;
-
-    const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
-    const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-
-    for (let i = 0; i < length; i += 1) {
-      const fadeIn = Math.min(i / Math.max(1, ctx.sampleRate * 0.035), 1);
-      const fadeOut = Math.min((length - i) / Math.max(1, ctx.sampleRate * 0.14), 1);
-      data[i] = (Math.random() * 2 - 1) * fadeIn * fadeOut;
-    }
 
     const source = ctx.createBufferSource();
     const filter = ctx.createBiquadFilter();
     const gain = ctx.createGain();
 
-    source.buffer = buffer;
-    filter.type = type;
+    source.buffer = createNoiseBuffer(ctx, duration);
+    filter.type = filterType;
     filter.frequency.value = frequency;
-    filter.Q.value = type === "lowpass" ? 0.35 : 0.8;
+    filter.Q.value = filterType === "lowpass" ? 0.35 : 1.1;
 
-    gain.gain.setValueAtTime(gainValue, ctx.currentTime);
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(volume, ctx.currentTime + Math.min(.03, duration * .2));
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
 
     source.connect(filter).connect(gain).connect(master);
     source.start();
-    source.stop(ctx.currentTime + duration + 0.03);
+    source.stop(ctx.currentTime + duration + .03);
   };
 
-  const footstep = (strength = 1) => {
+  const step = (strength = 1) => {
     const ctx = ctxRef.current;
     const master = masterRef.current;
     if (!ctx || !master) return;
 
-    noise(.16, 105, .22 * strength, "lowpass");
+    burst(.18, 125, .34 * strength, "lowpass");
 
-    const thump = ctx.createOscillator();
+    const impact = ctx.createOscillator();
     const gain = ctx.createGain();
-    thump.type = "sine";
-    thump.frequency.setValueAtTime(72 + Math.random() * 12, ctx.currentTime);
-    thump.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + .13);
-    gain.gain.setValueAtTime(.09 * strength, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .15);
-    thump.connect(gain).connect(master);
-    thump.start();
-    thump.stop(ctx.currentTime + .17);
+    impact.type = "sine";
+    impact.frequency.setValueAtTime(74, ctx.currentTime);
+    impact.frequency.exponentialRampToValueAtTime(36, ctx.currentTime + .18);
+    gain.gain.setValueAtTime(.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.16 * strength, ctx.currentTime + .012);
+    gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .19);
+    impact.connect(gain).connect(master);
+    impact.start();
+    impact.stop(ctx.currentTime + .21);
 
-    window.setTimeout(() => noise(.32, 2200, .045 * strength), 55);
+    window.setTimeout(() => burst(.35, 2300, .09 * strength), 45);
   };
 
   const breath = (deep = false) => {
-    noise(deep ? 1.35 : .9, 720, deep ? .09 : .055, "bandpass");
+    burst(deep ? 1.45 : 1.0, 620, deep ? .16 : .095);
   };
 
   const init = () => {
     if (typeof window === "undefined") return;
 
     if (!ctxRef.current) {
-      const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return;
+      const AudioCtor =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
 
-      const ctx = new AudioCtx();
+      if (!AudioCtor) return;
+
+      const ctx = new AudioCtor();
       const master = ctx.createGain();
-      master.gain.value = .34;
+      master.gain.value = .72;
       master.connect(ctx.destination);
 
       const windGain = ctx.createGain();
-      windGain.gain.value = .065;
+      windGain.gain.value = .18;
       windGain.connect(master);
-
-      const length = ctx.sampleRate * 4;
-      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-
-      for (let i = 0; i < length; i += 1) {
-        const slow = Math.sin(i / ctx.sampleRate * 1.7) * .45;
-        data[i] = (Math.random() * 2 - 1) * (.55 + slow * .22);
-      }
 
       const wind = ctx.createBufferSource();
       const windFilter = ctx.createBiquadFilter();
-      wind.buffer = buffer;
+      wind.buffer = createNoiseBuffer(ctx, 5);
       wind.loop = true;
       windFilter.type = "lowpass";
-      windFilter.frequency.value = 900;
-      windFilter.Q.value = .25;
+      windFilter.frequency.value = 1200;
+      windFilter.Q.value = .22;
       wind.connect(windFilter).connect(windGain);
       wind.start();
 
-      const low = ctx.createOscillator();
-      const lowGain = ctx.createGain();
-      low.type = "sine";
-      low.frequency.value = 43;
-      lowGain.gain.value = .018;
-      low.connect(lowGain).connect(master);
-      low.start();
+      const drone = ctx.createOscillator();
+      const droneGain = ctx.createGain();
+      drone.type = "sine";
+      drone.frequency.value = 48;
+      droneGain.gain.value = .035;
+      drone.connect(droneGain).connect(master);
+      drone.start();
 
       ctxRef.current = ctx;
       masterRef.current = master;
-      windGainRef.current = windGain;
+      windRef.current = windGain;
     }
 
     const ctx = ctxRef.current;
@@ -129,35 +129,33 @@ export function useForestSound(): SoundState {
       startedRef.current = true;
       setEnabled(true);
 
-      window.setTimeout(() => {
-        breath(true);
-        footstep(.7);
-      }, 260);
-
-      window.setTimeout(() => noise(.75, 3200, .025), 850);
+      window.setTimeout(() => breath(true), 180);
+      window.setTimeout(() => step(.9), 520);
+      window.setTimeout(() => burst(.7, 2800, .055), 1050);
     } else {
       setEnabled(true);
     }
   };
 
   const onTravel = (progress: number, velocity = 0) => {
-    if (!enabled || !ctxRef.current) return;
+    if (!ctxRef.current) return;
 
-    const stepCount = Math.floor(progress * 22);
-    if (stepCount > lastStepRef.current) {
-      lastStepRef.current = stepCount;
+    const stepIndex = Math.floor(progress * 18);
+    if (stepIndex > lastStepRef.current) {
+      lastStepRef.current = stepIndex;
       const speed = Math.min(Math.abs(velocity) / 900, 1);
-      footstep(.72 + speed * .28);
+      step(.85 + speed * .3);
     }
 
-    const breathCount = Math.floor(progress * 6);
-    if (breathCount > lastBreathRef.current) {
-      lastBreathRef.current = breathCount;
-      breath(breathCount % 2 === 0);
+    const breathIndex = Math.floor(progress * 5);
+    if (breathIndex > lastBreathRef.current) {
+      lastBreathRef.current = breathIndex;
+      breath(breathIndex % 2 === 0);
     }
 
-    const wind = windGainRef.current;
-    if (wind) wind.gain.value = .055 + Math.min(Math.abs(velocity) / 1800, .035);
+    if (windRef.current) {
+      windRef.current.gain.value = .13 + Math.min(Math.abs(velocity) / 2000, .08);
+    }
   };
 
   useEffect(() => {
