@@ -71,7 +71,7 @@ export default function RadmanOpening() {
             trigger: section,
             start: "top top",
             end: "bottom top",
-            pin: q(".opening__pin"),
+            pin: section.querySelector(".opening__pin") as HTMLElement,
             anticipatePin: 1,
           });
 
