@@ -33,7 +33,9 @@ const memory: Memory[] = [
   {src:"/memory/radman%20(18).JPG",no:"20",title:"Memory 18",year:"20",tag:"ARCHIVE"},
 ];
 
-const asset = (src: string) => src.startsWith("/memory/") ? `/api/memory?file=${encodeURIComponent(src.slice(1))}` : src;\n\nconst chapters = [
+const asset = (src: string) => src.startsWith("/memory/") ? `/api/memory?file=${encodeURIComponent(src.slice(1))}` : src;
+
+const chapters = [
   ["01","THE BEGINNING","A face arrives and an ordinary life becomes a story.","02"],
   ["02","THE LITTLE YEARS","The years move quickly. The archive keeps what time cannot.","06"],
   ["03","BECOMING","Twenty frames. One childhood. Hundreds of moments between them.","11"],
@@ -127,7 +129,7 @@ export default function RadmanUltimate() {
     <section className="u-archive">
       <div className="u-archive__head u-reveal"><span className="u-kicker">02 / THE COMPLETE ARCHIVE</span><h2>Twenty frames.<br/><em>Nothing repeated.</em></h2><p>هر کارت یک فایل واقعی از آرشیو است؛ بدون تکرار تصویری.</p></div>
       <div className="u-archive__grid">
-        {memory.map((m,i)=><figure className={"u-card u-card--"+(i%4)} key={m.src}><div><img src={m.src} alt={m.title} loading={i<4?"eager":"lazy"}/><span>{m.no}</span></div><figcaption><small>{m.tag}</small><b>{m.title}</b><em>{m.year}</em></figcaption></figure>)}
+        {memory.map((m,i)=><figure className={"u-card u-card--"+(i%4)} key={m.src}><div><img src={asset(m.src)} alt={m.title} loading={i<4?"eager":"lazy"}/><span>{m.no}</span></div><figcaption><small>{m.tag}</small><b>{m.title}</b><em>{m.year}</em></figcaption></figure>)}
       </div>
     </section>
 
