@@ -70,7 +70,7 @@ export default function RadmanUltimate() {
   },[]);
 
   const toggle=()=>{
-    if(!audio.current){audio.current=new Audio("/memory/memory-audio.mp3");audio.current.loop=true;audio.current.volume=.22;}
+    if(!audio.current){audio.current=new Audio(asset("/memory/memory-audio.mp3"));audio.current.loop=true;audio.current.volume=.22;}
     if(sound){audio.current.pause();setSound(false);}else{audio.current.play().catch(()=>{});setSound(true);}
   };
 
@@ -134,7 +134,7 @@ export default function RadmanUltimate() {
     <section className="u-film">
       <div className="u-film__copy u-reveal"><span className="u-kicker">03 / MOVING MEMORY</span><h2>Photos hold time.<br/><em>Film holds breath.</em></h2><p>در این بخش تصویر از آرشیو جدا می‌شود و وارد حرکت می‌شود؛ ویدئو و صدای خاطره، بخشی از روایت هستند.</p></div>
       <div className="u-film__media u-reveal"><img src={asset("/memory/radman-sit.jpeg")} alt="Radman seated from behind"/><span>QUIET FRAME / RADMAN</span></div>
-      <div className="u-video u-reveal"><video src="/memory/memory-video.mp4" controls playsInline preload="metadata"/><small>ORIGINAL HOME MOVIE / PLAY</small></div>
+      <div className="u-video u-reveal"><video src={asset("/memory/memory-video.mp4")} controls playsInline preload="metadata"/><small>ORIGINAL HOME MOVIE / PLAY</small></div>
     </section>
 
     <section className="u-finale">
