@@ -15,6 +15,8 @@ export default function RadmanOpening() {
   const sectionRef = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
   const sound = useForestSound();
+  const soundRef = useRef(sound);
+  soundRef.current = sound;
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -61,7 +63,7 @@ export default function RadmanOpening() {
             end: "bottom top",
             pin: section.querySelector(".opening__pin") as HTMLElement,
             anticipatePin: 1,
-            onUpdate: (self) => sound.onTravel(self.progress),
+            onUpdate: (self) => soundRef.current.onTravel(self.progress),
           });
 
           gsap.to(q(".opening__plate"), {
@@ -129,7 +131,7 @@ export default function RadmanOpening() {
     }, section);
 
     return () => ctx.revert();
-  }, [sound]);
+  }, []);
 
   const enterMemory = () => {
     sound.init();
