@@ -97,6 +97,9 @@ export default function CinematicStory() {
       </section>
 
       <section className="bio-hero" id="story">
+        <div className="bio-hero__orbs"><i/><i/><i/></div>
+        <div className="bio-hero__grid"/>
+        <div className="bio-hero__cursor">SCROLL<br/>TO ENTER</div>
         <div className="bio-hero__media"><img src="/memory/radman-and-me.png" alt="Radman and his father" /></div>
         <div className="bio-hero__veil" />
         <div className="bio-hero__title" data-reveal>
@@ -108,6 +111,8 @@ export default function CinematicStory() {
       </section>
 
       <section className="bio-intro">
+        <div className="bio-intro__orb"/>
+
         <div className="bio-intro__num">01</div>
         <div className="bio-intro__text" data-reveal>
           <span className="micro">THE IDEA</span>
@@ -129,6 +134,8 @@ export default function CinematicStory() {
       </section>
 
       <section className="bio-film" id="film">
+        <div className="bio-film__halo"/>
+
         <div className="bio-film__copy" data-reveal>
           <span className="micro">MOVING MEMORY</span>
           <h2>Some memories<br/><i>need motion.</i></h2>
@@ -150,6 +157,8 @@ export default function CinematicStory() {
       </section>
 
       <section className="bio-future">
+        <div className="bio-future__aurora"/>
+
         <span className="bio-future__ghost">06</span>
         <div data-reveal>
           <span className="micro">TO BE CONTINUED</span>
