@@ -268,12 +268,8 @@ export default function RadmanExperience() {
             <div className="rx-chapter__top">
               <span>{chapter.number}</span><small>{chapter.eyebrow}</small><i>{String(chapterIndex + 1).padStart(2, "0")} / 04</i>
             </div>
-            <div className="rx-chapter__mosaic">
+            <div className="rx-chapter__mosaic rx-chapter__mosaic--pair">
               <div className="rx-mosaic__main"><img src={chapter.images[0].file} alt={chapter.images[0].title} /><span>{chapter.images[0].number}</span></div>
-              <div className="rx-mosaic__stack">
-                <figure><img src={chapter.images[1].file} alt={chapter.images[1].title} /><span>{chapter.images[1].number}</span></figure>
-                <figure><img src={chapter.images[0].file} alt={chapter.images[0].title} /><span>DETAIL</span></figure>
-              </div>
               <div className="rx-mosaic__wide"><img src={chapter.images[1].file} alt={chapter.images[1].title} /><span>{chapter.images[1].number}</span></div>
             </div>
             <div className="rx-chapter__copy">
