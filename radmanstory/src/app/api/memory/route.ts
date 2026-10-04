@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 const mime: Record<string,string> = {
-  ".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif"
+  ".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif",".mp4":"video/mp4",".mp3":"audio/mpeg"
 };
 
 export async function GET(request: NextRequest) {
