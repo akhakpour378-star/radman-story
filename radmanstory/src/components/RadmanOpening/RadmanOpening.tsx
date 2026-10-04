@@ -1,12 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "./RadmanOpening.css";
-
 import ForestDepth from "../RadmanScene/ForestDepth";
 import FogField from "../RadmanScene/FogField";
 import RadmanPresence from "../RadmanScene/RadmanPresence";
@@ -14,312 +12,171 @@ import RadmanPresence from "../RadmanScene/RadmanPresence";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function RadmanOpening() {
-    const sectionRef = useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-    useLayoutEffect(() => {
-        const section = sectionRef.current;
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
 
-        if (!section) return;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
 
-        const ctx = gsap.context(() => {
-            const intro = gsap.timeline({
-                defaults: {
-                    ease: "power3.out",
-                },
+      mm.add(
+        {
+          desktop: "(min-width: 901px)",
+          mobile: "(max-width: 900px)",
+          reduce: "(prefers-reduced-motion: reduce)",
+        },
+        (context) => {
+          const { desktop, reduce } = context.conditions as {
+            desktop: boolean;
+            mobile: boolean;
+            reduce: boolean;
+          };
+
+          const q = gsap.utils.selector(section);
+
+          if (reduce) {
+            gsap.set(q(".opening__veil, .opening__content, .opening__meta"), {
+              opacity: 1,
+              clearProps: "transform",
             });
+            return;
+          }
 
-            intro
-                .set(".cinematic__black", {
-                    opacity: 1,
-                })
-                .to(".cinematic__black", {
-                    opacity: 0,
-                    duration: 2.4,
-                    ease: "power2.inOut",
-                })
-                .fromTo(
-                    ".cinematic__world",
-                    {
-                        opacity: 0,
-                        scale: 1.045,
-                    },
-                    {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 3.2,
-                        ease: "power2.out",
-                    },
-                    "-=1.8",
-                )
-                .fromTo(
-                    ".cinematic__radman",
-                    {
-                        opacity: 0,
-                        y: 30,
-                    },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 2.2,
-                    },
-                    "-=2",
-                )
-                .fromTo(
-                    ".cinematic__title",
-                    {
-                        opacity: 0,
-                        y: 35,
-                    },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1.5,
-                    },
-                    "-=1.2",
-                )
-                .fromTo(
-                    ".cinematic__navigation",
-                    {
-                        opacity: 0,
-                    },
-                    {
-                        opacity: 1,
-                        duration: 1,
-                    },
-                    "-=0.7",
-                );
+          const intro = gsap.timeline({
+            defaults: { ease: "power3.out" },
+          });
 
-            /*
-             * IMPORTANT:
-             *
-             * We pin the INNER FRAME,
-             * not the element that receives transforms.
-             */
+          intro
+            .fromTo(
+              q(".opening__veil"),
+              { opacity: 1 },
+              { opacity: 0.5, duration: 2.2, ease: "power2.inOut" },
+            )
+            .fromTo(
+              q(".opening__content"),
+              { opacity: 0, y: 42 },
+              { opacity: 1, y: 0, duration: 1.4 },
+              "-=1.4",
+            )
+            .fromTo(
+              q(".opening__meta"),
+              { opacity: 0, y: 18 },
+              { opacity: 1, y: 0, duration: 0.9 },
+              "-=0.8",
+            );
 
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top top",
-                end: "bottom top",
-                pin: ".cinematic__frame",
-                scrub: 1.1,
-                anticipatePin: 1,
-            });
+          const travel = {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: desktop ? 1.15 : 0.8,
+          };
 
-            gsap.to(".forest-depth__back", {
-                xPercent: -2,
-                yPercent: -2,
-                scale: 1.08,
+          gsap.to(q(".forest-depth__distant"), {
+            yPercent: -2,
+            scale: 1.04,
+            ease: "none",
+            scrollTrigger: travel,
+          });
 
-                ease: "none",
+          gsap.to(q(".forest-depth__near"), {
+            yPercent: -7,
+            xPercent: desktop ? 2 : 0,
+            scale: 1.1,
+            ease: "none",
+            scrollTrigger: { ...travel, scrub: desktop ? 0.9 : 0.7 },
+          });
 
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.8,
-                },
-            });
+          gsap.to(q(".radman-presence"), {
+            yPercent: -8,
+            scale: 1.045,
+            ease: "none",
+            scrollTrigger: { ...travel, scrub: 1.25 },
+          });
 
-            gsap.to(".forest-depth__middle", {
-                xPercent: -5,
-                yPercent: -4,
-                scale: 1.12,
+          gsap.to(q(".fog-field"), {
+            xPercent: 7,
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: { ...travel, scrub: 1.8 },
+          });
 
-                ease: "none",
+          gsap.to(q(".opening__content"), {
+            yPercent: -34,
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "12% top",
+              end: "58% top",
+              scrub: 1,
+            },
+          });
 
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.35,
-                },
-            });
+          gsap.to(q(".opening__scroll"), {
+            opacity: 0,
+            y: 20,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "18% top",
+              scrub: true,
+            },
+          });
+        },
+      );
 
-            gsap.to(".forest-depth__front", {
-                xPercent: -9,
-                yPercent: -7,
-                scale: 1.17,
+      return () => mm.revert();
+    }, section);
 
-                ease: "none",
+    return () => ctx.revert();
+  }, []);
 
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 0.9,
-                },
-            });
+  return (
+    <section ref={sectionRef} className="opening">
+      <div className="opening__pin">
+        <ForestDepth />
+        <FogField />
+        <div className="opening__light" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
 
-            gsap.to(".radman-presence", {
-                yPercent: -7,
-                scale: 1.07,
+        <RadmanPresence />
 
-                ease: "none",
+        <div className="opening__veil" aria-hidden="true" />
+        <div className="opening__grain" aria-hidden="true" />
 
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.2,
-                },
-            });
+        <div className="opening__nav opening__meta">
+          <span className="opening__mark">R</span>
+          <span>RADMAN</span>
+          <span className="opening__nav-line" />
+          <span>01 — 04</span>
+        </div>
 
-            gsap.to(".fog-field", {
-                yPercent: -10,
-                xPercent: 5,
+        <div className="opening__content">
+          <p className="opening__eyebrow">A memory that remains</p>
+          <h1>Radman</h1>
+          <div className="opening__rule" />
+          <p className="opening__copy">
+            Some moments pass through time.
+            <br />
+            Some moments become time.
+          </p>
+        </div>
 
-                ease: "none",
+        <div className="opening__scroll" aria-hidden="true">
+          <span>SCROLL TO REMEMBER</span>
+          <i />
+        </div>
 
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 2,
-                },
-            });
-
-            gsap.to(".cinematic__background", {
-                scale: 1.12,
-                yPercent: 5,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.2,
-                },
-            });
-
-            gsap.to(".cinematic__forest-back", {
-                xPercent: -2,
-                yPercent: -3,
-                scale: 1.06,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.4,
-                },
-            });
-
-            gsap.to(".cinematic__forest-front", {
-                xPercent: 3,
-                yPercent: -7,
-                scale: 1.12,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.1,
-                },
-            });
-
-            gsap.to(".cinematic__fog", {
-                xPercent: 8,
-                yPercent: -4,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.8,
-                },
-            });
-
-            gsap.to(".cinematic__radman", {
-                scale: 1.08,
-                yPercent: -5,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1.3,
-                },
-            });
-
-            gsap.to(".cinematic__title", {
-                yPercent: -45,
-                opacity: 0,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "55% top",
-                    scrub: 1,
-                },
-            });
-
-            gsap.to(".cinematic__navigation", {
-                opacity: 0,
-                y: -20,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "15% top",
-                    end: "42% top",
-                    scrub: true,
-                },
-            });
-
-            gsap.to(".cinematic__exit", {
-                opacity: 1,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "55% top",
-                    end: "80% top",
-                    scrub: true,
-                },
-            });
-        }, section);
-
-        return () => {
-            ctx.revert();
-        };
-    }, []);
-
-    return (
-        <section
-            ref={sectionRef}
-            className="cinematic"
-        >
-            <div className="cinematic__frame">
-
-                <div className="cinematic__black" />
-
-                <div className="cinematic__world">
-
-                    <ForestDepth />
-
-                    <FogField />
-
-                    <div className="cinematic__light">
-                        <span />
-                        <span />
-                        <span />
-                    </div>
-
-                    <div className="cinematic__particles">
-                        {Array.from({ length: 24 }).map((_, index) => (
-                            <i key={index} />
-                        ))}
-                    </div>
-
-                    <RadmanPresence />
-
-                    <div className="cinematic__foreground-fog" />
-
-                    <div className="cinematic__title">
-                        ...
-                    </div>
-
-                    ...
-                </div>
-
-            </div>
-        </section>
-    );
+        <div className="opening__corner opening__corner--left">14 : 15</div>
+        <div className="opening__corner opening__corner--right">FOREVER</div>
+      </div>
+    </section>
+  );
 }
