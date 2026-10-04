@@ -1,61 +1,53 @@
 .forest-depth {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 6;
   overflow: hidden;
   pointer-events: none;
 }
 
-.forest-depth__distant,
-.forest-depth__near {
-  position: absolute;
-  inset: -12%;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.forest-depth__distant {
-  opacity: .78;
-  background:
-    radial-gradient(ellipse at 18% 42%, transparent 0 7%, rgba(2,7,4,.52) 9% 12%, transparent 13%),
-    radial-gradient(ellipse at 82% 38%, transparent 0 6%, rgba(2,7,4,.48) 8% 12%, transparent 13%);
-}
-
-.forest-depth__near {
-  opacity: .92;
-  background:
-    linear-gradient(90deg, rgba(0,4,2,.86), transparent 18%, transparent 80%, rgba(0,4,2,.9)),
-    linear-gradient(to bottom, transparent 38%, rgba(0,4,2,.16) 60%, rgba(0,2,1,.9) 100%);
-}
-
-.forest-depth__near::before,
-.forest-depth__near::after {
-  content: "";
-  position: absolute;
-  bottom: -8%;
-  width: 24vw;
-  height: 78%;
-  background: linear-gradient(90deg, rgba(0,2,1,.82), rgba(0,3,2,.18), transparent);
-}
-
-.forest-depth__near::before { left: -5%; transform: skewX(-7deg); }
-.forest-depth__near::after { right: -5%; transform: scaleX(-1) skewX(-7deg); }
-
+.forest-depth__far,
+.forest-depth__mid,
+.forest-depth__path,
 .forest-depth__mist {
   position: absolute;
-  inset: 35% -15% -5%;
-  z-index: 7;
-  background:
-    radial-gradient(ellipse at 25% 55%, rgba(191,203,190,.13), transparent 40%),
-    radial-gradient(ellipse at 74% 45%, rgba(191,203,190,.1), transparent 42%);
-  filter: blur(28px);
+  inset: 0;
+  pointer-events: none;
 }
 
-.forest-depth__ground {
-  position: absolute;
-  inset: 0;
-  z-index: 8;
+.forest-depth__far {
   background:
-    linear-gradient(to bottom, transparent 48%, rgba(2,5,3,.2) 67%, rgba(1,2,2,.94) 100%),
-    radial-gradient(circle at 50% 54%, transparent 0 18%, rgba(0,0,0,.32) 78%);
+    linear-gradient(to bottom, rgba(1,7,4,.05), rgba(1,5,3,.18) 60%, rgba(0,2,1,.48)),
+    radial-gradient(ellipse at 50% 52%, transparent 0 23%, rgba(0,4,2,.2) 55%, rgba(0,2,1,.55) 100%);
+  opacity: .55;
+}
+
+.forest-depth__mid {
+  inset: -5%;
+  opacity: .36;
+  background:
+    linear-gradient(90deg, rgba(0,4,2,.58), transparent 20%, transparent 80%, rgba(0,4,2,.62)),
+    linear-gradient(to bottom, transparent 45%, rgba(0,3,2,.08) 62%, rgba(0,2,1,.46) 100%);
+}
+
+.forest-depth__path {
+  z-index: 3;
+  left: 24%;
+  right: 24%;
+  top: 51%;
+  bottom: -8%;
+  background: radial-gradient(ellipse at 50% 20%, rgba(185,173,137,.08), rgba(76,74,62,.035) 42%, transparent 70%);
+  filter: blur(15px);
+  opacity: .72;
+}
+
+.forest-depth__mist {
+  z-index: 4;
+  top: 45%;
+  bottom: 2%;
+  background:
+    radial-gradient(ellipse at 30% 45%, rgba(198,207,193,.045), transparent 42%),
+    radial-gradient(ellipse at 72% 54%, rgba(198,207,193,.035), transparent 44%);
+  filter: blur(24px);
+  opacity: .55;
 }
