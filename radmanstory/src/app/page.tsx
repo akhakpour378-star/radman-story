@@ -1,5 +1,3 @@
-import CinematicStory from "@/components/CinematicStory/CinematicStory";
+import RadmanExperience from "@/components/RadmanExperience/RadmanExperience";
 
-export default function Home() {
-  return <CinematicStory />;
-}
+export default function Home(){ return <RadmanExperience />; }
