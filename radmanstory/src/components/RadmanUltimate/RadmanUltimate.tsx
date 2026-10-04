@@ -33,7 +33,7 @@ const memory: Memory[] = [
   {src:"/memory/radman%20(18).JPG",no:"20",title:"Memory 18",year:"20",tag:"ARCHIVE"},
 ];
 
-const chapters = [
+const asset = (src: string) => src.startsWith("/memory/") ? `/api/memory?file=${encodeURIComponent(src.slice(1))}` : src;\n\nconst chapters = [
   ["01","THE BEGINNING","A face arrives and an ordinary life becomes a story.","02"],
   ["02","THE LITTLE YEARS","The years move quickly. The archive keeps what time cannot.","06"],
   ["03","BECOMING","Twenty frames. One childhood. Hundreds of moments between them.","11"],
@@ -83,7 +83,7 @@ export default function RadmanUltimate() {
     </nav>
 
     <section id="top" className="u-hero">
-      <div className="u-hero__photo"><img src={memory[0].src} alt="Radman and his father"/></div>
+      <div className="u-hero__photo"><img src={asset(memory[0].src)} alt="Radman and his father"/></div>
       <div className="u-hero__wash"/>
       <div className="u-orb"/>
       <div className="u-grain"/>
@@ -110,7 +110,7 @@ export default function RadmanUltimate() {
       {chapters.map(([num,title,copy,frame],i)=>{const m=memory[Number(frame)-1]??memory[i];return <article className="u-chapter" key={num}>
         <div className="u-chapter__top"><b>{num}</b><span>{m.tag}</span><small>{String(i+1).padStart(2,"0")} / 04</small></div>
         <div className="u-chapter__layout">
-          <div className="u-chapter__image"><img src={m.src} alt={m.title}/><span>{m.no}</span></div>
+          <div className="u-chapter__image"><img src={asset(m.src)} alt={m.title}/><span>{m.no}</span></div>
           <div className="u-chapter__copy u-reveal"><p className="u-kicker">{m.tag} / {m.year}</p><h2>{title}</h2><p>{copy}</p><div className="u-rule"/></div>
         </div>
       </article>})}
@@ -133,7 +133,7 @@ export default function RadmanUltimate() {
 
     <section className="u-film">
       <div className="u-film__copy u-reveal"><span className="u-kicker">03 / MOVING MEMORY</span><h2>Photos hold time.<br/><em>Film holds breath.</em></h2><p>در این بخش تصویر از آرشیو جدا می‌شود و وارد حرکت می‌شود؛ ویدئو و صدای خاطره، بخشی از روایت هستند.</p></div>
-      <div className="u-film__media u-reveal"><img src="/memory/radman-sit.jpeg" alt="Radman seated from behind"/><span>QUIET FRAME / RADMAN</span></div>
+      <div className="u-film__media u-reveal"><img src={asset("/memory/radman-sit.jpeg")} alt="Radman seated from behind"/><span>QUIET FRAME / RADMAN</span></div>
       <div className="u-video u-reveal"><video src="/memory/memory-video.mp4" controls playsInline preload="metadata"/><small>ORIGINAL HOME MOVIE / PLAY</small></div>
     </section>
 
