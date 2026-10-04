@@ -43,7 +43,7 @@ const chapters = [
 ];
 
 export default function RadmanUltimate() {
-  const root=useRef<main>(null);
+  const root=useRef<HTMLElement>(null);
   const audio=useRef<HTMLAudioElement|null>(null);
   const [sound,setSound]=useState(false);
 
