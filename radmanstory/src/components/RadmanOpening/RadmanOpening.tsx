@@ -17,7 +17,7 @@ const dust = Array.from({ length: 28 }, (_, i) => ({
 export default function RadmanOpening() {
   const sectionRef = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
-  const [heroSrc, setHeroSrc] = useState("/memory/world/radman-forest-cinematic.jpg");
+  const [heroSrc, setHeroSrc] = useState("/memory/radman-and-me.png");
   const sound = useForestSound();
   const soundRef = useRef(sound);
   soundRef.current = sound;
@@ -90,7 +90,7 @@ export default function RadmanOpening() {
     <section ref={sectionRef} className="opening">
       <div className="opening__pin">
         <div className="opening__photo" aria-hidden="true">
-          <img src={heroSrc} alt="" draggable={false} fetchPriority="high" onError={() => setHeroSrc("/memory/radman-main.JPG")} />
+          <img src={heroSrc} alt="" draggable={false} fetchPriority="high" onError={() => setHeroSrc("/memory/radman-and-me.png")} />
         </div>
 
         <div className="opening__color" aria-hidden="true" />
