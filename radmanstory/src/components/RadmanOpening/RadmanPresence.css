@@ -1,111 +1,65 @@
-.opening__radman {
-  position: absolute;
-  inset: 0;
-
-  z-index: 18;
-
-  pointer-events: none;
-}
-
 .radman-presence {
   position: absolute;
-
-  left: 50%;
-  bottom: -2%;
-
-  width: min(42vw, 680px);
-  height: min(78vh, 820px);
-
-  transform:
-    translateX(-50%);
-
-  will-change:
-    transform,
-    opacity;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
 }
 
 .radman-presence__halo {
   position: absolute;
-
   left: 50%;
-  top: 34%;
-
-  width: 60%;
-  height: 50%;
-
+  top: 40%;
+  width: min(48vw, 720px);
+  height: min(48vw, 720px);
   transform: translate(-50%, -50%);
-
   border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(194, 185, 143, 0.14),
-      transparent 68%
-    );
-
+  background: radial-gradient(circle, rgba(203, 191, 151, 0.12), transparent 66%);
   filter: blur(30px);
 }
 
-.radman-presence__figure {
+.radman-presence__body {
   position: absolute;
-  inset: 0;
-
-  overflow: hidden;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.92) 17%,
-      black 42%,
-      black 76%,
-      transparent 100%
-    );
-
-  -webkit-mask-image:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.92) 17%,
-      black 42%,
-      black 76%,
-      transparent 100%
-    );
+  left: 50%;
+  bottom: -9%;
+  width: min(52vw, 760px);
+  height: 92vh;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55));
 }
 
 .radman-presence__image {
   object-fit: contain;
   object-position: center bottom;
-
-  filter:
-    brightness(0.48)
-    contrast(1.18)
-    saturate(0.4);
-
-  opacity: 0.82;
-
-  mix-blend-mode: screen;
+  filter: brightness(0.7) contrast(1.12) saturate(0.58);
+  opacity: 0.9;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 74%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 74%, transparent 100%);
 }
 
-.radman-presence__mist {
+.radman-presence__ground {
   position: absolute;
-  inset: 35% -20% 0;
-
-  background:
-    linear-gradient(
-      to top,
-      rgba(170, 181, 164, 0.16),
-      transparent
-    );
-
-  filter: blur(20px);
+  left: 50%;
+  bottom: -8%;
+  width: min(62vw, 900px);
+  height: 28%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.72), transparent 70%);
+  filter: blur(18px);
 }
 
 @media (max-width: 900px) {
-  .radman-presence {
-    width: 74vw;
-    height: 68vh;
-    bottom: 1%;
+  .radman-presence__body {
+    width: 92vw;
+    height: 76vh;
+    bottom: -3%;
+  }
+
+  .radman-presence__halo {
+    width: 92vw;
+    height: 92vw;
+    top: 44%;
   }
 }
