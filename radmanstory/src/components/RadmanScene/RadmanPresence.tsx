@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import "./../RadmanOpening/RadmanPresence.css";
 
 export default function RadmanPresence() {
   return (
