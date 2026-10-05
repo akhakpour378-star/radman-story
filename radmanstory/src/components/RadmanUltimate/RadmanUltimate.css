@@ -244,3 +244,22 @@
 .u-nav{background:linear-gradient(180deg,#03050bb8 0%,#05081282 48%,#05081224 78%,transparent 100%)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;box-shadow:0 10px 35px #0003!important;border:0!important;border-bottom:0!important}
 .u-nav:before,.u-nav:after{display:none!important;content:none!important;border:0!important}
 .u-nav *{border-bottom-color:transparent!important}
+
+/* TATTOO-INSPIRED BIRTH ARCHIVE — left hero composition */
+.u-hero__tattooData{position:absolute;left:5vw;top:50%;transform:translateY(-42%);z-index:24;color:#f2f1ec;pointer-events:none;max-width:390px}
+.u-tattooData__eyebrow{font:500 8px/1 "DM Sans",sans-serif;letter-spacing:.34em;color:#c8c9c5;margin-bottom:18px;opacity:.72}
+.u-tattooData__date{font:500 clamp(48px,6.2vw,92px)/.82 "Cormorant Garamond","Playfair Display",serif;letter-spacing:-.055em;white-space:nowrap;text-shadow:0 5px 35px #0008}
+.u-tattooData__line{display:flex;align-items:center;gap:11px;margin-top:22px;font:500 8px/1 "DM Sans",sans-serif;letter-spacing:.18em;color:#e7e8e5}
+.u-tattooData__line i{width:3px;height:3px;border-radius:50%;background:#9ce7ef;box-shadow:0 0 8px #9ce7ef88}
+.u-tattooData__place{margin-top:14px;font:400 7px/1.5 "DM Sans",sans-serif;letter-spacing:.25em;color:#b9bbb8}
+.u-tattooData__pulse{position:relative;margin-top:27px;width:285px;height:28px;opacity:.72}
+.u-tattooData__pulse:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#ffffff20}
+.u-tattooData__pulse span{position:absolute;left:0;top:50%;width:285px;height:18px;transform:translateY(-50%);background:linear-gradient(90deg,transparent 0 14%,#9ce7ef 14% 14.5%,transparent 14.5% 29%,#9ce7ef 29% 30%,transparent 30% 37%,#9ce7ef 37% 38%,transparent 38% 47%,#9ce7ef 47% 48%,transparent 48% 61%,#9ce7ef 61% 61.5%,transparent 61.5% 100%);clip-path:polygon(0 50%,14% 50%,18% 50%,20% 12%,22% 88%,24% 50%,29% 50%,32% 35%,34% 65%,37% 50%,44% 50%,47% 8%,50% 92%,53% 50%,61% 50%,64% 28%,66% 72%,69% 50%,100% 50%)}
+.u-hero__photoShade{background:linear-gradient(90deg,#030507cc 0%,#03050755 24%,transparent 48%,#03050722 100%)!important}
+@media(max-width:850px){
+ .u-hero__tattooData{left:6vw;top:auto;bottom:18%;transform:none;max-width:82vw}
+ .u-tattooData__date{font-size:48px}
+ .u-tattooData__line{gap:8px;font-size:6.5px}
+ .u-tattooData__pulse{width:220px}
+ .u-tattooData__pulse span{width:220px}
+}
