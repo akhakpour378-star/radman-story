@@ -1,1 +1,10 @@
-*{box-sizing:border-box}html{scroll-behavior:smooth}html,body{margin:0;padding:0;background:#02050b}body{min-height:100vh}button,input,textarea,select{font:inherit}::selection{background:#718cff;color:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#02050b}
+html,body{margin:0;padding:0;background:#02050b;color:#f3f4f1}
+body{min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input,textarea,select{font:inherit}
+button{appearance:none}
+img,video{max-width:100%}
+::selection{background:#718cff;color:#fff}
+:focus-visible{outline:1px solid #72dfff;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
