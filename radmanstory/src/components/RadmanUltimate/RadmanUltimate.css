@@ -494,3 +494,6 @@
  .u-hero:before{background-size:62px 62px;opacity:.12}
  .u-hero:after{opacity:.14}
 }
+
+.u-hero__particles{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:none!important;display:block!important}
+.u-hero > .u-hero__frame,.u-hero > .u-hero__panel,.u-hero > .u-hero__tattooArt,.u-hero > .u-orb,.u-hero > .u-grain,.u-hero > .u-scroll{z-index:2!important}
