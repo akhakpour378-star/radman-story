@@ -73,49 +73,54 @@ export default function RadmanUltimate() {
     let raf = 0;
     let w = 0, h = 0, dpr = 1;
     let particles: Array<{x:number;y:number;vx:number;vy:number;size:number;alpha:number}> = [];
-    const pointer = {x:-9999,y:-9999,active:false};
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const resize = () => {
       const r = hero.getBoundingClientRect();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = r.width; h = r.height;
-      canvas.width = w*dpr; canvas.height = h*dpr;
-      canvas.style.width = w+"px"; canvas.style.height = h+"px";
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-      const count = Math.min(420, Math.max(180, Math.floor((w*h)/5200)));
-      particles = Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.16,vy:(Math.random()-.5)*.16,size:Math.random()<.82?1:1.6,alpha:.18+Math.random()*.42}));
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + "px"; canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(420, Math.max(180, Math.floor((w * h) / 5200)));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.055,
+        vy: (Math.random() - 0.5) * 0.045,
+        size: Math.random() < 0.84 ? 0.8 : 1.35,
+        alpha: 0.16 + Math.random() * 0.34,
+      }));
     };
-    const move = (e: MouseEvent) => { const r=hero.getBoundingClientRect(); pointer.x=e.clientX-r.left; pointer.y=e.clientY-r.top; pointer.active=true; };
-    const leave = () => { pointer.active=false; };
+
     const frame = () => {
-      ctx.clearRect(0,0,w,h);
+      ctx.clearRect(0, 0, w, h);
       for (const p of particles) {
         if (!reduce.matches) {
-          p.x += p.vx; p.y += p.vy;
-          if (p.x < -10) p.x=w+10; if (p.x>w+10) p.x=-10;
-          if (p.y < -10) p.y=h+10; if (p.y>h+10) p.y=-10;
-          if (pointer.active) {
-            const dx=p.x-pointer.x, dy=p.y-pointer.y, dist=Math.hypot(dx,dy)||1;
-            if(dist<150){ const force=(1-dist/150)*0.18; p.vx += dx/dist*force; p.vy += dy/dist*force; }
-          }
-          p.vx*=.985; p.vy*=.985;
-          const speed=Math.hypot(p.vx,p.vy);
-          if(speed<.12){p.vx += (Math.random()-.5)*.006; p.vy += (Math.random()-.5)*.006;}
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -8) p.x = w + 8;
+          if (p.x > w + 8) p.x = -8;
+          if (p.y < -8) p.y = h + 8;
+          if (p.y > h + 8) p.y = -8;
         }
-        ctx.globalAlpha=p.alpha;
-        ctx.fillStyle="rgba(220,235,233,1)";
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = "rgba(220,235,233,1)";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
       }
-      ctx.globalAlpha=1;
-      raf=requestAnimationFrame(frame);
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(frame);
     };
+
     resize();
-    window.addEventListener("resize",resize);
-    hero.addEventListener("mousemove",move);
-    hero.addEventListener("mouseleave",leave);
+    window.addEventListener("resize", resize);
     frame();
-    return()=>{cancelAnimationFrame(raf);window.removeEventListener("resize",resize);hero.removeEventListener("mousemove",move);hero.removeEventListener("mouseleave",leave)};
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
   useEffect(() => {
@@ -356,14 +361,13 @@ export default function RadmanUltimate() {
               <em>Tehran · Iran</em>
             </div>
           </div>
-          <a className="u-hero__cta" href="#story">
-            <span>ENTER THE STORY</span>
-            <ArrowDown size={13} />
-          </a>
         </div>
+        <a className="u-hero__cta" href="#story" aria-label="Enter Radman's story">
+          <span>ENTER THE STORY</span>
+          <ArrowDown size={13} />
+        </a>
         <div className="u-orb" />
         <div className="u-grain" />
-        <div className="u-scroll"><span>01</span><i /></div>
       </section>
 
       <section id="story" className="u-manifesto">
