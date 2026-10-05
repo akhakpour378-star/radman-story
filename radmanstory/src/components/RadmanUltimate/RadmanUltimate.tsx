@@ -99,8 +99,8 @@ export default function RadmanUltimate() {
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 6,
+        vx: (Math.random() - 0.5) * 18,
+        vy: (Math.random() - 0.5) * 14,
         size: Math.random() < 0.86 ? 0.8 : 1.45,
         alpha: 0.14 + Math.random() * 0.34,
         phase: Math.random() * Math.PI * 2,
@@ -118,8 +118,8 @@ export default function RadmanUltimate() {
         p.phase += dt * 0.22;
 
         // Slow autonomous floating motion — deliberately visible, never mouse-dependent.
-        p.x += (p.vx + Math.cos(p.phase) * 1.15) * dt;
-        p.y += (p.vy + Math.sin(p.phase * 0.82) * 0.9) * dt;
+        p.x += (p.vx + Math.cos(p.phase) * 2.4) * dt;
+        p.y += (p.vy + Math.sin(p.phase * 0.82) * 1.9) * dt;
 
         if (p.x < -12) p.x = width + 12;
         if (p.x > width + 12) p.x = -12;
