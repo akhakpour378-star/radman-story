@@ -247,10 +247,14 @@ export default function RadmanUltimate() {
       <div className="u-progress"><i /></div>
 
       <nav className="u-nav">
-        <a href="#top" className="u-logo">R<span>.</span></a>
-        <div className="u-nav__center"><span>RADMAN</span><i /><span>VISUAL BIOGRAPHY</span></div>
-        <button onClick={toggleSound} aria-label="Toggle ambient sound">
-          {sound ? <Volume2 size={14} /> : <VolumeX size={14} />} {sound ? "SOUND ON" : "SOUND"}
+        <a href="#top" className="u-logo" aria-label="Radman — beginning">R<span>.</span></a>
+        <div className="u-nav__center">
+          <a href="#story">STORY</a>
+          <a href="#chapters">CHAPTERS</a>
+          <a href="#archive">ARCHIVE</a>
+        </div>
+        <button className="u-nav__sound" onClick={toggleSound} aria-label="Toggle ambient sound">
+          {sound ? <Volume2 size={13} /> : <VolumeX size={13} />}<span>{sound ? "ON" : "SOUND"}</span>
         </button>
       </nav>
 
@@ -262,16 +266,13 @@ export default function RadmanUltimate() {
           <div className="u-hero__photoShade" />
           <div className="u-hero__halo" aria-hidden="true" />
           <div className="u-hero__ghost" aria-hidden="true">R</div>
-          <div className="u-hero__caption" aria-hidden="true">
-            <span>ARCHIVE 001</span><i /><span>RADMAN / FATHER</span>
-          </div>
-          <div className="u-hero__frameNo">RADMAN &amp; DAD <i /> 01</div>
+          <div className="u-hero__signature" aria-hidden="true">R / 01</div>
         </div>
 
         <div className="u-hero__panel">
           <div className="u-hero__panelTop">
             <span>1401—09—10</span>
-            <span>RADMAN</span>
+            <span>R.</span>
           </div>
 
           <div className="u-hero__birthData" aria-label="Radman birth details">
@@ -311,7 +312,7 @@ export default function RadmanUltimate() {
           </div>
         </div>
         <div className="u-orb" /><div className="u-grain" />
-        <div className="u-scroll"><ArrowDown size={14} /><span>SCROLL TO ENTER</span></div>
+        <div className="u-scroll"><span>01</span><i /></div>
       </section>
 
       <section id="story" className="u-manifesto">
@@ -389,7 +390,7 @@ export default function RadmanUltimate() {
         </div>
       </section>
 
-      <section className="u-archive">
+      <section id="archive" className="u-archive">
         <div className="u-archive__head u-reveal">
           <div><span className="u-kicker">02 / THE COMPLETE ARCHIVE</span><h2>Small moments.<br /><em>Kept forever.</em></h2></div>
           <p>{memories.length} قاب از آرشیو واقعی رادمان؛ با اندازه‌های کنترل‌شده و نسبت تصویر طبیعی تا هر عکس مثل یک اثر مستقل دیده شود.</p>
