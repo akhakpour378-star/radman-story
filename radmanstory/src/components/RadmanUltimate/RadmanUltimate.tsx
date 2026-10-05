@@ -305,9 +305,6 @@ export default function RadmanUltimate() {
           </div>
 
           <div className="u-hero__copy">
-            <div className="u-hero__title">
-              <span className="u-hero__titleLine u-hero__titleLine--soft">RADMAN</span>
-            </div>
             <p className="u-hero__lead">From the moment he arrived on December 1, 2022, time was no longer measured only in dates. It became a collection of first looks, first smiles, small steps, quiet mornings and moments that slowly became part of a life. This is Radman — a visual archive of childhood, memory, and the bond that remains in every frame.</p>
             <a className="u-hero__cta" href="#story"><span>ENTER THE STORY</span><ArrowDown size={13} /></a>
           </div>
