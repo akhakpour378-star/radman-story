@@ -64,3 +64,13 @@
 @media(prefers-reduced-motion:reduce){.u *{animation:none!important;transition:none!important}}
 
 @media(max-width:850px){.u-hero__halo{width:70vw;height:70vw;right:0;top:25%}.u-hero__caption{display:none}.u-hero__ghost{font-size:75vw;bottom:-2vw}.u-reel{padding:8vh 0 11vh}.u-reel__head{width:calc(100% - 40px);display:block}.u-reel__head p{margin-top:18px}.u-reel__track{gap:12px;padding-left:20px;animation-duration:25s}.u-reel__item{width:145px;height:190px}.u-step{min-height:120px}.u-step b{margin-top:22px}}
+/* FINAL HERO / HEADER POLISH */
+.u-nav{height:78px;padding:0 5vw;background:linear-gradient(180deg,#05070bd9,transparent);border-bottom:1px solid #ffffff0d}
+.u-logo{font:400 24px/1 "Playfair Display",serif;letter-spacing:-.08em}.u-logo span{color:var(--cyan)}
+.u-nav__center{gap:28px}.u-nav__center a{position:relative;color:#8a939e;font:600 6px "DM Sans";letter-spacing:.22em;transition:color .3s}.u-nav__center a:after{content:"";position:absolute;left:0;right:100%;bottom:-8px;height:1px;background:var(--cyan);transition:right .35s}.u-nav__center a:hover{color:#f0f1ef}.u-nav__center a:hover:after{right:0}
+.u-nav__sound{gap:7px;border:0!important;color:#7e8995!important;background:transparent!important;font:600 6px "DM Sans"!important;letter-spacing:.18em}.u-nav__sound svg{color:var(--cyan)}
+.u-hero__signature{position:absolute;z-index:12;right:5vw;bottom:31px;color:#aeb5be;font:600 6px "DM Sans";letter-spacing:.2em}.u-hero__signature:before{content:"";display:inline-block;width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan));vertical-align:middle;margin-right:9px}
+.u-hero__ghost,.u-hero__halo{opacity:.35}
+.u-scroll{right:5vw;bottom:30px;gap:9px}.u-scroll span{font:600 6px "DM Sans";letter-spacing:.2em;color:#65717f}.u-scroll i{width:42px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.u-hero__panelTop{letter-spacing:.25em}.u-hero__panelTop span:last-child{font-family:"Playfair Display";font-size:13px;letter-spacing:.02em;color:#d8dadc}
+@media(max-width:850px){.u-nav{height:64px;padding:0 20px}.u-nav__center{display:flex;gap:15px}.u-nav__center a{font-size:5px}.u-nav__sound span{display:none}.u-hero__signature{display:none}.u-scroll{display:none}}
