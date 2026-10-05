@@ -408,27 +408,38 @@ export default function RadmanUltimate() {
         <div className="u-grain" />
       </section>
 
-      <section id="story" className="u-manifesto">
+      <section id="story" className="u-manifesto u-manifesto--story">
         <div className="u-manifesto__ambient" aria-hidden="true" />
+        <div className="u-manifesto__scan" aria-hidden="true" />
         <div className="u-manifesto__top u-reveal">
-          <span className="u-kicker">00 / THE ARCHIVE</span>
-          <span className="u-manifesto__index">A PRIVATE VISUAL BIOGRAPHY</span>
+          <span className="u-kicker">00 / BEFORE THE CHAPTERS</span>
+          <span className="u-manifesto__index">RADMAN / A VISUAL MEMORY</span>
         </div>
+
         <div className="u-manifesto__copy u-reveal">
-          <p className="u-manifesto__eyebrow">A STORY IS BUILT FROM SMALL MOMENTS.</p>
-          <h2>Not a gallery.<br /><em>A living archive.</em></h2>
-          <p>هر تصویر فقط یک عکس نیست؛ یک نشانه از زمانی است که دیگر تکرار نمی‌شود. اینجا عکس‌ها با ریتم، فاصله، نور و حرکت کنار هم قرار می‌گیرند تا داستان آرام‌آرام شکل بگیرد.</p>
-          <a className="u-manifesto__enter" href="#chapters"><span>EXPLORE THE STORY</span><ArrowDown size={14} /></a>
+          <p className="u-manifesto__eyebrow">THIS IS WHY THE ARCHIVE EXISTS.</p>
+          <h2>Some days<br /><em>become a lifetime.</em></h2>
+          <p>این آرشیو برای شمردن روزها ساخته نشده؛ برای نگه‌داشتن ردِ حضوری‌ست که از کنار ما گذشته و هنوز درون ما ادامه دارد. هر قاب، یک مکث کوتاه است؛ پیش از اینکه وارد فصل بعدی شویم.</p>
+          <a className="u-manifesto__enter" href="#chapters">
+            <span>OPEN THE CHAPTERS</span>
+            <ArrowDown size={14} />
+          </a>
         </div>
+
         <div className="u-manifesto__side u-reveal">
-          <div className="u-manifesto__quote">A moment is small.<br /><em>Memory is not.</em></div>
-          <div className="u-manifesto__numbers">
-            <div><b>{String(memories.length).padStart(2, "0")}</b><span>ORIGINAL FRAMES</span></div>
-            <div><b>04</b><span>CHAPTERS</span></div>
-            <div><b>∞</b><span>UNFINISHED STORY</span></div>
+          <div className="u-manifesto__quote">
+            <span>THE PURPOSE</span>
+            We don't stop time.<br /><em>We give memory a place to live.</em>
+          </div>
+          <div className="u-manifesto__principles">
+            <div><span>01</span><b>LOOK</b><small>Stay with the frame.</small></div>
+            <div><span>02</span><b>REMEMBER</b><small>Let the moment return.</small></div>
+            <div><span>03</span><b>CONTINUE</b><small>Carry the story forward.</small></div>
           </div>
         </div>
+
         <div className="u-manifesto__line" aria-hidden="true" />
+        <div className="u-manifesto__scroll" aria-hidden="true"><span>SCROLL TO BEGIN</span><i /></div>
       </section>
 
       <section className="u-reel" aria-label="Selected memories">
