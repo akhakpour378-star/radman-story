@@ -827,3 +827,128 @@
     min-width:176px!important;
   }
 }
+
+
+/* FINAL VERIFIED HERO FIX — CTA, stray number, slow autonomous particles */
+.u-hero--editorial .u-hero__panel{
+  position:absolute!important;
+  right:7vw!important;
+  top:50%!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+  width:min(34vw,500px)!important;
+  z-index:8!important;
+}
+.u-hero--editorial .u-hero__cta{
+  position:absolute!important;
+  left:5vw!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:7vh!important;
+  width:176px!important;
+  min-width:176px!important;
+  height:42px!important;
+  margin:0!important;
+  padding:0 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  box-sizing:border-box!important;
+  border:1px solid rgba(240,241,237,.25)!important;
+  border-radius:999px!important;
+  background:rgba(4,8,13,.38)!important;
+  overflow:hidden!important;
+  transform:none!important;
+  z-index:30!important;
+}
+.u-hero--editorial .u-hero__cta:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  width:auto!important;
+  height:auto!important;
+  border:1px solid rgba(156,231,239,.0)!important;
+  border-radius:inherit!important;
+  background:none!important;
+  box-shadow:inset 0 0 0 1px rgba(156,231,239,0)!important;
+  opacity:0!important;
+  transition:opacity .25s ease,border-color .25s ease,box-shadow .25s ease!important;
+  pointer-events:none!important;
+}
+.u-hero--editorial .u-hero__cta:hover:after,
+.u-hero--editorial .u-hero__cta:focus-visible:after{
+  opacity:1!important;
+  border-color:rgba(156,231,239,.95)!important;
+  box-shadow:inset 0 0 0 1px rgba(156,231,239,.18),0 0 14px rgba(156,231,239,.14)!important;
+}
+.u-hero--editorial .u-hero__cta:hover{
+  transform:none!important;
+  letter-spacing:.14em!important;
+}
+.u-hero--editorial .u-hero__cta span{
+  font-size:8px!important;
+  letter-spacing:.14em!important;
+}
+.u-hero--editorial .u-hero__cta svg{width:11px!important;height:11px!important}
+.u-scroll{display:none!important}
+
+/* Clean R: no pseudo marks, no pulse, no dot */
+.u-logo__mark{
+  position:relative!important;
+  width:38px!important;
+  height:38px!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid rgba(241,241,235,.38)!important;
+  border-radius:50%!important;
+  background:rgba(4,8,13,.28)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.10),0 8px 24px rgba(0,0,0,.24)!important;
+  overflow:hidden!important;
+  transform:none!important;
+}
+.u-logo__mark:before,.u-logo__mark:after{content:none!important;display:none!important}
+.u-logo__r{
+  display:block!important;
+  position:relative!important;
+  z-index:2!important;
+  color:#f1f1eb!important;
+  font-family:"Cormorant Garamond","Playfair Display",serif!important;
+  font-size:25px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:-.08em!important;
+  transform:translateX(-1px)!important;
+}
+.u-logo__r b,.u-logo__r i,.u-logo__pulse{display:none!important}
+
+/* The only Hero particle layer is the canvas; slow, continuous drift comes from TSX. */
+.u-hero:before,.u-hero:after{display:none!important;content:none!important}
+.u-hero__particles{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:3!important;
+  pointer-events:none!important;
+  display:block!important;
+  opacity:.92!important;
+  mix-blend-mode:screen!important;
+}
+@media(max-width:850px){
+  .u-hero--editorial .u-hero__panel{
+    right:5vw!important;
+    top:auto!important;
+    bottom:7vh!important;
+    transform:none!important;
+    width:90%!important;
+  }
+  .u-hero--editorial .u-hero__cta{
+    left:5vw!important;
+    bottom:6vh!important;
+    width:170px!important;
+    min-width:170px!important;
+    height:42px!important;
+  }
+  .u-scroll{display:none!important}
+}
