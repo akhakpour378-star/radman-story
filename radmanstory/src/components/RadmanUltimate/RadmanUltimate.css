@@ -560,3 +560,18 @@
 .u-hero__birthData{position:relative!important;top:auto!important;transform:none!important}
 @media(max-width:1100px){.u-hero__frame{left:2vw!important;width:55vw!important}.u-hero__panel{right:4vw!important;width:38vw!important}}
 @media(max-width:850px){.u-hero__frame{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:52vh!important;transform:none!important}.u-hero__panel{position:relative!important;right:auto!important;top:auto!important;transform:none!important;width:100%!important}}
+
+/* FULL-BLEED HERO PHOTO */
+.u-hero{position:relative!important;min-height:100svh!important;height:100svh!important;width:100%!important;overflow:hidden!important}
+.u-hero__frame{position:absolute!important;inset:0!important;left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;z-index:1!important}
+.u-hero__photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
+.u-hero__photo img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;display:block!important}
+.u-hero__panel{position:absolute!important;right:7vw!important;top:50%!important;transform:translateY(-50%)!important;z-index:4!important;width:min(34vw,500px)!important}
+.u-hero__particles{position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important;pointer-events:none!important}
+.u-hero__panel,.u-hero__photo{pointer-events:auto!important}
+@media(max-width:850px){
+ .u-hero{min-height:100svh!important;height:auto!important}
+ .u-hero__frame{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
+ .u-hero__photo img{object-position:center center!important}
+ .u-hero__panel{right:5vw!important;top:auto!important;bottom:7vh!important;transform:none!important;width:90%!important}
+}
