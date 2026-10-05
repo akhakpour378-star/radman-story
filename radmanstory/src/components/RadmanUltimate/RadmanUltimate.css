@@ -1834,3 +1834,78 @@
     min-width:178px!important;
   }
 }
+
+/* ===== CTA FINAL FIX: EXPLORE UNTOUCHED / ENTER MATCHES IT ===== */
+.u-manifesto__enter{
+  display:inline-flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:178px!important;
+  min-width:178px!important;
+  height:44px!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  padding:0 15px!important;
+  margin-left:5vw!important;
+  box-sizing:border-box!important;
+  border-radius:999px!important;
+  border:1px solid rgba(241,241,235,.18)!important;
+  background:rgba(7,11,18,.34)!important;
+  color:#f1f1eb!important;
+  text-decoration:none!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 14px 36px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(15px)!important;
+  -webkit-backdrop-filter:blur(15px)!important;
+  position:relative!important;
+  overflow:hidden!important;
+  z-index:80!important;
+}
+.u-manifesto__enter::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(105deg,transparent 15%,rgba(156,231,239,.12) 48%,transparent 82%)!important;
+  transform:translateX(-110%)!important;
+  transition:transform .65s ease!important;
+  pointer-events:none!important;
+}
+.u-manifesto__enter::after{
+  content:"→"!important;
+  position:absolute!important;
+  right:15px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:auto!important;
+  height:auto!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:#9ce7ef!important;
+  opacity:1!important;
+  transition:transform .3s ease!important;
+}
+.u-manifesto__enter span{
+  position:relative!important;
+  z-index:2!important;
+  font:600 8px/1 "DM Sans",sans-serif!important;
+  letter-spacing:.16em!important;
+  color:#f1f1eb!important;
+}
+.u-manifesto__enter svg{display:none!important}
+.u-manifesto__enter:hover{
+  transform:translateY(-2px)!important;
+  border-color:rgba(156,231,239,.42)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.10),0 18px 40px rgba(0,0,0,.28),0 0 22px rgba(156,231,239,.07)!important;
+}
+.u-manifesto__enter:hover::before{transform:translateX(110%)!important}
+.u-manifesto__enter:hover::after{transform:translate(3px,-50%)!important}
+
+/* ENTER uses the same visual language, while EXPLORE keeps its original CSS untouched. */
+.u-hero--editorial .u-hero__cta{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  z-index:90!important;
+}
