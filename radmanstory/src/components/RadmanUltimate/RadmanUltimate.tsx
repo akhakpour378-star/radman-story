@@ -88,7 +88,6 @@ export default function RadmanUltimate() {
       intro
         .from(".u-hero__panelTop span", { y: 14, opacity: 0, stagger: 0.08, duration: 0.7, delay: 0.15 })
         .from(".u-hero__titleLine", { yPercent: 105, opacity: 0, duration: 1.1, stagger: 0.1 }, "-=.3")
-        .from(".u-hero__submark span, .u-hero__submark i", { opacity: 0, stagger: 0.04, duration: 0.35 }, "-=.55")
         .from(".u-hero__lead", { y: 18, opacity: 0, duration: 0.75 }, "-=.4")
         .from(".u-hero__cta", { y: 12, opacity: 0, duration: 0.65 }, "-=.45")
         .from(".u-birthData__item", { y: 14, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=.45")
@@ -271,8 +270,8 @@ export default function RadmanUltimate() {
 
         <div className="u-hero__panel">
           <div className="u-hero__panelTop">
-            <span>RADMAN / 1401—09—10</span>
-            <span>PRIVATE BIRTH ARCHIVE</span>
+            <span>1401—09—10</span>
+            <span>RADMAN</span>
           </div>
 
           <div className="u-hero__birthData" aria-label="Radman birth details">
@@ -300,22 +299,11 @@ export default function RadmanUltimate() {
           </div>
 
           <div className="u-hero__copy">
-            <p className="u-kicker"><span />A LIFE / BEGINS HERE</p>
             <div className="u-hero__title">
-              <span className="u-hero__titleLine">R<span className="u-hero__titleDot">.</span></span>
               <span className="u-hero__titleLine u-hero__titleLine--soft">RADMAN</span>
             </div>
-            <div className="u-hero__submark">
-              <span>ONE CHILD</span><i /><span>ONE STORY</span><i /><span>FOREVER</span>
-            </div>
-            <p className="u-hero__lead">روایتی تصویری از پسری که یک روز آمد و معنای «خانه» را برای همیشه تغییر داد.</p>
-            <a className="u-hero__cta" href="#story"><span>ENTER HIS STORY</span><ArrowDown size={14} /></a>
-          </div>
-
-          <div className="u-hero__tattoo">
-            <span>THE MARK / 01</span>
-            <p>روی بازوی راست پدر</p>
-            <i />
+            <p className="u-hero__lead">روایتی از آغاز زندگی رادمان.</p>
+            <a className="u-hero__cta" href="#story"><span>DISCOVER</span><ArrowDown size={13} /></a>
           </div>
 
           <div className="u-hero__panelBottom">
