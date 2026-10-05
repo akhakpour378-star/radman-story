@@ -952,3 +952,169 @@
   }
   .u-scroll{display:none!important}
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   RADMAN — FINAL CINEMATIC HEADER / MONOGRAM
+   ═══════════════════════════════════════════════════════ */
+.u-nav{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  height:88px!important;
+  min-height:88px!important;
+  padding:0 5vw!important;
+  display:grid!important;
+  grid-template-columns:1fr auto 1fr!important;
+  align-items:center!important;
+  background:linear-gradient(180deg,rgba(3,6,11,.78) 0%,rgba(3,6,11,.34) 68%,transparent 100%)!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+  z-index:50!important;
+}
+.u-nav:after{
+  content:""!important;
+  position:absolute!important;
+  left:5vw!important;
+  right:5vw!important;
+  bottom:0!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,rgba(241,241,235,.16) 18%,rgba(156,231,239,.24) 50%,rgba(241,241,235,.16) 82%,transparent)!important;
+}
+.u-logo{
+  grid-column:1!important;
+  justify-self:start!important;
+  width:48px!important;
+  height:48px!important;
+  display:grid!important;
+  place-items:center!important;
+  text-decoration:none!important;
+}
+.u-logo__mark{
+  width:42px!important;
+  height:42px!important;
+  border:1px solid rgba(241,241,235,.42)!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.10),rgba(255,255,255,.025) 46%,rgba(0,0,0,.24) 100%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 12px 32px rgba(0,0,0,.30)!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:none!important;
+  overflow:hidden!important;
+}
+.u-logo__mark:before{
+  content:""!important;
+  position:absolute!important;
+  inset:5px!important;
+  border:1px solid rgba(156,231,239,.16)!important;
+  border-radius:50%!important;
+}
+.u-logo__mark:after{
+  content:""!important;
+  position:absolute!important;
+  width:5px!important;
+  height:5px!important;
+  right:7px!important;
+  bottom:8px!important;
+  border-radius:50%!important;
+  background:#9ce7ef!important;
+  box-shadow:0 0 12px rgba(156,231,239,.7)!important;
+}
+.u-logo__r{
+  position:relative!important;
+  z-index:3!important;
+  display:block!important;
+  color:#f3f2ed!important;
+  font-family:"Cormorant Garamond","Playfair Display",Georgia,serif!important;
+  font-size:27px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:-.10em!important;
+  transform:translate(-1px,-1px)!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.4)!important;
+}
+.u-logo__r b,.u-logo__r i,.u-logo__pulse{display:none!important}
+.u-logo:hover .u-logo__mark{
+  transform:scale(1.06)!important;
+  border-color:rgba(156,231,239,.65)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.16),0 14px 38px rgba(0,0,0,.34),0 0 24px rgba(156,231,239,.10)!important;
+}
+.u-nav__center{
+  grid-column:2!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:34px!important;
+  padding:9px 18px!important;
+  border:1px solid rgba(241,241,235,.10)!important;
+  border-radius:999px!important;
+  background:rgba(4,8,14,.28)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.04)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+}
+.u-nav__center a{
+  position:relative!important;
+  font-size:8px!important;
+  letter-spacing:.28em!important;
+  color:rgba(241,241,235,.72)!important;
+  text-decoration:none!important;
+  transition:color .3s ease!important;
+}
+.u-nav__center a:before{display:none!important}
+.u-nav__center a:after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:.28em!important;
+  bottom:-7px!important;
+  height:1px!important;
+  background:#9ce7ef!important;
+  transform:scaleX(0)!important;
+  transform-origin:left!important;
+  transition:transform .3s ease!important;
+}
+.u-nav__center a:hover{color:#f3f2ed!important}
+.u-nav__center a:hover:after{transform:scaleX(1)!important}
+.u-nav__sound{
+  grid-column:3!important;
+  justify-self:end!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  height:34px!important;
+  padding:0 12px!important;
+  border:1px solid rgba(241,241,235,.13)!important;
+  border-radius:999px!important;
+  background:rgba(4,8,14,.24)!important;
+  color:rgba(241,241,235,.66)!important;
+  font-size:7px!important;
+  letter-spacing:.20em!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+}
+.u-hero__particles{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:4!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  mix-blend-mode:screen!important;
+}
+@media(max-width:850px){
+  .u-nav{
+    height:68px!important;
+    min-height:68px!important;
+    padding:0 20px!important;
+    grid-template-columns:auto 1fr auto!important;
+  }
+  .u-nav:after{left:20px!important;right:20px!important}
+  .u-logo,.u-logo__mark{width:36px!important;height:36px!important}
+  .u-logo__r{font-size:23px!important}
+  .u-nav__center{display:none!important}
+  .u-nav__sound{grid-column:3!important}
+}
