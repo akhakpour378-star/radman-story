@@ -511,3 +511,19 @@
 .u-memoryVoid:before,.u-memoryVoid:after{display:none!important;content:none!important}
 .u-memoryVoid__date{left:50%!important;transform:translateX(-50%)!important;bottom:12vh!important}
 .u-memoryVoid__time{left:50%!important;right:auto!important;transform:translateX(-50%)!important;bottom:7vh!important}
+
+/* Restore original two-column Hero composition; particles remain the only atmospheric effect */
+.u-hero__panel{display:block!important}
+.u-hero__tattooArt{position:absolute!important;left:2vw!important;top:50%!important;bottom:auto!important;width:min(43vw,600px)!important;height:min(78vh,720px)!important;transform:translateY(-50%)!important;z-index:1!important}
+.u-memoryStage{position:relative!important;width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-memoryStage__core{position:relative!important;width:76%!important;height:76%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-memoryStage__core img{width:90%!important;height:90%!important;object-fit:contain!important;position:relative!important;z-index:2!important;filter:drop-shadow(0 20px 38px rgba(0,0,0,.3))!important}
+.u-memoryVoid__date,.u-memoryVoid__time,.u-memoryVoid__label{display:none!important}
+@media(max-width:850px){
+ .u-hero__panel{display:block!important}
+ .u-hero__tattooArt{left:0!important;top:auto!important;bottom:8%!important;width:235px!important;height:340px!important;transform:none!important}
+ .u-memoryStage__core{width:82%!important;height:82%!important}
+ .u-memoryStage__core img{width:94%!important;height:94%!important}
+}
+/* particles only: remove every decorative band/line behind them */
+.u-hero:before,.u-hero:after,.u-memoryVoid:before,.u-memoryVoid:after{display:none!important;content:none!important}
