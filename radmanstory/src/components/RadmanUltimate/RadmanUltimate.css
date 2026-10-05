@@ -173,3 +173,15 @@
 .u-logo:hover .u-logo__mark{transform:translateY(-1px)!important;box-shadow:0 10px 34px #9ce7ef20,inset 0 1px #fff!important}
 .u-nav{background:linear-gradient(180deg,#02040aeF 0%,#050812dc 45%,#050812b8 72%,transparent 100%)!important;box-shadow:0 10px 34px #0008}
 .u-nav:after{height:1px;background:linear-gradient(90deg,transparent,#9ce7ef2a 25%,#ffffff18 50%,#9ce7ef2a 75%,transparent)}
+
+/* FINAL IDENTITY MARK — minimal celestial R */
+.u-logo__mark{width:38px!important;height:38px!important;border-radius:12px!important;background:linear-gradient(145deg,#f4f3ee 0%,#d5d7d6 45%,#8c949e 100%)!important;position:relative!important;transform:rotate(45deg)!important;box-shadow:0 8px 30px #0008,inset 0 1px #ffffff!important;border:1px solid #ffffff55!important}
+.u-logo__mark:before{content:"R";position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;color:#0a1018!important;font:500 20px/1 "Cormorant Garamond","Playfair Display",serif!important;letter-spacing:-.12em!important;transform:rotate(-45deg)!important;border:0!important}
+.u-logo__mark:after{content:"";position:absolute!important;width:8px!important;height:8px!important;right:5px!important;top:5px!important;border-radius:50%!important;background:#9ce7ef!important;box-shadow:0 0 12px #9ce7ef99!important;border:0!important;transform:none!important}
+.u-logo__mark span{display:none!important}
+.u-logo:hover .u-logo__mark{transform:rotate(45deg) translateY(-2px) scale(1.06)!important;box-shadow:0 14px 40px #9ce7ef22,inset 0 1px #fff!important}
+.u-nav{background:linear-gradient(180deg,#03050bd0 0%,#050812a8 48%,#05081255 78%,transparent 100%)!important;box-shadow:0 8px 28px #0005!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important}
+.u-nav:after{display:none!important}
+.u-hero__copy{left:5vw!important}
+.u-hero__lead{margin-top:0!important}
+@media(max-width:850px){.u-logo__mark{width:30px!important;height:30px!important}.u-logo__mark:before{font-size:16px!important}}
