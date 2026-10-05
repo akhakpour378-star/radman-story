@@ -1,6 +1,6 @@
-import tattooGraphic from "../../../memory/tatoo-graphic.png";
 "use client";
 
+import tattooGraphic from "../../../../memory/tatoo-graphic.png";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
