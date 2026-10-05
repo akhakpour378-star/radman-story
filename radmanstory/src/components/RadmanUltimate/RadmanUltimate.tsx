@@ -279,14 +279,7 @@ export default function RadmanUltimate() {
         <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
           <div className="u-tattooFrame__art">
             <span className="u-tattooFrame__halo" aria-hidden="true" />
-            <span className="u-tattooFrame__crosshair u-tattooFrame__crosshair--h" aria-hidden="true" />
-            <span className="u-tattooFrame__crosshair u-tattooFrame__crosshair--v" aria-hidden="true" />
             <img src="/api/memory?file=memory/tatoo-graphic.png" alt="Original Radman birth tattoo graphic" />
-            <div className="u-tattooClock" aria-hidden="true">
-              <span className="u-tattooClock__hour" />
-              <span className="u-tattooClock__minute" />
-              <span className="u-tattooClock__hub" />
-            </div>
           </div>
         </div>
         <div className="u-hero__panel">
