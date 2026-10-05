@@ -87,10 +87,12 @@ export default function RadmanUltimate() {
       const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
       intro
         .from(".u-hero__panelTop span", { y: 14, opacity: 0, stagger: 0.08, duration: 0.7, delay: 0.15 })
-        .from(".u-hero__title .word span", { yPercent: 120, opacity: 0, duration: 1.15, stagger: 0.08 }, "-=.3")
-        .from(".u-hero__lead", { y: 20, opacity: 0, duration: 0.8 }, "-=.65")
-        .from(".u-hero__cta", { y: 14, opacity: 0, duration: 0.7 }, "-=.5")
-        .from(".u-hero__meta div", { y: 16, opacity: 0, stagger: 0.08, duration: 0.6 }, "-=.4");
+        .from(".u-hero__titleLine", { yPercent: 105, opacity: 0, duration: 1.1, stagger: 0.1 }, "-=.3")
+        .from(".u-hero__submark span, .u-hero__submark i", { opacity: 0, stagger: 0.04, duration: 0.35 }, "-=.55")
+        .from(".u-hero__lead", { y: 18, opacity: 0, duration: 0.75 }, "-=.4")
+        .from(".u-hero__cta", { y: 12, opacity: 0, duration: 0.65 }, "-=.45")
+        .from(".u-birthData__item", { y: 14, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=.45")
+        .from(".u-hero__tattoo", { opacity: 0, duration: 0.6 }, "-=.3");
 
       gsap.to(".u-hero__photo img", {
         scale: 1.17,
