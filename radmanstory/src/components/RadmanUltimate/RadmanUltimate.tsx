@@ -254,7 +254,7 @@ export default function RadmanUltimate() {
       <nav className="u-nav">
         <a href="#top" className="u-logo" aria-label="Radman">
           <span className="u-logo__mark" aria-hidden="true"><span className="u-logo__r">R</span><span className="u-logo__pulse"></span></span>
-          <span className="u-logo__word">RADMAN</span>
+          
         </a>
         <div className="u-nav__center">
           <a href="#story">STORY</a>
@@ -274,7 +274,7 @@ export default function RadmanUltimate() {
           <div className="u-hero__photoShade" />
           <div className="u-hero__halo" aria-hidden="true" />
           <div className="u-hero__ghost" aria-hidden="true">R</div>
-          <div className="u-hero__signature" aria-hidden="true">R / 01</div>
+          
         </div>
         <div className="u-hero__panel">
           <div className="u-hero__birthData" aria-label="Radman birth details">
