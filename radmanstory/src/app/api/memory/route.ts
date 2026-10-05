@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const target = path.join(root, clean);
     const data = await readFile(target);
     const ext = path.extname(target).toLowerCase();
-    return new NextResponse(data, { headers: { "Content-Type": mime[ext] ?? "application/octet-stream", "Cache-Control":"public,max-age=31536000,immutable" } });
+    return new NextResponse(data, { headers: { "Content-Type": mime[ext] ?? "application/octet-stream", "Cache-Control":"no-store, max-age=0" } });
   } catch {
     return NextResponse.json({ error: "Image not found" }, { status: 404 });
   }
