@@ -273,3 +273,14 @@
  .u-hero__tattooArt{left:5vw;top:auto;bottom:15%;transform:none;width:135px;height:260px;opacity:.72}
  .u-hero__tattooArt:before{inset:4% 12%}
 }
+
+/* Final R monogram: custom geometry, negative space, no wordmark */
+.u-logo__mark{position:relative!important;overflow:hidden!important;background:transparent!important;border:1px solid rgba(236,239,234,.42)!important;border-radius:50%!important;box-shadow:0 8px 28px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.05)!important}
+.u-logo__mark:before{content:"";position:absolute!important;inset:5px!important;border:1px solid rgba(236,239,234,.14)!important;border-radius:50%!important}
+.u-logo__r{position:absolute!important;inset:0!important;display:block!important;font-size:0!important}
+.u-logo__r:before{content:"";position:absolute!important;left:13px!important;top:9px!important;width:13px!important;height:24px!important;border-left:2px solid #f1f1eb!important;border-top:2px solid #f1f1eb!important;border-radius:9px 9px 0 0!important}
+.u-logo__r:after{content:"";position:absolute!important;left:13px!important;top:20px!important;width:15px!important;height:10px!important;border:2px solid #f1f1eb!important;border-left:0!important;border-radius:0 9px 9px 0!important}
+.u-logo__r b{position:absolute!important;left:23px!important;top:27px!important;width:15px!important;height:2px!important;background:#f1f1eb!important;transform:rotate(43deg)!important;transform-origin:left center!important}
+.u-logo__r i{position:absolute!important;right:6px!important;bottom:7px!important;width:4px!important;height:4px!important;border-radius:50%!important;background:#9ce7ef!important;box-shadow:0 0 10px rgba(156,231,239,.6)!important}
+.u-logo:hover .u-logo__mark{transform:rotate(-4deg) scale(1.04)!important}
+.u-nav{min-height:74px!important;background:linear-gradient(180deg,rgba(3,6,12,.86),rgba(3,6,12,.48) 65%,transparent)!important;backdrop-filter:blur(18px) saturate(115%)!important;-webkit-backdrop-filter:blur(18px) saturate(115%)!important;box-shadow:0 12px 34px rgba(0,0,0,.18)!important}
