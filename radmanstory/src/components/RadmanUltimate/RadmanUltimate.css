@@ -467,3 +467,30 @@
  .u-memoryVoid__date{left:8vw!important;bottom:11vh!important}
  .u-memoryVoid__time{right:8vw!important;bottom:11vh!important}
 }
+
+/* Restore Hero composition. Particles are atmospheric only, behind all existing content. */
+.u-hero__panel{display:block!important}
+.u-hero__tattooArt{position:absolute!important;left:2vw!important;top:50%!important;bottom:auto!important;width:min(43vw,600px)!important;height:min(78vh,720px)!important;transform:translateY(-50%)!important;z-index:1!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-memoryVoid{position:relative!important;width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important}
+.u-memoryVoid__halo{width:38vw!important;height:38vw!important;max-width:620px!important;max-height:620px!important}
+.u-memoryVoid__ring--1{width:44vw!important;height:44vw!important;max-width:720px!important;max-height:720px!important}
+.u-memoryVoid__ring--2{width:68vw!important;height:32vw!important;max-width:1100px!important;max-height:520px!important}
+.u-memoryVoid__ring--3{width:82vw!important;height:48vw!important;max-width:1320px!important;max-height:760px!important}
+.u-memoryVoid__pulse{width:min(72vw,1050px)!important}
+.u-memoryVoid__orbit{width:min(76vw,1120px)!important;height:min(76vw,1120px)!important}
+
+/* Full-hero particle atmosphere: does not replace or hide any Hero content. */
+.u-hero{position:relative!important;overflow:hidden!important}
+.u-hero:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle,rgba(198,232,232,.42) 0 1px,transparent 1.5px);background-size:92px 92px;opacity:.16;mask-image:radial-gradient(ellipse at center,black 0%,rgba(0,0,0,.72) 42%,transparent 88%);animation:heroParticleDrift 28s linear infinite}
+.u-hero:after{content:"";position:absolute;inset:-15%;z-index:0;pointer-events:none;background-image:radial-gradient(circle at 20% 30%,rgba(156,231,239,.22) 0 1px,transparent 2px),radial-gradient(circle at 72% 64%,rgba(240,241,237,.18) 0 1px,transparent 2px),radial-gradient(circle at 44% 82%,rgba(156,231,239,.14) 0 1px,transparent 2px);background-size:260px 260px,340px 340px,430px 430px;opacity:.2;animation:heroParticleDriftReverse 38s linear infinite}
+.u-hero > *{position:relative;z-index:2}
+.u-hero__tattooArt{z-index:1!important}
+@keyframes heroParticleDrift{from{background-position:0 0}to{background-position:92px 92px}}
+@keyframes heroParticleDriftReverse{from{background-position:0 0,0 0,0 0}to{background-position:-260px 180px,340px -220px,-430px 300px}}
+@media(prefers-reduced-motion:reduce){.u-hero:before,.u-hero:after{animation:none!important}}
+@media(max-width:850px){
+ .u-hero__panel{display:block!important}
+ .u-hero__tattooArt{left:0!important;top:auto!important;bottom:8%!important;width:235px!important;height:340px!important;transform:none!important}
+ .u-hero:before{background-size:62px 62px;opacity:.12}
+ .u-hero:after{opacity:.14}
+}
