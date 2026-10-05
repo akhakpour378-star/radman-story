@@ -253,7 +253,7 @@ export default function RadmanUltimate() {
 
       <nav className="u-nav">
         <a href="#top" className="u-logo" aria-label="Radman">
-          <span className="u-logo__mark" aria-hidden="true"><span className="u-logo__r">R</span><span className="u-logo__pulse"></span></span>
+          <span className="u-logo__mark" aria-hidden="true"><span className="u-logo__r" aria-hidden="true"><b></b><i></i></span><span className="u-logo__pulse"></span></span>
           
         </a>
         <div className="u-nav__center">
