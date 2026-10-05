@@ -212,6 +212,8 @@ export default function RadmanUltimate() {
 
   return (
     <main ref={root} className="u">
+      <div className="u-cursorLight" aria-hidden="true" />
+      <div className="u-cursorDot" aria-hidden="true" />
       <div className="u-progress"><i /></div>
 
       <nav className="u-nav">
@@ -254,25 +256,26 @@ export default function RadmanUltimate() {
       </section>
 
       <section id="story" className="u-manifesto">
-        <div className="u-manifesto__ghost">R</div>
+        <div className="u-manifesto__ambient" aria-hidden="true" />
         <div className="u-manifesto__top u-reveal">
           <span className="u-kicker">00 / THE ARCHIVE</span>
           <span className="u-manifesto__index">A PRIVATE VISUAL BIOGRAPHY</span>
         </div>
         <div className="u-manifesto__copy u-reveal">
           <p className="u-manifesto__eyebrow">A STORY IS BUILT FROM SMALL MOMENTS.</p>
-          <h2>Hold the<br /><em>moment.</em></h2>
-          <p>اینجا قرار نیست فقط عکس‌ها را ورق بزنیم. این بخش، ورودی آرشیو است؛ جایی که چند لحظه‌ی ساده کنار هم قرار می‌گیرند تا مسیر زندگی رادمان را نشان بدهند.</p>
+          <h2>Not a gallery.<br /><em>A living archive.</em></h2>
+          <p>هر تصویر فقط یک عکس نیست؛ یک نشانه از زمانی است که دیگر تکرار نمی‌شود. اینجا عکس‌ها با ریتم، فاصله، نور و حرکت کنار هم قرار می‌گیرند تا داستان آرام‌آرام شکل بگیرد.</p>
+          <a className="u-manifesto__enter" href="#chapters"><span>EXPLORE THE STORY</span><ArrowDown size={14} /></a>
         </div>
         <div className="u-manifesto__side u-reveal">
-          <div className="u-manifesto__quote">“The years disappear.<br /><em>The frames remain.</em>”</div>
+          <div className="u-manifesto__quote">A moment is small.<br /><em>Memory is not.</em></div>
           <div className="u-manifesto__numbers">
             <div><b>{String(memories.length).padStart(2, "0")}</b><span>ORIGINAL FRAMES</span></div>
-            <div><b>04</b><span>STORY CHAPTERS</span></div>
-            <div><b>∞</b><span>MORE TO COME</span></div>
+            <div><b>04</b><span>CHAPTERS</span></div>
+            <div><b>∞</b><span>UNFINISHED STORY</span></div>
           </div>
         </div>
-        <a className="u-manifesto__enter" href="#chapters"><span>OPEN THE CHAPTERS</span><ArrowDown size={14} /></a>
+        <div className="u-manifesto__line" aria-hidden="true" />
       </section>
 
       <section id="chapters" className="u-chapters">
