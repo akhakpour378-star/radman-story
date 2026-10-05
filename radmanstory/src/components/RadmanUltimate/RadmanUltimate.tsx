@@ -252,8 +252,9 @@ export default function RadmanUltimate() {
       <div className="u-progress"><i /></div>
 
       <nav className="u-nav">
-        <a href="#top" className="u-logo" aria-label="Radman — beginning">
-          <span className="u-logo__mark" aria-hidden="true"><span></span></span>
+        <a href="#top" className="u-logo" aria-label="Radman">
+          <span className="u-logo__mark" aria-hidden="true"><span className="u-logo__r">R</span><span className="u-logo__pulse"></span></span>
+          <span className="u-logo__word">RADMAN</span>
         </a>
         <div className="u-nav__center">
           <a href="#story">STORY</a>
