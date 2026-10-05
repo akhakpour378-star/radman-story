@@ -277,10 +277,17 @@ export default function RadmanUltimate() {
           
         </div>
         <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
-          <img
-            src="/api/memory?file=memory/tatoo-graphic.png"
-            alt="Original Radman birth tattoo graphic"
-          />
+          <div className="u-tattooFrame__label u-tattooFrame__label--top">RADMAN · ORIGINAL MARK</div>
+          <div className="u-tattooFrame__line u-tattooFrame__line--left" />
+          <div className="u-tattooFrame__art">
+            <span className="u-tattooFrame__corner u-tattooFrame__corner--tl" />
+            <span className="u-tattooFrame__corner u-tattooFrame__corner--br" />
+            <img src="/api/memory?file=memory/tatoo-graphic.png" alt="Original Radman birth tattoo graphic" />
+          </div>
+          <div className="u-tattooFrame__meta">
+            <span>10 DEC 2022</span><i /><span>14:15</span><i /><span>49 CM · 3.1 KG</span>
+          </div>
+          <div className="u-tattooFrame__pulse" aria-hidden="true"><span /></div>
         </div>
         <div className="u-hero__panel">
           <div className="u-hero__birthData" aria-label="Radman birth details">
