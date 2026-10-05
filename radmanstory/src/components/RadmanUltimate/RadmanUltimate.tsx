@@ -1,6 +1,5 @@
 "use client";
 
-import tattooGraphic from "../../../../memory/tatoo-graphic.png";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -279,7 +278,7 @@ export default function RadmanUltimate() {
         </div>
         <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
           <img
-            src={tattooGraphic.src}
+            src="/api/memory?file=memory/tatoo-graphic.png"
             alt="Original Radman birth tattoo graphic"
           />
         </div>
