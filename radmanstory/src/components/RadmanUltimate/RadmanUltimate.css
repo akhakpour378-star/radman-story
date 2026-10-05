@@ -1443,3 +1443,58 @@
 @media(max-width:850px){
   .u-lightbox__videoFrame{width:94vw!important}
 }
+
+/* ===== HERO -> NEXT SECTION : CINEMATIC FADE ===== */
+.u-hero{
+  position:relative!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+/* The hero itself dissolves into the following section instead of ending at a hard viewport edge. */
+.u-hero::after{
+  content:""!important;
+  position:absolute!important;
+  z-index:20!important;
+  left:0!important;
+  right:0!important;
+  bottom:-1px!important;
+  height:22vh!important;
+  pointer-events:none!important;
+  background:linear-gradient(
+    to bottom,
+    rgba(2,5,10,0) 0%,
+    rgba(2,5,10,.10) 18%,
+    rgba(2,5,10,.34) 42%,
+    rgba(2,5,10,.72) 68%,
+    #02050a 100%
+  )!important;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 20%,transparent 100%)!important;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 20%,transparent 100%)!important;
+}
+/* Soft atmospheric veil: prevents the next section from appearing as a sudden cut. */
+.u-hero::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:19!important;
+  left:-5%!important;
+  right:-5%!important;
+  bottom:-8vh!important;
+  height:30vh!important;
+  pointer-events:none!important;
+  background:radial-gradient(
+    ellipse 75% 55% at 50% 100%,
+    rgba(156,231,239,.045) 0%,
+    rgba(2,5,10,.28) 42%,
+    rgba(2,5,10,0) 78%
+  )!important;
+  filter:blur(12px)!important;
+}
+/* Keep particles/content above the fade until the final soft boundary. */
+.u-hero__particles,.u-hero__frame,.u-hero__panel,.u-hero__copy{
+  position:relative;
+  z-index:21;
+}
+@media(max-width:850px){
+  .u-hero::after{height:18vh!important}
+  .u-hero::before{height:25vh!important}
+}
