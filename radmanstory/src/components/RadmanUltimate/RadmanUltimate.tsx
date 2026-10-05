@@ -41,9 +41,9 @@ const asset = (src: string) =>
 
 const prettyTitle = (file: string, index: number) => {
   const clean = file
-    .replace(/^/memory//, "")
-    .replace(/.[^.]+$/, "")
-    .replace(/s*(d+)s*$/, "")
+    .replace(/^\/memory\//, "")
+    .replace(/\.[^.]+$/, "")
+    .replace(/\s*\(\d+\)\s*$/, "")
     .replace(/[-_]+/g, " ")
     .trim();
   if (!clean || /^radman$/i.test(clean)) return `Memory ${String(index + 1).padStart(2, "0")}`;
