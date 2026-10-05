@@ -259,6 +259,11 @@ export default function RadmanUltimate() {
             <img src={asset("/memory/radman-and-me.png")} alt="Radman and his father — archive photograph" />
           </div>
           <div className="u-hero__photoShade" />
+          <div className="u-hero__halo" aria-hidden="true" />
+          <div className="u-hero__ghost" aria-hidden="true">R</div>
+          <div className="u-hero__caption" aria-hidden="true">
+            <span>ARCHIVE 001</span><i /><span>RADMAN / FATHER</span>
+          </div>
           <div className="u-hero__frameNo">RADMAN &amp; DAD <i /> 01</div>
         </div>
 
@@ -307,6 +312,20 @@ export default function RadmanUltimate() {
         <div className="u-manifesto__line" aria-hidden="true" />
       </section>
 
+      <section className="u-reel" aria-label="Selected memories">
+        <div className="u-reel__head">
+          <span className="u-kicker">00.5 / MEMORY SIGNAL</span>
+          <p>Twenty photographs. One childhood. No two frames carry the same weight.</p>
+        </div>
+        <div className="u-reel__track">
+          {memories.slice(0, Math.min(8, memories.length)).map((m, i) => (
+            <button className="u-reel__item" key={m.src} onClick={() => setSelected(i)} aria-label={m.title}>
+              <span>{m.no}</span><img src={asset(m.src)} alt={m.title} loading="lazy" /><b>{m.title}</b>
+            </button>
+          ))}
+        </div>
+      </section>
+
       <section id="chapters" className="u-chapters">
         {chapters.map(([num, title, copy, m]) => (
           <article className="u-chapter" key={num}>
@@ -329,10 +348,19 @@ export default function RadmanUltimate() {
       </section>
 
       <section className="u-timeline">
-        <div className="u-timeline__head u-reveal"><span className="u-kicker">01 / THE YEARS</span><h2>From first breath<br /><em>to becoming.</em></h2></div>
+        <div className="u-timeline__head u-reveal">
+          <span className="u-kicker">01 / THE YEARS</span>
+          <h2>Time leaves traces.<br /><em>We keep them.</em></h2>
+          <p>هر تصویر یک نقطه روی خط زمان است؛ اما وقتی کنار تصویر بعدی قرار می‌گیرد، تبدیل به روایت می‌شود.</p>
+        </div>
         <div className="u-line" />
         <div className="u-timeline__steps">
-          {memories.slice(0, 8).map((m) => <div className="u-step u-reveal" key={m.src}><span>{m.no}</span><b>{m.title}</b><small>{m.tag}</small></div>)}
+          {memories.slice(0, 8).map((m, i) => (
+            <button className="u-step u-reveal" key={m.src} onClick={() => setSelected(i)}>
+              <span>{m.no}</span><b>{m.title}</b><small>{m.tag}</small>
+              <i><ArrowUpRight size={12} /></i>
+            </button>
+          ))}
         </div>
       </section>
 
