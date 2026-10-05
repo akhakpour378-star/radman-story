@@ -136,3 +136,30 @@
  .u-hero__lead{max-width:300px!important;font-size:8.5px!important;line-height:2!important}
  .u-hero__cta{width:200px!important}
 }
+
+/* RADMAN SIGNATURE MARK + ICON LED BIRTH RECORD */
+.u-logo__mark{width:36px!important;height:36px!important;border:0!important;border-radius:11px!important;position:relative;overflow:hidden;background:linear-gradient(145deg,#f1f0eb 0%,#bfc4c8 48%,#69727d 100%);color:#05070b!important;box-shadow:0 8px 30px #0005,inset 0 1px #fff9!important;transform:rotate(45deg)}
+.u-logo__mark:before{content:"";position:absolute;inset:5px;border:1px solid #05070b44;border-radius:7px}
+.u-logo__mark:after{content:"R";position:absolute;inset:0;display:grid;place-items:center;border:0!important;border-radius:0!important;color:#05070b;font:500 17px/1 "Playfair Display",serif;letter-spacing:-.12em;transform:rotate(-45deg)}
+.u-logo__slash{font-size:18px!important;color:#a5adb7!important;margin-left:2px}
+.u-logo__name{font-size:8px!important;letter-spacing:.38em!important;color:#edf0f2!important}
+.u-logo:hover .u-logo__mark{transform:rotate(135deg) scale(1.04);box-shadow:0 12px 40px #9ce7ef20,inset 0 1px #fff!important}
+.u-logo:hover .u-logo__mark:after{transform:rotate(-135deg)}
+.u-logo:hover .u-logo__slash{color:var(--cyan)!important}
+.u-logo:hover .u-logo__name{letter-spacing:.44em!important}
+.u-hero__birthData{width:min(230px,18vw)!important}
+.u-birthData__item{padding:14px 0!important}
+.u-birthData__item small{display:flex!important;align-items:center;gap:7px}
+.u-birthData__item small svg{color:#9ce7ef;opacity:.72;stroke-width:1.4}
+.u-birthData__item--intro{padding-bottom:17px!important;border-bottom:1px solid #ffffff1c!important}
+.u-birthData__item--intro strong{font:400 20px/1 "Playfair Display",serif!important;letter-spacing:.12em!important;color:#f0efeb!important}
+.u-birthData__item--intro small{color:#9da6b0!important;letter-spacing:.26em!important}
+.u-hero__lead{font-family:"Cormorant Garamond","Playfair Display",serif!important;font-size:18px!important;line-height:1.48!important;letter-spacing:.005em!important;max-width:440px!important;color:#e2e3e1!important}
+.u-hero__cta span{letter-spacing:.24em!important}
+@media(max-width:850px){
+ .u-logo__mark{width:30px!important;height:30px!important;border-radius:9px!important}
+ .u-logo__mark:after{font-size:14px}
+ .u-logo__name{font-size:6px!important;letter-spacing:.27em!important}
+ .u-hero__birthData{width:190px!important}
+ .u-hero__lead{font-size:15px!important;line-height:1.5!important;max-width:330px!important}
+}
