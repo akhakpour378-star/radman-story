@@ -332,10 +332,10 @@ export default function RadmanUltimate() {
           <div className="u-hero__ghost" aria-hidden="true">R</div>
           
         </div>
-        <div className="u-hero__tattooArt" aria-label="Radman's memory artwork">
+        <div className="u-hero__tattooArt" aria-label="Radman memory">
           <div className="u-memoryStage">
             <div className="u-memoryStage__core">
-              <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Radman's memory artwork" />
+              <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Radman memory artwork" />
             </div>
           </div>
         </div>
