@@ -47,3 +47,23 @@
  .u-hero--editorial .u-hero__meta{margin-top:55px}
  .u-hero--editorial .u-scroll{left:22px;bottom:auto;top:53vh}
 }
+
+/* FINAL POLISH / 2026 */
+.u-chapter__image,.u-card button{border:0;padding:0;cursor:zoom-in;text-align:inherit}
+.u-chapter__image i,.u-card button i{position:absolute;right:16px;bottom:16px;width:34px;height:34px;border:1px solid #ffffff35;border-radius:50%;display:grid;place-items:center;color:#fff;background:#02050b66;backdrop-filter:blur(10px);opacity:.7;transition:.35s}
+.u-chapter__image:hover i,.u-card button:hover i{opacity:1;transform:scale(1.08);border-color:#72dfff99}
+.u-card button{display:block;position:relative;width:100%;height:100%;overflow:hidden;background:#c4cedb}
+.u-card button img{transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.u-card button:hover img{transform:scale(1.075)}
+.u-card figcaption{pointer-events:none}
+.u-lightbox{position:fixed;inset:0;z-index:3000;background:rgba(1,3,8,.94);backdrop-filter:blur(22px);display:grid;place-items:center;padding:5vh 7vw;animation:uLbIn .45s ease both}
+.u-lightbox__image{width:min(1100px,82vw);height:min(78vh,820px);display:grid;place-items:center}
+.u-lightbox__image img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;box-shadow:0 40px 120px #000}
+.u-lightbox__close,.u-lightbox__prev,.u-lightbox__next{position:absolute;z-index:2;border:1px solid #ffffff20;background:#07101dcc;color:#fff;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:.3s}
+.u-lightbox__close:hover,.u-lightbox__prev:hover,.u-lightbox__next:hover{border-color:#72dfff99;transform:scale(1.06)}
+.u-lightbox__close{top:28px;right:28px}.u-lightbox__prev{left:28px;top:50%;margin-top:-24px}.u-lightbox__next{right:28px;top:50%;margin-top:-24px}
+.u-lightbox__info{position:absolute;left:7vw;bottom:6vh;display:grid;gap:6px}.u-lightbox__info span,.u-lightbox__info small{font:400 7px 'DM Mono';letter-spacing:.18em;color:#77869a}.u-lightbox__info b{font:400 30px 'Cormorant Garamond';color:#f4f6f8}
+@keyframes uLbIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@media(max-width:850px){
+ .u-lightbox{padding:90px 18px 130px}.u-lightbox__image{width:94vw;height:70vh}.u-lightbox__prev{left:16px;top:auto;bottom:32px;margin:0}.u-lightbox__next{right:16px;top:auto;bottom:32px;margin:0}.u-lightbox__close{top:20px;right:18px}.u-lightbox__info{left:50%;transform:translateX(-50%);bottom:38px;text-align:center;white-space:nowrap}
+}
