@@ -276,6 +276,13 @@ export default function RadmanUltimate() {
           <div className="u-hero__ghost" aria-hidden="true">R</div>
           
         </div>
+        <div className="u-hero__tattooData" aria-label="Radman birth tattoo">
+          <div className="u-tattooData__eyebrow">BIRTH / 10.12.2022</div>
+          <div className="u-tattooData__date">10 · 12 · 22</div>
+          <div className="u-tattooData__line"><span>14:15</span><i></i><span>3.100 KG</span><i></i><span>49 CM</span></div>
+          <div className="u-tattooData__place">NIKAN AQDASIEH · TEHRAN</div>
+          <div className="u-tattooData__pulse" aria-hidden="true"><span></span></div>
+        </div>
         <div className="u-hero__panel">
           <div className="u-hero__birthData" aria-label="Radman birth details">
             <div className="u-birthData__item u-birthData__date">
