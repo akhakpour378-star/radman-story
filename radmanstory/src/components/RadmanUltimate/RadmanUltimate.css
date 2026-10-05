@@ -1339,3 +1339,21 @@
   .u-nav__center a{min-width:58px!important;height:30px!important;padding:0 9px!important;font-size:6px!important}
   .u-nav__sound{min-width:60px!important;height:32px!important;padding:0 10px!important}
 }
+
+/* ===== CHAPTER IMAGE SYSTEM — SMALLER, UNDISTORTED, FOCAL-SAFE ===== */
+.u-chapter__layout{grid-template-columns:minmax(0,.92fr) minmax(280px,.58fr)!important;gap:6vw!important;margin-top:5vh!important}
+.u-chapter__image{width:min(100%,720px)!important;height:auto!important;aspect-ratio:4 / 3!important;min-height:0!important;justify-self:start!important;border-radius:14px!important;border:1px solid rgba(241,241,235,.13)!important;background:radial-gradient(circle at 50% 20%,rgba(156,231,239,.07),transparent 42%),#090d14!important;box-shadow:0 28px 70px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.07)!important}
+.u-chapter__image img{width:100%!important;height:100%!important;display:block!important;object-fit:contain!important;object-position:center 25%!important;transform:none!important;padding:12px!important;box-sizing:border-box!important;border-radius:inherit!important;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .5s ease!important}
+.u-chapter__image:hover img{transform:scale(1.025)!important;filter:saturate(1.04) contrast(1.02)!important}
+.u-chapter:nth-child(2) .u-chapter__image img{object-position:center 20%!important}
+.u-chapter:nth-child(3) .u-chapter__image img{object-position:center 22%!important}
+.u-chapter:nth-child(4) .u-chapter__image img{object-position:center 25%!important}
+.u-chapter__image:after{content:""!important;position:absolute!important;inset:0!important;border-radius:inherit!important;background:linear-gradient(145deg,rgba(156,231,239,.035),transparent 38%,rgba(167,173,255,.025))!important;pointer-events:none!important}
+.u-chapter__image span{top:12px!important;left:12px!important;padding:6px 8px!important;border-radius:999px!important;background:rgba(5,7,11,.68)!important}
+.u-chapter__image i{right:12px!important;bottom:12px!important;width:30px!important;height:30px!important}
+.u-chapter__copy h2{margin-top:12px!important}
+@media(max-width:850px){
+ .u-chapter__layout{grid-template-columns:1fr!important;gap:28px!important;margin-top:4vh!important}
+ .u-chapter__image{width:100%!important;aspect-ratio:4 / 3!important;height:auto!important;min-height:0!important}
+ .u-chapter__image img{padding:8px!important}
+}
