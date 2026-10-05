@@ -321,12 +321,23 @@ export default function RadmanUltimate() {
   };
 
   const chapters = useMemo(() => {
-    const pick = (index: number) => memories[index % Math.max(memories.length, 1)] ?? fallback[index];
+    const used = new Set<string>();
+    const pick = (preferred: number[], matcher?: (m: Memory) => boolean) => {
+      const ordered = [
+        ...(matcher ? memories.filter(matcher) : []),
+        ...preferred.map(i => memories[i]).filter(Boolean),
+        ...memories,
+      ];
+      const found = ordered.find(m => !used.has(m.src));
+      if (found) used.add(found.src);
+      return found ?? memories[0] ?? fallback[0];
+    };
+
     return [
-      ["01", "THE BEGINNING", "A face arrives and an ordinary life becomes a story.", pick(0)],
-      ["02", "THE LITTLE YEARS", "The years move quickly. The archive keeps what time cannot.", pick(2)],
-      ["03", "BECOMING", "Hundreds of ordinary moments slowly become a childhood.", pick(Math.min(7, memories.length - 1))],
-      ["04", "TOGETHER", "Some memories are not about a place. They are about who was there.", memories.find((m) => /together|and-me/i.test(m.src)) ?? pick(0)],
+      ["01", "THE BEGINNING", "A face arrives and an ordinary life becomes a story.", pick([0])],
+      ["02", "THE LITTLE YEARS", "The years move quickly. The archive keeps what time cannot.", pick([2, 3])],
+      ["03", "BECOMING", "Hundreds of ordinary moments slowly become a childhood.", pick([7, 4, 5])],
+      ["04", "TOGETHER", "Some memories are not about a place. They are about who was there.", pick([], m => /together|and-me/i.test(m.src))],
     ] as const;
   }, [memories]);
 
