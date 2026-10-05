@@ -276,15 +276,21 @@ export default function RadmanUltimate() {
           <div className="u-hero__ghost" aria-hidden="true">R</div>
           
         </div>
-        <div className="u-hero__tattooArt" aria-label="Radman's memory artwork">
-          <div className="u-memoryStage">
-            <div className="u-memoryStage__orbit u-memoryStage__orbit--a" />
-            <div className="u-memoryStage__orbit u-memoryStage__orbit--b" />
-            <div className="u-memoryStage__core">
-              <span className="u-memoryStage__scan" />
-              <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Radman's memory artwork" />
+        <div className="u-hero__tattooArt" aria-hidden="true">
+          <div className="u-memoryVoid">
+            <div className="u-memoryVoid__halo" />
+            <div className="u-memoryVoid__ring u-memoryVoid__ring--1" />
+            <div className="u-memoryVoid__ring u-memoryVoid__ring--2" />
+            <div className="u-memoryVoid__ring u-memoryVoid__ring--3" />
+            <div className="u-memoryVoid__pulse">
+              <i /><i /><i /><i /><i />
             </div>
-            <div className="u-memoryStage__caption"><b>R</b><span>14 : 15</span></div>
+            <div className="u-memoryVoid__orbit">
+              <b /><b /><b />
+            </div>
+            <div className="u-memoryVoid__date">10 · 12 · 2022</div>
+            <div className="u-memoryVoid__time">14:15</div>
+            <div className="u-memoryVoid__label">A MOMENT BECAME FOREVER</div>
           </div>
         </div>
         <div className="u-hero__panel">
