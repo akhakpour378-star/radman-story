@@ -505,3 +505,9 @@
 .u-hero > *:not(.u-hero__particles){position:relative;z-index:2}
 .u-hero__particles{mix-blend-mode:screen!important}
 @media(max-width:850px){.u-hero__particles{opacity:.8!important}}
+
+/* Particle-only atmosphere: remove all center artwork/lines */
+.u-memoryVoid__halo,.u-memoryVoid__ring,.u-memoryVoid__pulse,.u-memoryVoid__orbit,.u-memoryVoid__label{display:none!important}
+.u-memoryVoid:before,.u-memoryVoid:after{display:none!important;content:none!important}
+.u-memoryVoid__date{left:50%!important;transform:translateX(-50%)!important;bottom:12vh!important}
+.u-memoryVoid__time{left:50%!important;right:auto!important;transform:translateX(-50%)!important;bottom:7vh!important}
