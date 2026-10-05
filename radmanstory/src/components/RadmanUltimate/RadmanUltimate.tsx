@@ -278,24 +278,25 @@ export default function RadmanUltimate() {
           </div>
 
           <div className="u-hero__birthData" aria-label="Radman birth details">
+            <div className="u-birthData__item u-birthData__item--intro"><small>BIRTH RECORD</small><strong>RADMAN</strong></div>
             <div className="u-birthData__item u-birthData__date">
-              <small>DATE OF BIRTH</small>
+              <small><CalendarDays size={11}/> DATE OF BIRTH</small>
               <strong>DEC <span>/</span> 01 <span>/</span> 2022</strong>
             </div>
             <div className="u-birthData__item u-birthData__time">
-              <small>TIME OF BIRTH</small>
+              <small><Clock3 size={11}/> TIME OF BIRTH</small>
               <strong>14<span>:</span>15</strong>
             </div>
             <div className="u-birthData__item u-birthData__weight">
-              <small>BIRTH WEIGHT</small>
+              <small><Scale size={11}/> BIRTH WEIGHT</small>
               <strong>3.100 <i>kg</i></strong>
             </div>
             <div className="u-birthData__item u-birthData__height">
-              <small>BIRTH HEIGHT</small>
+              <small><Ruler size={11}/> BIRTH HEIGHT</small>
               <strong>49 <i>cm</i></strong>
             </div>
             <div className="u-birthData__item u-birthData__place">
-              <small>PLACE OF BIRTH</small>
+              <small><MapPin size={11}/> PLACE OF BIRTH</small>
               <strong>NIKAN AQDASIEH</strong>
               <em>Tehran · Iran</em>
             </div>
@@ -305,7 +306,7 @@ export default function RadmanUltimate() {
             <div className="u-hero__title">
               <span className="u-hero__titleLine u-hero__titleLine--soft">RADMAN</span>
             </div>
-            <p className="u-hero__lead">از لحظه‌ای که در ۱ دسامبر ۲۰۲۲ به دنیا آمد، زمان برای من فقط با تاریخ‌ها اندازه‌گیری نشد؛ با اولین نگاه، اولین لبخند، قدم‌های کوچک و تمام لحظه‌هایی که آرام‌آرام بخشی از زندگی شدند معنا پیدا کرد. اینجا روایت رادمان است؛ آرشیوی از کودکی، خاطره و عشقی که در قاب‌ها باقی مانده است.</p>
+            <p className="u-hero__lead">From the moment he arrived on December 1, 2022, time was no longer measured only in dates. It became a collection of first looks, first smiles, small steps, quiet mornings and moments that slowly became part of a life. This is Radman — a visual archive of childhood, memory, and the bond that remains in every frame.</p>
             <a className="u-hero__cta" href="#story"><span>ENTER THE STORY</span><ArrowDown size={13} /></a>
           </div>
 
