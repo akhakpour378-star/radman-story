@@ -218,3 +218,16 @@
 .u-hero__cta span{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.28em!important;color:#e5e8ea!important}
 .u-hero__cta svg{color:#9ce7ef!important}
 .u-hero__panelBottom{display:none!important}
+
+/* Pixel Freak inspired: custom geometric R monogram — simple, ownable, precise */
+.u-logo__mark{width:40px!important;height:40px!important;border-radius:10px!important;background:#e9e8e2!important;border:1px solid #ffffff80!important;transform:none!important;box-shadow:0 8px 28px #0007,inset 0 1px #fff!important}
+.u-logo__mark:before{content:"";position:absolute!important;inset:7px!important;border:1px solid #0a101722!important;border-radius:7px!important}
+.u-logo__r{position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;color:#080e16!important;font:600 25px/1 "Cormorant Garamond","Playfair Display",serif!important;transform:none!important;z-index:3}
+.u-logo__mark:after{content:"";position:absolute!important;width:8px!important;height:8px!important;right:6px!important;bottom:6px!important;background:#0a1119!important;border-radius:50%!important;border:0!important;box-shadow:none!important}
+.u-logo__mark i{position:absolute!important;left:9px!important;bottom:9px!important;width:12px!important;height:1px!important;background:#0a1119!important;transform:rotate(-32deg)!important;transform-origin:left center!important}
+.u-logo__word{font-size:7px!important;letter-spacing:.4em!important}
+.u-logo:hover .u-logo__mark{transform:translateY(-2px) scale(1.04)!important;box-shadow:0 13px 36px #0008,inset 0 1px #fff!important}
+.u-hero__cta{display:flex!important;visibility:visible!important;opacity:1!important;left:5vw!important;bottom:10%!important}
+.u-hero__panelBottom{display:none!important}
+.u-nav{border-bottom:0!important}
+.u-nav:after{content:none!important;display:none!important}
