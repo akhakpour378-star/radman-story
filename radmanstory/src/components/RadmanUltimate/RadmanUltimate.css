@@ -544,3 +544,9 @@
  .u-hero__tattooArt{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:52vh!important;transform:none!important;margin-top:3vh!important}
  .u-memoryStage__core img{width:92%!important;height:92%!important}
 }
+
+/* Correct Hero: father-son photo is the primary visual; tattoo is removed. */
+.u-hero__tattooArt{display:none!important}
+.u-hero--editorial .u-hero__photo img{object-position:center 52%!important;transform:scale(1.035)!important}
+.u-hero__birthData{top:50%!important;transform:translateY(-50%)!important}
+@media(max-width:850px){.u-hero__birthData{top:auto!important;transform:none!important}}
