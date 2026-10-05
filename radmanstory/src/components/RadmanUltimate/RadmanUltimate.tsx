@@ -279,7 +279,7 @@ export default function RadmanUltimate() {
         <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
           <div className="u-tattooFrame__art">
             <span className="u-tattooFrame__halo" aria-hidden="true" />
-            <img src="/api/memory?file=memory/tatoo-graphic.png" alt="Original Radman birth tattoo graphic" />
+            <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Original Radman birth tattoo graphic" />
           </div>
         </div>
         <div className="u-hero__panel">
