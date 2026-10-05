@@ -175,9 +175,29 @@ export default function RadmanUltimate() {
       document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
       document.documentElement.style.setProperty("--my", `${e.clientY}px`);
     };
+    const cards = Array.from(document.querySelectorAll<HTMLElement>(".u-card button, .u-chapter__image, .u-hero__cta, .u-manifesto__enter"));
+    const tilt = (e: MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      el.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
+      el.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
+      el.style.setProperty("--px", `${(x * 18).toFixed(1)}px`);
+      el.style.setProperty("--py", `${(y * 18).toFixed(1)}px`);
+    };
+    const reset = (e: MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      el.style.setProperty("--rx", "0deg"); el.style.setProperty("--ry", "0deg");
+      el.style.setProperty("--px", "0px"); el.style.setProperty("--py", "0px");
+    };
     window.addEventListener("mousemove", move, { passive: true });
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
+    cards.forEach((el) => { el.addEventListener("mousemove", tilt); el.addEventListener("mouseleave", reset); });
+    return () => {
+      window.removeEventListener("mousemove", move);
+      cards.forEach((el) => { el.removeEventListener("mousemove", tilt); el.removeEventListener("mouseleave", reset); });
+    };
+  }, [memories.length]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
