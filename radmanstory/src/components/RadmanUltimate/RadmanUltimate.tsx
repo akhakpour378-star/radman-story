@@ -225,10 +225,10 @@ export default function RadmanUltimate() {
       <section id="top" className="u-hero u-hero--editorial">
         <div className="u-hero__frame">
           <div className="u-hero__photo">
-            <img src={asset(memories[0]?.src ?? fallback[0].src)} alt="Radman — archive photograph" />
+            <img src={asset("/memory/radman-and-me.png")} alt="Radman and his father — archive photograph" />
           </div>
           <div className="u-hero__photoShade" />
-          <div className="u-hero__frameNo">01 <i /> {String(memories.length).padStart(2, "0")}</div>
+          <div className="u-hero__frameNo">RADMAN &amp; DAD <i /> 01</div>
         </div>
 
         <div className="u-hero__panel">
@@ -255,19 +255,27 @@ export default function RadmanUltimate() {
 
       <section id="story" className="u-manifesto">
         <div className="u-manifesto__ghost">R</div>
-        <span className="u-kicker u-reveal">00 / THE IDEA</span>
+        <div className="u-manifesto__top u-reveal">
+          <span className="u-kicker">00 / THE ARCHIVE</span>
+          <span className="u-manifesto__index">A PRIVATE VISUAL BIOGRAPHY</span>
+        </div>
         <div className="u-manifesto__copy u-reveal">
-          <h2>Not a gallery.<br /><em>A life.</em></h2>
-          <p>این صفحه یک گالری معمولی نیست؛ یک آرشیو زنده است. عکس‌ها با عمق، حرکت، تایپوگرافی و ریتم کنار هم قرار می‌گیرند تا روایت رادمان حس شود، نه فقط دیده شود.</p>
+          <p className="u-manifesto__eyebrow">A STORY IS BUILT FROM SMALL MOMENTS.</p>
+          <h2>Hold the<br /><em>moment.</em></h2>
+          <p>اینجا قرار نیست فقط عکس‌ها را ورق بزنیم. این بخش، ورودی آرشیو است؛ جایی که چند لحظه‌ی ساده کنار هم قرار می‌گیرند تا مسیر زندگی رادمان را نشان بدهند.</p>
         </div>
-        <div className="u-manifesto__numbers u-reveal">
-          <div><b>{String(memories.length).padStart(2, "0")}</b><span>FRAMES</span></div>
-          <div><b>04</b><span>CHAPTERS</span></div>
-          <div><b>∞</b><span>MEMORY</span></div>
+        <div className="u-manifesto__side u-reveal">
+          <div className="u-manifesto__quote">“The years disappear.<br /><em>The frames remain.</em>”</div>
+          <div className="u-manifesto__numbers">
+            <div><b>{String(memories.length).padStart(2, "0")}</b><span>ORIGINAL FRAMES</span></div>
+            <div><b>04</b><span>STORY CHAPTERS</span></div>
+            <div><b>∞</b><span>MORE TO COME</span></div>
+          </div>
         </div>
+        <a className="u-manifesto__enter" href="#chapters"><span>OPEN THE CHAPTERS</span><ArrowDown size={14} /></a>
       </section>
 
-      <section className="u-chapters">
+      <section id="chapters" className="u-chapters">
         {chapters.map(([num, title, copy, m]) => (
           <article className="u-chapter" key={num}>
             <div className="u-chapter__top"><b>{num}</b><span>{m.tag}</span><small>STORY / 04</small></div>
@@ -298,8 +306,8 @@ export default function RadmanUltimate() {
 
       <section className="u-archive">
         <div className="u-archive__head u-reveal">
-          <div><span className="u-kicker">02 / THE COMPLETE ARCHIVE</span><h2>Every frame.<br /><em>Nothing repeated.</em></h2></div>
-          <p>{memories.length} فایل واقعی از آرشیو، بدون تکرار در گرید. روی هر تصویر کلیک کن تا در حالت سینمایی تمام‌صفحه باز شود.</p>
+          <div><span className="u-kicker">02 / THE COMPLETE ARCHIVE</span><h2>Small moments.<br /><em>Kept forever.</em></h2></div>
+          <p>{memories.length} قاب از آرشیو واقعی رادمان؛ با اندازه‌های کنترل‌شده و نسبت تصویر طبیعی تا هر عکس مثل یک اثر مستقل دیده شود.</p>
         </div>
         <div className="u-archive__grid">
           {memories.map((m, i) => (
