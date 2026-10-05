@@ -231,3 +231,16 @@
 .u-hero__panelBottom{display:none!important}
 .u-nav{border-bottom:0!important}
 .u-nav:after{content:none!important;display:none!important}
+
+/* STANDALONE RADMAN R MONOGRAM + REFINED HEADER */
+.u-logo{gap:0!important}
+.u-logo__mark{width:42px!important;height:42px!important;border-radius:14px!important;background:linear-gradient(145deg,#f5f3ed 0%,#d8d8d3 48%,#aeb4b7 100%)!important;border:1px solid #ffffff8a!important;box-shadow:0 10px 32px #0008,inset 0 1px #ffffff!important;transform:none!important}
+.u-logo__r{font-family:"Cormorant Garamond","Playfair Display",serif!important;font-size:29px!important;font-weight:600!important;letter-spacing:-.08em!important;color:#071019!important}
+.u-logo__mark:before{content:"";position:absolute!important;inset:6px!important;border:1px solid #0710192a!important;border-radius:9px!important}
+.u-logo__mark:after{content:"";position:absolute!important;width:15px!important;height:2px!important;right:6px!important;bottom:9px!important;background:#071019!important;border:0!important;border-radius:2px!important;transform:rotate(-34deg)!important;transform-origin:right center!important}
+.u-logo__mark i{position:absolute!important;width:5px!important;height:5px!important;right:6px!important;top:6px!important;border-radius:50%!important;background:#9ce7ef!important;box-shadow:0 0 12px #9ce7ef88!important}
+.u-logo:hover .u-logo__mark{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 15px 38px #9ce7ef18,inset 0 1px #fff!important}
+.u-hero__signature{display:none!important}
+.u-nav{background:linear-gradient(180deg,#03050bb8 0%,#05081282 48%,#05081224 78%,transparent 100%)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;box-shadow:0 10px 35px #0003!important;border:0!important;border-bottom:0!important}
+.u-nav:before,.u-nav:after{display:none!important;content:none!important;border:0!important}
+.u-nav *{border-bottom-color:transparent!important}
