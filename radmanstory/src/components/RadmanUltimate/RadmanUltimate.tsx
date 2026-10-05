@@ -268,22 +268,57 @@ export default function RadmanUltimate() {
         </div>
 
         <div className="u-hero__panel">
-          <div className="u-hero__panelTop"><span>RADMAN</span><span>VISUAL BIOGRAPHY / 2026</span></div>
+          <div className="u-hero__panelTop">
+            <span>RADMAN / 1401—09—10</span>
+            <span>PRIVATE BIRTH ARCHIVE</span>
+          </div>
+
+          <div className="u-hero__birthData" aria-label="Radman birth details">
+            <div className="u-birthData__item u-birthData__date">
+              <small>DATE OF BIRTH</small>
+              <strong>1401<span>/</span>09<span>/</span>10</strong>
+            </div>
+            <div className="u-birthData__item u-birthData__time">
+              <small>TIME OF BIRTH</small>
+              <strong>14<span>:</span>15</strong>
+            </div>
+            <div className="u-birthData__item u-birthData__weight">
+              <small>BIRTH WEIGHT</small>
+              <strong>3.100 <i>kg</i></strong>
+            </div>
+            <div className="u-birthData__item u-birthData__height">
+              <small>BIRTH HEIGHT</small>
+              <strong>49 <i>cm</i></strong>
+            </div>
+            <div className="u-birthData__item u-birthData__place">
+              <small>PLACE OF BIRTH</small>
+              <strong>NIKAN AQDASIEH</strong>
+              <em>Tehran · Iran</em>
+            </div>
+          </div>
+
           <div className="u-hero__copy">
-            <p className="u-kicker"><span />THE ARCHIVE / A LIFE IN FRAMES</p>
-            <h1 className="u-hero__title">
-              <span className="word"><span>RADMAN</span></span>
-              <span className="word"><em>A LIFE</em><br /><span>IN FRAMES.</span></span>
-            </h1>
-            <p className="u-hero__lead">از اولین نفس تا سال‌هایی که هنوز نیامده‌اند؛ یک روایت تصویری از رشد، خنده، خانواده و خاطراتی که زمان نمی‌تواند پاکشان کند.</p>
-            <a className="u-hero__cta" href="#story"><span>ENTER THE STORY</span><ArrowDown size={14} /></a>
+            <p className="u-kicker"><span />A LIFE / BEGINS HERE</p>
+            <div className="u-hero__title">
+              <span className="u-hero__titleLine">R<span className="u-hero__titleDot">.</span></span>
+              <span className="u-hero__titleLine u-hero__titleLine--soft">RADMAN</span>
+            </div>
+            <div className="u-hero__submark">
+              <span>ONE CHILD</span><i /><span>ONE STORY</span><i /><span>FOREVER</span>
+            </div>
+            <p className="u-hero__lead">روایتی تصویری از پسری که یک روز آمد و معنای «خانه» را برای همیشه تغییر داد.</p>
+            <a className="u-hero__cta" href="#story"><span>ENTER HIS STORY</span><ArrowDown size={14} /></a>
           </div>
-          <div className="u-hero__meta">
-            <div><small>ORIGINAL FRAMES</small><b>{memories.length}</b></div>
-            <div><small>CHAPTERS</small><b>04</b></div>
-            <div><small>STORY</small><b>∞</b></div>
+
+          <div className="u-hero__tattoo">
+            <span>THE MARK / 01</span>
+            <p>روی بازوی راست پدر</p>
+            <i />
           </div>
-          <div className="u-hero__panelBottom"><span>MEMORY / 001</span><span>ARCHIVE / 2026</span></div>
+
+          <div className="u-hero__panelBottom">
+            <span>MEMORY / 001</span><span>ARCHIVE / 2026</span>
+          </div>
         </div>
         <div className="u-orb" /><div className="u-grain" />
         <div className="u-scroll"><ArrowDown size={14} /><span>SCROLL TO ENTER</span></div>
