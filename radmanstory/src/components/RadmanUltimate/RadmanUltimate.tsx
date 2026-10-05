@@ -62,6 +62,62 @@ export default function RadmanUltimate() {
   const [memories, setMemories] = useState<Memory[]>(fallback);
   const [selected, setSelected] = useState<number | null>(null);
 
+  const particleCanvas = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = particleCanvas.current;
+    const hero = canvas?.parentElement;
+    if (!canvas || !hero) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let raf = 0;
+    let w = 0, h = 0, dpr = 1;
+    let particles: Array<{x:number;y:number;vx:number;vy:number;size:number;alpha:number}> = [];
+    const pointer = {x:-9999,y:-9999,active:false};
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const resize = () => {
+      const r = hero.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = r.width; h = r.height;
+      canvas.width = w*dpr; canvas.height = h*dpr;
+      canvas.style.width = w+"px"; canvas.style.height = h+"px";
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      const count = Math.min(180, Math.max(75, Math.floor((w*h)/10500)));
+      particles = Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.16,vy:(Math.random()-.5)*.16,size:Math.random()<.82?1:1.6,alpha:.18+Math.random()*.42}));
+    };
+    const move = (e: MouseEvent) => { const r=hero.getBoundingClientRect(); pointer.x=e.clientX-r.left; pointer.y=e.clientY-r.top; pointer.active=true; };
+    const leave = () => { pointer.active=false; };
+    const frame = () => {
+      ctx.clearRect(0,0,w,h);
+      for (const p of particles) {
+        if (!reduce.matches) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < -10) p.x=w+10; if (p.x>w+10) p.x=-10;
+          if (p.y < -10) p.y=h+10; if (p.y>h+10) p.y=-10;
+          if (pointer.active) {
+            const dx=p.x-pointer.x, dy=p.y-pointer.y, dist=Math.hypot(dx,dy)||1;
+            if(dist<150){ const force=(1-dist/150)*0.18; p.vx += dx/dist*force; p.vy += dy/dist*force; }
+          }
+          p.vx*=.985; p.vy*=.985;
+          const speed=Math.hypot(p.vx,p.vy);
+          if(speed<.12){p.vx += (Math.random()-.5)*.006; p.vy += (Math.random()-.5)*.006;}
+        }
+        ctx.globalAlpha=p.alpha;
+        ctx.fillStyle="rgba(220,235,233,1)";
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      raf=requestAnimationFrame(frame);
+    };
+    resize();
+    window.addEventListener("resize",resize);
+    hero.addEventListener("mousemove",move);
+    hero.addEventListener("mouseleave",leave);
+    frame();
+    return()=>{cancelAnimationFrame(raf);window.removeEventListener("resize",resize);hero.removeEventListener("mousemove",move);hero.removeEventListener("mouseleave",leave)};
+  }, []);
+
   useEffect(() => {
     let alive = true;
     fetch("/api/memory?list=1")
@@ -266,7 +322,7 @@ export default function RadmanUltimate() {
         </button>
       </nav>
 
-      <section id="top" className="u-hero u-hero--editorial">
+      <section id="top" className="u-hero u-hero--editorial"><canvas ref={particleCanvas} className="u-hero__particles" aria-hidden="true" />
         <div className="u-hero__frame">
           <div className="u-hero__photo">
             <img src={asset("/memory/radman-and-me.png")} alt="Radman and his father — archive photograph" />
