@@ -70,55 +70,79 @@ export default function RadmanUltimate() {
     if (!canvas || !hero) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
     let raf = 0;
-    let w = 0, h = 0, dpr = 1;
-    let particles: Array<{x:number;y:number;vx:number;vy:number;size:number;alpha:number}> = [];
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let last = 0;
+
+    type Particle = {
+      x:number; y:number; vx:number; vy:number;
+      size:number; alpha:number; phase:number;
+    };
+
+    let particles: Particle[] = [];
 
     const resize = () => {
-      const r = hero.getBoundingClientRect();
+      const rect = hero.getBoundingClientRect();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = r.width; h = r.height;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      canvas.style.width = w + "px"; canvas.style.height = h + "px";
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(420, Math.max(180, Math.floor((w * h) / 5200)));
+
+      const count = Math.min(460, Math.max(220, Math.floor((width * height) / 4300)));
       particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.055,
-        vy: (Math.random() - 0.5) * 0.045,
-        size: Math.random() < 0.84 ? 0.8 : 1.35,
-        alpha: 0.16 + Math.random() * 0.34,
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 6,
+        size: Math.random() < 0.86 ? 0.8 : 1.45,
+        alpha: 0.14 + Math.random() * 0.34,
+        phase: Math.random() * Math.PI * 2,
       }));
     };
 
-    const frame = () => {
-      ctx.clearRect(0, 0, w, h);
+    const frame = (time: number) => {
+      if (!last) last = time;
+      const dt = Math.min((time - last) / 1000, 0.04);
+      last = time;
+
+      ctx.clearRect(0, 0, width, height);
+
       for (const p of particles) {
-        if (!reduce.matches) {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < -8) p.x = w + 8;
-          if (p.x > w + 8) p.x = -8;
-          if (p.y < -8) p.y = h + 8;
-          if (p.y > h + 8) p.y = -8;
-        }
+        p.phase += dt * 0.22;
+
+        // Slow autonomous floating motion — deliberately visible, never mouse-dependent.
+        p.x += (p.vx + Math.cos(p.phase) * 1.15) * dt;
+        p.y += (p.vy + Math.sin(p.phase * 0.82) * 0.9) * dt;
+
+        if (p.x < -12) p.x = width + 12;
+        if (p.x > width + 12) p.x = -12;
+        if (p.y < -12) p.y = height + 12;
+        if (p.y > height + 12) p.y = -12;
+
         ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = "rgba(220,235,233,1)";
+        ctx.fillStyle = "rgba(225,238,237,1)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
       }
+
       ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
+      raf = window.requestAnimationFrame(frame);
     };
 
     resize();
     window.addEventListener("resize", resize);
-    frame();
+    raf = window.requestAnimationFrame(frame);
+
     return () => {
-      cancelAnimationFrame(raf);
+      window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
   }, []);
