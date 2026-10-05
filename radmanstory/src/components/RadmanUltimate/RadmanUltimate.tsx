@@ -83,7 +83,7 @@ export default function RadmanUltimate() {
       canvas.width = w*dpr; canvas.height = h*dpr;
       canvas.style.width = w+"px"; canvas.style.height = h+"px";
       ctx.setTransform(dpr,0,0,dpr,0,0);
-      const count = Math.min(180, Math.max(75, Math.floor((w*h)/10500)));
+      const count = Math.min(420, Math.max(180, Math.floor((w*h)/5200)));
       particles = Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.16,vy:(Math.random()-.5)*.16,size:Math.random()<.82?1:1.6,alpha:.18+Math.random()*.42}));
     };
     const move = (e: MouseEvent) => { const r=hero.getBoundingClientRect(); pointer.x=e.clientX-r.left; pointer.y=e.clientY-r.top; pointer.active=true; };
