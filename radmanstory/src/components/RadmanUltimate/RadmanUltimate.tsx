@@ -61,6 +61,8 @@ export default function RadmanUltimate() {
   const [sound, setSound] = useState(false);
   const [memories, setMemories] = useState<Memory[]>(fallback);
   const [selected, setSelected] = useState<number | null>(null);
+  const [videos, setVideos] = useState<string[]>([]);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const particleCanvas = useRef<HTMLCanvasElement | null>(null);
 
@@ -151,8 +153,9 @@ export default function RadmanUltimate() {
     let alive = true;
     fetch("/api/memory?list=1")
       .then((r) => r.json())
-      .then((data: { images?: string[] }) => {
+      .then((data: { images?: string[]; videos?: string[] }) => {
         if (!alive || !Array.isArray(data.images) || !data.images.length) return;
+        if (Array.isArray(data.videos)) setVideos(data.videos);
         const files = data.images.filter((x) => /\.(jpe?g|png|webp|avif)$/i.test(x));
         const next = files.map((src, index) => ({
           src,
@@ -293,17 +296,17 @@ export default function RadmanUltimate() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
-      if (e.key === "Escape") setSelected(null);
+      if (e.key === "Escape") { setSelected(null); setSelectedVideo(null); }
       if (e.key === "ArrowRight") setSelected((v) => (v === null ? 0 : (v + 1) % memories.length));
       if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
     };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = selected !== null ? "hidden" : "";
+    document.body.style.overflow = (selected !== null || selectedVideo !== null) ? "hidden" : "";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [selected, memories.length]);
+  }, [selected, selectedVideo, memories.length]);
 
   const toggleSound = () => {
     if (!audio.current) {
@@ -434,9 +437,17 @@ export default function RadmanUltimate() {
           <p>Twenty photographs. One childhood. No two frames carry the same weight.</p>
         </div>
         <div className="u-reel__track">
-          {memories.slice(0, Math.min(8, memories.length)).map((m, i) => (
+          {memories.slice(0, Math.min(7, memories.length)).map((m, i) => (
             <button className="u-reel__item" key={m.src} onClick={() => setSelected(i)} aria-label={m.title}>
               <span>{m.no}</span><img src={asset(m.src)} alt={m.title} loading="lazy" /><b>{m.title}</b>
+            </button>
+          ))}
+          {videos.slice(0, 2).map((src, i) => (
+            <button className="u-reel__item u-reel__item--video" key={src} onClick={() => setSelectedVideo(src)} aria-label="Play memory video">
+              <span>V{String(i + 1).padStart(2, "0")}</span>
+              <video src={asset(src)} muted playsInline preload="metadata" />
+              <i className="u-mediaPlay">PLAY</i>
+              <b>Moving Memory</b>
             </button>
           ))}
         </div>
@@ -534,6 +545,15 @@ export default function RadmanUltimate() {
           <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
           <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
           <button className="u-lightbox__next" onClick={() => setSelected((selected! + 1) % memories.length)} aria-label="Next"><ArrowRight /></button>
+        </div>
+      )}
+      {selectedVideo && (
+        <div className="u-lightbox u-lightbox--video" role="dialog" aria-modal="true" aria-label="Memory video">
+          <button className="u-lightbox__close" onClick={() => setSelectedVideo(null)} aria-label="Close"><X /></button>
+          <div className="u-lightbox__videoFrame">
+            <video src={asset(selectedVideo)} controls autoPlay playsInline preload="metadata" />
+            <span>ORIGINAL MEMORY / VIDEO</span>
+          </div>
         </div>
       )}
     </main>
