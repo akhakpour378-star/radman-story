@@ -13,8 +13,10 @@ export async function GET(request: NextRequest) {
   if (list === "1") {
     try {
       const dir = path.join(root, "memory");
-      const names = (await readdir(dir)).filter((name) => /\\.(jpe?g|png|webp|avif)$/i.test(name));
-      return NextResponse.json({ images: names.map((name) => `/memory/${name}`) }, { headers: { "Cache-Control": "no-store" } });
+      const names = await readdir(dir);
+      const images = names.filter((name) => /\\.(jpe?g|png|webp|avif)$/i.test(name)).map((name) => `/memory/${name}`);
+      const videos = names.filter((name) => /\\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
+      return NextResponse.json({ images, videos }, { headers: { "Cache-Control": "no-store" } });
     } catch { return NextResponse.json({ images: [] }); }
   }
   const file = request.nextUrl.searchParams.get("file");
