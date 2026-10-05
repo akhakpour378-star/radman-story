@@ -527,3 +527,20 @@
 }
 /* particles only: remove every decorative band/line behind them */
 .u-hero:before,.u-hero:after,.u-memoryVoid:before,.u-memoryVoid:after{display:none!important;content:none!important}
+
+/* Restore balanced original Hero: visual left, content right, centered vertically */
+.u-hero{display:block!important;position:relative!important;overflow:hidden!important}
+.u-hero__panel{display:flex!important;position:absolute!important;right:7vw!important;top:50%!important;transform:translateY(-50%)!important;width:min(38vw,540px)!important;align-items:center!important}
+.u-hero__tattooArt{display:flex!important;position:absolute!important;left:4vw!important;top:50%!important;bottom:auto!important;width:min(46vw,650px)!important;height:min(82vh,760px)!important;transform:translateY(-50%)!important;align-items:center!important;justify-content:center!important;z-index:1!important}
+.u-memoryStage{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-memoryStage__core{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-memoryStage__core img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important;filter:drop-shadow(0 22px 40px rgba(0,0,0,.3))!important}
+@media(max-width:1100px){
+ .u-hero__panel{right:4vw!important;width:42vw!important}
+ .u-hero__tattooArt{left:1vw!important;width:50vw!important}
+}
+@media(max-width:850px){
+ .u-hero__panel{position:relative!important;right:auto!important;top:auto!important;transform:none!important;width:100%!important}
+ .u-hero__tattooArt{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:52vh!important;transform:none!important;margin-top:3vh!important}
+ .u-memoryStage__core img{width:92%!important;height:92%!important}
+}
