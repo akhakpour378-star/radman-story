@@ -332,10 +332,11 @@ export default function RadmanUltimate() {
           <div className="u-hero__ghost" aria-hidden="true">R</div>
           
         </div>
-        <div className="u-hero__tattooArt" aria-hidden="true">
-          <div className="u-memoryVoid">
-            <div className="u-memoryVoid__date">10 · 12 · 2022</div>
-            <div className="u-memoryVoid__time">14:15</div>
+        <div className="u-hero__tattooArt" aria-label="Radman's memory artwork">
+          <div className="u-memoryStage">
+            <div className="u-memoryStage__core">
+              <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Radman's memory artwork" />
+            </div>
           </div>
         </div>
         <div className="u-hero__panel">
