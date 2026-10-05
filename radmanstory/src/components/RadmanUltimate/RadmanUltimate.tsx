@@ -276,10 +276,15 @@ export default function RadmanUltimate() {
           <div className="u-hero__ghost" aria-hidden="true">R</div>
           
         </div>
-        <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
-          <div className="u-tattooFrame__art">
-            <span className="u-tattooFrame__halo" aria-hidden="true" />
-            <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Original Radman birth tattoo graphic" />
+        <div className="u-hero__tattooArt" aria-label="Radman's memory artwork">
+          <div className="u-memoryStage">
+            <div className="u-memoryStage__orbit u-memoryStage__orbit--a" />
+            <div className="u-memoryStage__orbit u-memoryStage__orbit--b" />
+            <div className="u-memoryStage__core">
+              <span className="u-memoryStage__scan" />
+              <img src="/api/memory?file=memory/radman-tattoo-hero.png" alt="Radman's memory artwork" />
+            </div>
+            <div className="u-memoryStage__caption"><b>R</b><span>14 : 15</span></div>
           </div>
         </div>
         <div className="u-hero__panel">
