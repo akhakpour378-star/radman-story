@@ -550,3 +550,13 @@
 .u-hero--editorial .u-hero__photo img{object-position:center 52%!important;transform:scale(1.035)!important}
 .u-hero__birthData{top:50%!important;transform:translateY(-50%)!important}
 @media(max-width:850px){.u-hero__birthData{top:auto!important;transform:none!important}}
+
+/* Final Hero correction: father-son photo + centered right birth panel + particles only */
+.u-hero__tattooArt{display:none!important}
+.u-hero__frame{position:absolute!important;left:4vw!important;top:50%!important;width:min(55vw,760px)!important;height:min(82vh,760px)!important;transform:translateY(-50%)!important}
+.u-hero__photo{position:absolute!important;inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-hero__photo img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important}
+.u-hero__panel{position:absolute!important;right:7vw!important;top:50%!important;transform:translateY(-50%)!important;width:min(32vw,460px)!important}
+.u-hero__birthData{position:relative!important;top:auto!important;transform:none!important}
+@media(max-width:1100px){.u-hero__frame{left:2vw!important;width:55vw!important}.u-hero__panel{right:4vw!important;width:38vw!important}}
+@media(max-width:850px){.u-hero__frame{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:52vh!important;transform:none!important}.u-hero__panel{position:relative!important;right:auto!important;top:auto!important;transform:none!important;width:100%!important}}
