@@ -372,3 +372,14 @@
  .u-tattooFrame__art img{width:92%!important;height:92%!important}
  .u-hero__tattooArt:after{font-size:5px!important;bottom:2%!important}
 }
+
+/* Clarity pass: move artwork left, build a controlled spotlight behind it */
+.u-hero__tattooArt{left:0.5vw!important;top:50%!important;width:min(37vw,520px)!important;height:min(78vh,720px)!important;transform:translateY(-50%)!important}
+.u-tattooFrame__art{isolation:isolate!important}
+.u-tattooFrame__art:before{display:block!important;content:""!important;position:absolute!important;z-index:0!important;width:74%!important;height:84%!important;border-radius:50%!important;background:radial-gradient(ellipse at center,rgba(230,239,237,.15) 0%,rgba(157,190,194,.08) 28%,rgba(42,53,57,.035) 52%,transparent 72%)!important;filter:blur(26px)!important;box-shadow:none!important}
+.u-tattooFrame__art:after{display:block!important;content:""!important;position:absolute!important;z-index:-1!important;width:92%!important;height:92%!important;border:1px solid rgba(240,241,237,.045)!important;border-radius:50%!important;background:radial-gradient(circle at 50% 48%,rgba(255,255,255,.025),transparent 57%)!important}
+.u-tattooFrame__art img{width:90%!important;height:90%!important;object-fit:contain!important;object-position:center!important;filter:drop-shadow(0 14px 28px rgba(0,0,0,.28))!important;opacity:1!important}
+@media(max-width:850px){
+ .u-hero__tattooArt{left:0!important;bottom:8%!important;top:auto!important;width:210px!important;height:350px!important;transform:none!important}
+ .u-tattooFrame__art img{width:94%!important;height:94%!important}
+}
