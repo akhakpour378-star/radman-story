@@ -163,3 +163,13 @@
  .u-hero__birthData{width:190px!important}
  .u-hero__lead{font-size:15px!important;line-height:1.5!important;max-width:330px!important}
 }
+
+/* REFINED MARK — abstract R + heartbeat */
+.u-logo__mark{width:36px!important;height:36px!important;border-radius:50%!important;background:radial-gradient(circle at 35% 30%,#f7f6f1 0%,#d9d9d5 42%,#777f89 100%)!important;transform:none!important;box-shadow:0 7px 24px #0007,inset 0 1px #fff!important}
+.u-logo__mark:before{content:"";position:absolute;left:9px;right:7px;top:11px;height:13px;border:0;border-left:1.5px solid #111923;border-bottom:1.5px solid #111923;border-radius:0 0 0 8px;transform:skewY(-8deg);opacity:.9}
+.u-logo__mark:after{content:"";position:absolute;left:8px;right:7px;top:17px;height:1px;border:0;border-radius:0;background:linear-gradient(90deg,#111923 0 20%,transparent 20% 27%,#111923 27% 45%,transparent 45% 52%,#111923 52% 100%);transform:none;opacity:.85}
+.u-logo__mark span{position:absolute;right:9px;top:9px;width:7px;height:7px;border:1px solid #111923;border-radius:50%;opacity:.9}
+.u-logo__slash,.u-logo__name{display:none!important}
+.u-logo:hover .u-logo__mark{transform:translateY(-1px)!important;box-shadow:0 10px 34px #9ce7ef20,inset 0 1px #fff!important}
+.u-nav{background:linear-gradient(180deg,#02040aeF 0%,#050812dc 45%,#050812b8 72%,transparent 100%)!important;box-shadow:0 10px 34px #0008}
+.u-nav:after{height:1px;background:linear-gradient(90deg,transparent,#9ce7ef2a 25%,#ffffff18 50%,#9ce7ef2a 75%,transparent)}
