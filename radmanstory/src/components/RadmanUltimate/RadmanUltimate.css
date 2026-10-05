@@ -301,3 +301,29 @@
 .u-hero__tattooArt{mix-blend-mode:screen!important;filter:drop-shadow(0 16px 35px rgba(0,0,0,.28))!important}
 .u-hero__tattooArt:after{display:none!important}
 .u-hero__tattooArt img{mix-blend-mode:screen!important;filter:grayscale(1) contrast(1.12) brightness(1.18)!important}
+
+/* Refined tattoo composition: artwork as an editorial object, not a floating image */
+.u-hero__tattooArt{left:4.2vw!important;top:50%!important;bottom:auto!important;transform:translateY(-48%)!important;width:min(31vw,420px)!important;height:min(70vh,690px)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;opacity:1!important;mix-blend-mode:normal!important;filter:none!important}
+.u-tattooFrame__label{font:500 7px/1 "DM Sans",sans-serif;letter-spacing:.34em;color:rgba(240,241,237,.52);white-space:nowrap}
+.u-tattooFrame__label--top{align-self:flex-start;margin-left:22%;margin-bottom:13px}
+.u-tattooFrame__line{height:1px;background:linear-gradient(90deg,rgba(156,231,239,.55),transparent);width:90px;opacity:.7}
+.u-tattooFrame__line--left{position:absolute;left:0;top:50%;transform:translateY(-50%);width:42px}
+.u-tattooFrame__art{position:relative;width:74%;height:73%;display:flex;align-items:center;justify-content:center}
+.u-tattooFrame__art:before{content:"";position:absolute;inset:0;border:1px solid rgba(240,241,237,.09);border-radius:50% 50% 46% 46%;transform:scaleX(.76);box-shadow:0 0 80px rgba(0,0,0,.2)}
+.u-tattooFrame__art:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(240,241,237,.10),transparent);opacity:.55}
+.u-tattooFrame__art img{position:relative!important;z-index:3!important;width:82%!important;height:92%!important;object-fit:contain!important;object-position:center!important;display:block!important;mix-blend-mode:normal!important;filter:grayscale(1) contrast(1.04)!important;opacity:.94!important}
+.u-tattooFrame__corner{position:absolute;width:18px;height:18px;z-index:4;opacity:.5}
+.u-tattooFrame__corner--tl{left:6%;top:4%;border-left:1px solid #9ce7ef99;border-top:1px solid #9ce7ef99}
+.u-tattooFrame__corner--br{right:6%;bottom:4%;border-right:1px solid #9ce7ef99;border-bottom:1px solid #9ce7ef99}
+.u-tattooFrame__meta{display:flex;align-items:center;gap:9px;margin-top:13px;font:500 6.5px/1 "DM Sans",sans-serif;letter-spacing:.18em;color:rgba(240,241,237,.46);white-space:nowrap}
+.u-tattooFrame__meta i{width:2px;height:2px;background:#9ce7ef;border-radius:50%;box-shadow:0 0 7px #9ce7ef}
+.u-tattooFrame__pulse{width:210px;height:16px;margin-top:17px;position:relative;opacity:.46}
+.u-tattooFrame__pulse:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#fff2}
+.u-tattooFrame__pulse span{position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 18%,#9ce7ef 18% 18.5%,transparent 18.5% 32%,#9ce7ef 32% 32.5%,transparent 32.5% 46%,#9ce7ef 46% 46.5%,transparent 46.5% 63%,#9ce7ef 63% 63.5%,transparent 63.5% 100%);clip-path:polygon(0 50%,18% 50%,22% 50%,24% 12%,26% 88%,28% 50%,32% 50%,35% 35%,37% 65%,39% 50%,46% 50%,48% 10%,50% 90%,52% 50%,63% 50%,66% 30%,68% 70%,70% 50%,100% 50%)}
+@media(max-width:850px){
+ .u-hero__tattooArt{left:4vw!important;top:auto!important;bottom:12%!important;transform:none!important;width:185px!important;height:350px!important;opacity:.82!important}
+ .u-tattooFrame__label--top{margin-left:18%;font-size:5.5px}
+ .u-tattooFrame__art{height:66%;width:78%}
+ .u-tattooFrame__meta{font-size:5px;gap:5px;letter-spacing:.1em}
+ .u-tattooFrame__pulse{width:140px}
+}
