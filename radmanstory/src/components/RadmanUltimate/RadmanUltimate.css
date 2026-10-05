@@ -296,3 +296,8 @@
 .u-logo:hover .u-logo__svg{stroke:#ffffff!important}
 .u-hero__tattooArt{display:flex!important;visibility:visible!important;opacity:.9!important;z-index:25!important}
 .u-hero__tattooArt img{display:block!important;visibility:visible!important;opacity:1!important;object-fit:contain!important}
+
+/* Transparent tattoo artwork presentation */
+.u-hero__tattooArt{mix-blend-mode:screen!important;filter:drop-shadow(0 16px 35px rgba(0,0,0,.28))!important}
+.u-hero__tattooArt:after{display:none!important}
+.u-hero__tattooArt img{mix-blend-mode:screen!important;filter:grayscale(1) contrast(1.12) brightness(1.18)!important}
