@@ -284,3 +284,15 @@
 .u-logo__r i{position:absolute!important;right:6px!important;bottom:7px!important;width:4px!important;height:4px!important;border-radius:50%!important;background:#9ce7ef!important;box-shadow:0 0 10px rgba(156,231,239,.6)!important}
 .u-logo:hover .u-logo__mark{transform:rotate(-4deg) scale(1.04)!important}
 .u-nav{min-height:74px!important;background:linear-gradient(180deg,rgba(3,6,12,.86),rgba(3,6,12,.48) 65%,transparent)!important;backdrop-filter:blur(18px) saturate(115%)!important;-webkit-backdrop-filter:blur(18px) saturate(115%)!important;box-shadow:0 12px 34px rgba(0,0,0,.18)!important}
+
+/* DEFINITIVE RADMAN MONOGRAM */
+.u-logo{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:44px!important;height:44px!important}
+.u-logo__word{display:none!important}
+.u-logo__mark{position:relative!important;width:44px!important;height:44px!important;display:grid!important;place-items:center!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;transform:none!important;overflow:visible!important}
+.u-logo__mark:before{content:"";position:absolute!important;inset:5px!important;border:1px solid rgba(241,241,235,.34)!important;border-radius:50%!important}
+.u-logo__mark:after{content:"";position:absolute!important;left:11px!important;right:11px!important;bottom:7px!important;height:1px!important;background:rgba(156,231,239,.62)!important;transform:none!important}
+.u-logo__svg{width:34px!important;height:34px!important;display:block!important;fill:none!important;stroke:#f1f1eb!important;stroke-width:2.15!important;stroke-linecap:round!important;stroke-linejoin:round!important;position:relative!important;z-index:2!important}
+.u-logo:hover .u-logo__mark{transform:scale(1.045)!important}
+.u-logo:hover .u-logo__svg{stroke:#ffffff!important}
+.u-hero__tattooArt{display:flex!important;visibility:visible!important;opacity:.9!important;z-index:25!important}
+.u-hero__tattooArt img{display:block!important;visibility:visible!important;opacity:1!important;object-fit:contain!important}
