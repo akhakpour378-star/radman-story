@@ -1,3 +1,4 @@
+import tattooGraphic from "../../../memory/tatoo-graphic.png";
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -278,7 +279,7 @@ export default function RadmanUltimate() {
         </div>
         <div className="u-hero__tattooArt" aria-label="Radman's original birth tattoo">
           <img
-            src={asset("/memory/tatoo-graphic.png")}
+            src={tattooGraphic.src}
             alt="Original Radman birth tattoo graphic"
           />
         </div>
