@@ -441,3 +441,29 @@
  .u-memoryVoid__time{right:4%;bottom:18%;font-size:13px}
  .u-memoryVoid__label{bottom:9%;font-size:4.5px;letter-spacing:.28em}
 }
+
+/* FULL-HERO MEMORY FIELD — remove the left content column and let the animation own the viewport */
+.u-hero__panel{display:none!important}
+.u-hero__tattooArt{position:absolute!important;inset:0!important;left:0!important;top:0!important;bottom:0!important;width:100%!important;height:100%!important;transform:none!important;display:block!important;z-index:1!important;pointer-events:none!important}
+.u-memoryVoid{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
+.u-memoryVoid__halo{width:38vw!important;height:38vw!important;max-width:620px!important;max-height:620px!important}
+.u-memoryVoid__ring--1{width:44vw!important;height:44vw!important;max-width:720px!important;max-height:720px!important}
+.u-memoryVoid__ring--2{width:68vw!important;height:32vw!important;max-width:1100px!important;max-height:520px!important}
+.u-memoryVoid__ring--3{width:82vw!important;height:48vw!important;max-width:1320px!important;max-height:760px!important}
+.u-memoryVoid__pulse{width:min(72vw,1050px)!important;height:220px!important}
+.u-memoryVoid__orbit{width:min(76vw,1120px)!important;height:min(76vw,1120px)!important}
+.u-memoryVoid__date{left:12vw!important;bottom:14vh!important}
+.u-memoryVoid__time{right:12vw!important;bottom:14vh!important}
+.u-memoryVoid__label{bottom:7vh!important}
+.u-memoryVoid:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(112,175,181,.045),transparent 34%),linear-gradient(90deg,transparent 0%,rgba(0,0,0,.12) 50%,transparent 100%);z-index:-1}
+.u-memoryVoid:after{content:"";position:absolute;inset:8vh 7vw;background:linear-gradient(90deg,transparent,rgba(240,241,237,.025),transparent);mask-image:linear-gradient(90deg,transparent,black 25%,black 75%,transparent);z-index:-1}
+@media(max-width:850px){
+ .u-hero__tattooArt{inset:0!important;width:100%!important;height:100%!important}
+ .u-memoryVoid__halo{width:65vw!important;height:65vw!important}
+ .u-memoryVoid__ring--1{width:72vw!important;height:72vw!important}
+ .u-memoryVoid__ring--2{width:110vw!important;height:55vw!important}
+ .u-memoryVoid__ring--3{width:125vw!important;height:75vw!important}
+ .u-memoryVoid__pulse{width:94vw!important;height:150px!important}
+ .u-memoryVoid__date{left:8vw!important;bottom:11vh!important}
+ .u-memoryVoid__time{right:8vw!important;bottom:11vh!important}
+}
