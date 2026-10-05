@@ -47,7 +47,7 @@ const prettyTitle = (file: string, index: number) => {
     .replace(/[-_]+/g, " ")
     .trim();
   if (!clean || /^radman$/i.test(clean)) return `Memory ${String(index + 1).padStart(2, "0")}`;
-  return clean.replace(/w/g, (c) => c.toUpperCase());
+  return clean.replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
 export default function RadmanUltimate() {
@@ -63,7 +63,7 @@ export default function RadmanUltimate() {
       .then((r) => r.json())
       .then((data: { images?: string[] }) => {
         if (!alive || !Array.isArray(data.images) || !data.images.length) return;
-        const files = data.images.filter((x) => /.(jpe?g|png|webp|avif)$/i.test(x));
+        const files = data.images.filter((x) => /\.(jpe?g|png|webp|avif)$/i.test(x));
         const next = files.map((src, index) => ({
           src,
           no: String(index + 1).padStart(2, "0"),
