@@ -99,8 +99,8 @@ export default function RadmanUltimate() {
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 18,
-        vy: (Math.random() - 0.5) * 14,
+        vx: (Math.random() - 0.5) * 30,
+        vy: (Math.random() - 0.5) * 23,
         size: Math.random() < 0.86 ? 0.8 : 1.45,
         alpha: 0.14 + Math.random() * 0.34,
         phase: Math.random() * Math.PI * 2,
@@ -118,8 +118,8 @@ export default function RadmanUltimate() {
         p.phase += dt * 0.22;
 
         // Slow autonomous floating motion — deliberately visible, never mouse-dependent.
-        p.x += (p.vx + Math.cos(p.phase) * 2.4) * dt;
-        p.y += (p.vy + Math.sin(p.phase * 0.82) * 1.9) * dt;
+        p.x += (p.vx + Math.cos(p.phase) * 4.0) * dt;
+        p.y += (p.vy + Math.sin(p.phase * 0.82) * 3.2) * dt;
 
         if (p.x < -12) p.x = width + 12;
         if (p.x > width + 12) p.x = -12;
@@ -240,7 +240,7 @@ export default function RadmanUltimate() {
       gsap.utils.toArray<HTMLElement>(".u-card").forEach((card, i) => {
         gsap.fromTo(
           card,
-          { y: 50 + (i % 3) * 18, opacity: 0 },
+          { y: 50 + (i % 3) * 30, opacity: 0 },
           {
             y: 0,
             opacity: 1,
@@ -274,8 +274,8 @@ export default function RadmanUltimate() {
       const y = (e.clientY - r.top) / r.height - .5;
       el.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
       el.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
-      el.style.setProperty("--px", `${(x * 18).toFixed(1)}px`);
-      el.style.setProperty("--py", `${(y * 18).toFixed(1)}px`);
+      el.style.setProperty("--px", `${(x * 30).toFixed(1)}px`);
+      el.style.setProperty("--py", `${(y * 30).toFixed(1)}px`);
     };
     const reset = (e: MouseEvent) => {
       const el = e.currentTarget as HTMLElement;
