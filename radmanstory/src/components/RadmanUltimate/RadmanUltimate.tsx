@@ -171,6 +171,15 @@ export default function RadmanUltimate() {
   }, [memories.length]);
 
   useEffect(() => {
+    const move = (e: MouseEvent) => {
+      document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
+      document.documentElement.style.setProperty("--my", `${e.clientY}px`);
+    };
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
       if (e.key === "Escape") setSelected(null);
