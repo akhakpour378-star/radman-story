@@ -1498,3 +1498,112 @@
   .u-hero::after{height:18vh!important}
   .u-hero::before{height:25vh!important}
 }
+
+/* ===== FINAL HERO FADE OVERRIDE ===== */
+.u-hero{
+  position:relative!important;
+  z-index:0!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+.u-hero::after{
+  content:""!important;
+  position:absolute!important;
+  z-index:50!important;
+  left:0!important;
+  right:0!important;
+  bottom:-2px!important;
+  height:clamp(180px,24vh,300px)!important;
+  pointer-events:none!important;
+  background:linear-gradient(
+    to bottom,
+    rgba(2,5,10,0) 0%,
+    rgba(2,5,10,.035) 12%,
+    rgba(2,5,10,.12) 30%,
+    rgba(2,5,10,.30) 52%,
+    rgba(2,5,10,.62) 74%,
+    #02050a 100%
+  )!important;
+}
+.u-hero::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:49!important;
+  left:-8%!important;
+  right:-8%!important;
+  bottom:-30px!important;
+  height:220px!important;
+  pointer-events:none!important;
+  background:radial-gradient(ellipse at 50% 100%,rgba(156,231,239,.055),rgba(2,5,10,0) 68%)!important;
+  filter:blur(20px)!important;
+}
+.u-hero + *{
+  position:relative!important;
+  z-index:1!important;
+  margin-top:-55px!important;
+  padding-top:55px!important;
+  background:linear-gradient(to bottom,#02050a 0,#02050a 100%)!important;
+}
+
+/* ===== ENTER THE STORY = EXPLORE BUTTON LANGUAGE ===== */
+.u-enter,
+.u-hero .enter-story,
+.u-hero a[href*="story"],
+.u-hero button[class*="enter"]{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  min-width:150px!important;
+  min-height:42px!important;
+  padding:0 18px!important;
+  border:1px solid rgba(241,241,235,.16)!important;
+  border-radius:999px!important;
+  color:rgba(241,241,235,.82)!important;
+  background:rgba(7,11,18,.34)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 12px 30px rgba(0,0,0,.18)!important;
+  backdrop-filter:blur(15px)!important;
+  -webkit-backdrop-filter:blur(15px)!important;
+  overflow:hidden!important;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s ease,color .3s ease,box-shadow .3s ease!important;
+}
+.u-enter::before,
+.u-hero .enter-story::before,
+.u-hero a[href*="story"]::before,
+.u-hero button[class*="enter"]::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border-radius:inherit!important;
+  background:linear-gradient(105deg,transparent 15%,rgba(156,231,239,.13) 48%,transparent 80%)!important;
+  transform:translateX(-110%)!important;
+  transition:transform .65s ease!important;
+  pointer-events:none!important;
+}
+.u-enter::after,
+.u-hero .enter-story::after,
+.u-hero a[href*="story"]::after,
+.u-hero button[class*="enter"]::after{
+  content:"→"!important;
+  font-size:13px!important;
+  color:#9ce7ef!important;
+  transition:transform .3s ease!important;
+}
+.u-enter:hover,
+.u-hero .enter-story:hover,
+.u-hero a[href*="story"]:hover,
+.u-hero button[class*="enter"]:hover{
+  transform:translateY(-2px)!important;
+  color:#f5f3ed!important;
+  border-color:rgba(156,231,239,.45)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.10),0 18px 38px rgba(0,0,0,.28),0 0 24px rgba(156,231,239,.07)!important;
+}
+.u-enter:hover::before,
+.u-hero .enter-story:hover::before,
+.u-hero a[href*="story"]:hover::before,
+.u-hero button[class*="enter"]:hover::before{transform:translateX(110%)!important}
+.u-enter:hover::after,
+.u-hero .enter-story:hover::after,
+.u-hero a[href*="story"]:hover::after,
+.u-hero button[class*="enter"]:hover::after{transform:translateX(3px)!important}
