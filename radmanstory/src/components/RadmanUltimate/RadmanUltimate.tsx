@@ -305,13 +305,11 @@ export default function RadmanUltimate() {
             <div className="u-hero__title">
               <span className="u-hero__titleLine u-hero__titleLine--soft">RADMAN</span>
             </div>
-            <p className="u-hero__lead">روایتی از آغاز زندگی رادمان.</p>
-            <a className="u-hero__cta" href="#story"><span>DISCOVER</span><ArrowDown size={13} /></a>
+            <p className="u-hero__lead">از لحظه‌ای که در ۱ دسامبر ۲۰۲۲ به دنیا آمد، زمان برای من فقط با تاریخ‌ها اندازه‌گیری نشد؛ با اولین نگاه، اولین لبخند، قدم‌های کوچک و تمام لحظه‌هایی که آرام‌آرام بخشی از زندگی شدند معنا پیدا کرد. اینجا روایت رادمان است؛ آرشیوی از کودکی، خاطره و عشقی که در قاب‌ها باقی مانده است.</p>
+            <a className="u-hero__cta" href="#story"><span>ENTER THE STORY</span><ArrowDown size={13} /></a>
           </div>
 
-          <div className="u-hero__panelBottom">
-            <span>MEMORY / 001</span><span>ARCHIVE / 2026</span>
-          </div>
+          
         </div>
         <div className="u-orb" /><div className="u-grain" />
         <div className="u-scroll"><span>01</span><i /></div>
