@@ -497,3 +497,11 @@
 
 .u-hero__particles{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:none!important;display:block!important}
 .u-hero > .u-hero__frame,.u-hero > .u-hero__panel,.u-hero > .u-hero__tattooArt,.u-hero > .u-orb,.u-hero > .u-grain,.u-hero > .u-scroll{z-index:2!important}
+
+/* FINAL PARTICLE FIELD: centered, clean, no lines / no wide bands */
+.u-hero__particles{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:none!important;display:block!important;opacity:.95!important}
+.u-hero:before,.u-hero:after{display:none!important;content:none!important}
+.u-hero{overflow:hidden!important}
+.u-hero > *:not(.u-hero__particles){position:relative;z-index:2}
+.u-hero__particles{mix-blend-mode:screen!important}
+@media(max-width:850px){.u-hero__particles{opacity:.8!important}}
