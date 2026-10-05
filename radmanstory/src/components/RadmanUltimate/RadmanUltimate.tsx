@@ -247,7 +247,9 @@ export default function RadmanUltimate() {
       <div className="u-progress"><i /></div>
 
       <nav className="u-nav">
-        <a href="#top" className="u-logo" aria-label="Radman — beginning">R<span>.</span></a>
+        <a href="#top" className="u-logo" aria-label="Radman — beginning">
+          <span className="u-logo__mark">R</span><span className="u-logo__slash">/</span><span className="u-logo__name">RADMAN</span>
+        </a>
         <div className="u-nav__center">
           <a href="#story">STORY</a>
           <a href="#chapters">CHAPTERS</a>
@@ -271,14 +273,14 @@ export default function RadmanUltimate() {
 
         <div className="u-hero__panel">
           <div className="u-hero__panelTop">
-            <span>1401—09—10</span>
-            <span>R.</span>
+            <span>DECEMBER 01, 2022</span>
+            <span>RADMAN / 01</span>
           </div>
 
           <div className="u-hero__birthData" aria-label="Radman birth details">
             <div className="u-birthData__item u-birthData__date">
               <small>DATE OF BIRTH</small>
-              <strong>1401<span>/</span>09<span>/</span>10</strong>
+              <strong>DEC <span>/</span> 01 <span>/</span> 2022</strong>
             </div>
             <div className="u-birthData__item u-birthData__time">
               <small>TIME OF BIRTH</small>
