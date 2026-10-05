@@ -347,3 +347,14 @@
  .u-hero__tattooArt{left:2vw!important;top:auto!important;bottom:10%!important;transform:none!important;width:190px!important;height:330px!important}
  .u-tattooFrame__art img,.u-tattooClock{width:82%!important;height:82%!important}
 }
+
+/* Clean final tattoo artwork — no labels, no fake overlays */
+.u-hero__tattooArt{left:4vw!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:min(32vw,430px)!important;height:min(70vh,650px)!important;display:flex!important;align-items:center!important;justify-content:center!important;opacity:1!important;pointer-events:none!important}
+.u-tattooFrame__art{position:relative!important;width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.u-tattooFrame__art:before,.u-tattooFrame__art:after,.u-tattooFrame__halo{display:none!important}
+.u-tattooFrame__art img{position:relative!important;z-index:2!important;width:94%!important;height:94%!important;object-fit:contain!important;object-position:center!important;display:block!important;filter:none!important;opacity:1!important;mix-blend-mode:normal!important}
+.u-tattooFrame__label,.u-tattooFrame__line,.u-tattooFrame__meta,.u-tattooFrame__pulse,.u-tattooFrame__corner,.u-tattooFrame__crosshair,.u-tattooClock{display:none!important}
+@media(max-width:850px){
+ .u-hero__tattooArt{left:3vw!important;top:auto!important;bottom:9%!important;transform:none!important;width:190px!important;height:330px!important}
+ .u-tattooFrame__art img{width:96%!important;height:96%!important}
+}
