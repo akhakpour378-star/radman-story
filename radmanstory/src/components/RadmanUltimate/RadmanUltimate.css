@@ -1945,3 +1945,154 @@
     padding-top:48px!important;
   }
 }
+
+
+/* ===== HERO FINAL FIX — dedicated fade layer + visible entry ===== */
+.u-hero--editorial{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#05070b!important;
+}
+
+/* Disable the competing pseudo fades. The dedicated DOM layer below is
+   intentionally above the image and below the CTA, so the fade cannot
+   disappear behind another hero layer. */
+.u-hero--editorial::before,
+.u-hero--editorial::after{
+  content:none!important;
+  display:none!important;
+}
+
+.u-hero--editorial .u-hero__fade{
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  height:42vh!important;
+  min-height:300px!important;
+  max-height:520px!important;
+  z-index:90!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(
+      ellipse 105% 78% at 50% 100%,
+      rgba(5,7,11,1) 0%,
+      rgba(5,7,11,.96) 22%,
+      rgba(5,7,11,.78) 43%,
+      rgba(5,7,11,.42) 65%,
+      rgba(5,7,11,0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(5,7,11,0) 0%,
+      rgba(5,7,11,.015) 12%,
+      rgba(5,7,11,.08) 27%,
+      rgba(5,7,11,.20) 43%,
+      rgba(5,7,11,.43) 62%,
+      rgba(5,7,11,.72) 80%,
+      #05070b 100%
+    )!important;
+}
+
+.u-hero--editorial .u-hero__cta{
+  position:absolute!important;
+  left:5vw!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:9vh!important;
+  z-index:120!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:14px!important;
+  width:196px!important;
+  min-width:196px!important;
+  height:46px!important;
+  margin:0!important;
+  padding:0 16px!important;
+  box-sizing:border-box!important;
+  border:1px solid rgba(240,241,237,.30)!important;
+  border-radius:999px!important;
+  background:rgba(4,8,13,.52)!important;
+  color:#f1f2f1!important;
+  font:600 8px/1 "DM Sans",sans-serif!important;
+  letter-spacing:.16em!important;
+  text-decoration:none!important;
+  overflow:hidden!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    0 14px 42px rgba(0,0,0,.32)!important;
+  transform:none!important;
+}
+
+.u-hero--editorial .u-hero__cta::after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:100%!important;
+  height:2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:linear-gradient(90deg,transparent 0%,rgba(156,231,239,.9) 28%,rgba(156,231,239,.25) 72%,transparent 100%)!important;
+  box-shadow:0 0 14px rgba(156,231,239,.32)!important;
+  opacity:.72!important;
+  transition:opacity .3s ease,transform .3s ease!important;
+}
+
+.u-hero--editorial .u-hero__cta span,
+.u-hero--editorial .u-hero__cta svg{
+  position:relative!important;
+  z-index:2!important;
+}
+
+.u-hero--editorial .u-hero__cta span{
+  color:#f1f2f1!important;
+  font-size:8px!important;
+  letter-spacing:.18em!important;
+}
+
+.u-hero--editorial .u-hero__cta svg{
+  width:12px!important;
+  height:12px!important;
+  color:#9ce7ef!important;
+  flex:0 0 auto!important;
+}
+
+.u-hero--editorial .u-hero__cta:hover{
+  transform:translateY(-2px)!important;
+  letter-spacing:.16em!important;
+  border-color:rgba(156,231,239,.62)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(156,231,239,.10),
+    0 18px 48px rgba(0,0,0,.40),
+    0 0 24px rgba(156,231,239,.08)!important;
+}
+
+.u-hero--editorial .u-hero__cta:hover::after{
+  opacity:1!important;
+  transform:scaleX(1.02)!important;
+}
+
+@media(max-width:850px){
+  .u-hero--editorial .u-hero__fade{
+    height:38vh!important;
+    min-height:230px!important;
+    max-height:340px!important;
+  }
+
+  .u-hero--editorial .u-hero__cta{
+    left:22px!important;
+    bottom:7vh!important;
+    width:178px!important;
+    min-width:178px!important;
+    height:43px!important;
+  }
+}
