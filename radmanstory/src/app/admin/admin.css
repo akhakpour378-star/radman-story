@@ -164,3 +164,27 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-mediaActions{grid-template-columns:1fr}
   .admin-uploadButton--hero{width:100%}
 }
+
+
+/* STORY IMAGE PATH + PERSIAN FONT CONTROL */
+.admin-storyToolbar__actions{display:flex;align-items:center;gap:10px}
+.admin-storyFontPicker{display:flex;align-items:center;gap:5px;padding:4px;background:#f7f9fa;border:1px solid #d8dde1}
+.admin-storyFontPicker>span{padding:0 7px;color:#7b858e;font:500 8px Vazirmatn;white-space:nowrap}
+.admin-storyFontPicker button{height:29px;padding:0 10px;border:1px solid transparent;background:transparent;color:#6d7780;font:600 8px Vazirmatn;cursor:pointer;transition:.2s}
+.admin-storyFontPicker button:hover{color:#263038;background:#eefbfc}
+.admin-storyFontPicker button.is-selected{border-color:#82cbd3;background:#eefbfc;color:#26383d}
+.admin-imagePathRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.admin-imagePathRow .admin-uploadMini{margin:0;min-height:38px;min-width:132px;white-space:nowrap}
+.admin-imagePathRow input{margin-top:7px!important}
+.admin-storyCard .admin-field--image{grid-column:1/-1}
+@media(max-width:800px){
+  .admin-storyToolbar__actions{width:100%;justify-content:space-between}
+  .admin-imagePathRow{grid-template-columns:1fr}
+  .admin-imagePathRow .admin-uploadMini{width:100%;min-width:0}
+}
+@media(max-width:560px){
+  .admin-storyToolbar__actions{align-items:stretch;flex-direction:column}
+  .admin-storyFontPicker{justify-content:space-between}
+  .admin-storyFontPicker>span{margin-left:auto}
+  .admin-addStory{width:100%}
+}
