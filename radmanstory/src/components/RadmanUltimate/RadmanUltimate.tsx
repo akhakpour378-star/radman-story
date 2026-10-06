@@ -40,6 +40,28 @@ type Memory = {
   tag: string;
 };
 
+type HeroConfig = {
+  image: string;
+  date: string;
+  time: string;
+  weight: string;
+  height: string;
+  place: string;
+  city: string;
+  cta: string;
+};
+
+const defaultHeroConfig: HeroConfig = {
+  image: "/memory/radman-and-me.png",
+  date: "DEC / 01 / 2022",
+  time: "14:15",
+  weight: "3.100 kg",
+  height: "49 cm",
+  place: "NIKAN AQDASIEH",
+  city: "Tehran · Iran",
+  cta: "ENTER THE STORY",
+};
+
 const fallback: Memory[] = [
   { src: "/memory/radman-main.JPG", no: "01", title: "The Beginning", tag: "ORIGIN" },
   { src: "/memory/radman-second.JPG", no: "02", title: "First Light", tag: "EARLY YEARS" },
@@ -84,6 +106,7 @@ export default function RadmanUltimate() {
   const [selected, setSelected] = useState<number | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [heroConfig, setHeroConfig] = useState<HeroConfig>(defaultHeroConfig);
 
   const particleCanvas = useRef<HTMLCanvasElement | null>(null);
 
@@ -179,6 +202,19 @@ export default function RadmanUltimate() {
       })
       .catch(() => {});
     return () => { alive = false; };
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/site/hero")
+      .then((r) => r.json())
+      .then((data: HeroConfig) => {
+        if (alive && data) setHeroConfig({ ...defaultHeroConfig, ...data });
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
   }, []);
 
   useEffect(() => {
