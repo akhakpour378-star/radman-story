@@ -55,6 +55,7 @@ export default function AdminPage() {
   const [config, setConfig] = useState<HeroConfig>(defaults);
   const [savedConfig, setSavedConfig] = useState<HeroConfig>(defaults);
   const [images, setImages] = useState<string[]>([]);
+  const [heroImages, setHeroImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
@@ -89,8 +90,9 @@ export default function AdminPage() {
         }
         if (mediaRes.ok) {
           const media = await mediaRes.json();
-          setImages(Array.isArray(media.images) ? media.images : []);
-          setVideos(Array.isArray(media.videos) ? media.videos : []);
+          setImages(Array.isArray(media.memoryImages) ? media.memoryImages : (Array.isArray(media.images) ? media.images : []));
+          setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []));
+          setHeroImages(Array.isArray(media.heroImages) ? media.heroImages : []);
           if (!Array.isArray(heroData.memorySignal) || !heroData.memorySignal.length) {
             const initialSignal = [...(Array.isArray(media.images) ? media.images.slice(0, 7) : []), ...(Array.isArray(media.videos) ? media.videos.slice(0, 2).map((v: string) => "video:" + v) : [])];
             setConfig(current => ({ ...current, memorySignal: initialSignal }));
@@ -159,7 +161,8 @@ export default function AdminPage() {
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
       const src = String(data.image);
-      setImages(current => current.includes(src) ? current : [src, ...current]);
+      if (section === "hero") setHeroImages(current => current.includes(src) ? current : [src, ...current]);
+      else setImages(current => current.includes(src) ? current : [src, ...current]);
       if (apply) apply(src);
     } catch (e) {
       setError(e instanceof Error ? e.message : "آپلود تصویر انجام نشد.");
@@ -443,7 +446,7 @@ export default function AdminPage() {
                 </div>
                 {imageOpen && (
                   <div className="admin-mediaMenu">
-                    {images.length ? images.map((src) => (
+                    {heroImages.length ? heroImages.map((src) => (
                       <button key={src} className={src === config.image ? "is-selected" : ""} onClick={() => { update("image", src); setImageOpen(false); }}>
                         <img src={mediaUrl(src)} alt="" /><span>{src.replace("/memory/", "")}</span>{src === config.image && <Check size={14} />}
                       </button>
