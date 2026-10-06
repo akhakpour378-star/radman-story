@@ -3073,3 +3073,15 @@
 .u-reel__item>span{display:none!important}.u-reel__item:hover{transform:translateY(-12px) rotate(0) scale(1.045)!important;border-color:#9ce7ef70!important;box-shadow:0 50px 120px #000e,0 0 38px #9ce7ef10!important}.u-reel__item:hover img,.u-reel__item:hover video{transform:scale(1.075)!important;filter:saturate(.92) contrast(1.07) brightness(1.02)}
 .u-reel__item:hover:after{border-color:#9ce7ef48;box-shadow:inset 0 0 0 1px #00000020,0 0 25px #9ce7ef10}.u-reel__item--video .u-mediaPlay{position:absolute;right:18px;bottom:18px;z-index:8;margin:0;width:34px;height:34px;display:grid;place-items:center;border:1px solid #ffffff30;background:#05070b66;backdrop-filter:blur(8px);font:600 6px DM Sans;letter-spacing:.12em;color:#dce2e2;transition:.4s}.u-reel__item--video:hover .u-mediaPlay{border-color:#9ce7ef80;color:#9ce7ef}
 @media(max-width:520px){.u-reel__item{width:165px;height:220px}.u-reel__frame>span{top:17px;left:17px}.u-reel__meta{left:17px;bottom:16px}.u-reel__meta b{font-size:12px}}
+
+
+/* MEMORY SIGNAL — PURE MEDIA TILES */
+.u-reel__item{border:1px solid #ffffff24!important;background:#080b10!important;overflow:hidden!important;box-shadow:0 30px 80px #000b,0 0 0 1px #ffffff05!important}
+.u-reel__item:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,transparent 55%,#02040855 100%)!important;opacity:1!important}
+.u-reel__item:after{content:"";position:absolute;inset:12px;z-index:4;pointer-events:none;border:1px solid #ffffff2b!important;box-shadow:inset 0 0 0 1px #00000020!important;background:none!important}
+.u-reel__item img,.u-reel__item video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;margin:0!important;transform:scale(1.015)!important;filter:saturate(.82) contrast(1.04)!important;transition:transform 1s cubic-bezier(.2,.8,.2,1),filter .7s!important}
+.u-reel__item:hover img,.u-reel__item:hover video{transform:scale(1.07)!important;filter:saturate(.98) contrast(1.07) brightness(1.03)!important}
+.u-reel__item--video .u-mediaPlay{position:absolute!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;z-index:8!important;margin:0!important;transform:translate(-50%,-50%)!important;width:54px!important;height:54px!important;display:grid!important;place-items:center!important;border:1px solid #ffffff80!important;border-radius:50%!important;background:#05070b80!important;color:#fff!important;backdrop-filter:blur(9px)!important;box-shadow:0 8px 30px #0008,0 0 25px #9ce7ef18!important;transition:transform .45s ease,border-color .35s,color .35s!important}
+.u-reel__item--video:hover .u-mediaPlay{transform:translate(-50%,-50%) scale(1.1)!important;border-color:#9ce7ef!important;color:#9ce7ef!important}
+.u-reel__item>span,.u-reel__item>b,.u-reel__frame,.u-reel__meta{display:none!important}
+@media(max-width:520px){.u-reel__item:after{inset:10px}.u-reel__item--video .u-mediaPlay{width:48px!important;height:48px!important}}
