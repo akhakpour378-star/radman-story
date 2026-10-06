@@ -2787,3 +2787,9 @@
 .radman-story-slider__meta{transition:transform .45s ease,opacity .45s ease}
 .radman-story-slider__media:hover .radman-story-slider__meta{transform:translateY(-3px)}
 @media(max-width:900px){.radman-story-slider__media:hover{transform:none}.radman-story-slider__media:hover:after{opacity:0}}
+
+/* STORY FINAL TYPOGRAPHY */
+.radman-story-slider__slides h2{font-size:clamp(46px,5.1vw,78px)!important;line-height:.88!important;letter-spacing:-.075em!important;font-weight:400!important;max-width:650px!important;text-wrap:balance!important}
+.radman-story-slider__slides h2 em{font-family:"Playfair Display",serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:-.06em!important}
+.radman-story-slider__slides h2:after{content:"";display:block;width:42px;height:1px;margin-top:24px;background:linear-gradient(90deg,#9ce7ef,transparent);box-shadow:0 0 12px #9ce7ef55}
+@media(max-width:900px){.radman-story-slider__slides h2{font-size:clamp(42px,11vw,68px)!important}}
