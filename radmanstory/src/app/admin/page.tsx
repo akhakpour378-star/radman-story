@@ -140,7 +140,7 @@ export default function AdminPage() {
       <aside className="admin-sidebar">
         <div className="admin-brand"><span>R</span><b>RADMAN</b></div>
         <div className="admin-sidebar__label">CONTENT MANAGEMENT</div>
-        <div className="admin-nav admin-nav--active"><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></div>
+        <button type="button" className="admin-nav admin-nav--active" onClick={() => document.getElementById("hero-editor")?.scrollIntoView({ behavior: "smooth", block: "start" })}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
         <div className="admin-nav" aria-disabled="true"><Sparkles size={16} /><span>Story / معرفی</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
@@ -169,7 +169,7 @@ export default function AdminPage() {
         {error && <div className="admin-error admin-error--wide">{error}</div>}
 
         <div className="admin-workspace">
-          <section className="admin-card admin-card--form">
+          <section id="hero-editor" className="admin-card admin-card--form">
             <div className="admin-card__head">
               <div><span>HERO CONTENT / 01</span><h2>اطلاعات اصلی</h2></div>
               <span className="admin-live"><i /> CONNECTED</span>
