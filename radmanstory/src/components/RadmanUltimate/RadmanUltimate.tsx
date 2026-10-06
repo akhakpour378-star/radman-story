@@ -548,7 +548,7 @@ export default function RadmanUltimate() {
       </section>
       <section className="u-reel" aria-label="Selected memories">
         <div className="u-reel__track">
-          {(heroConfig.memorySignal?.length ? heroConfig.memorySignal : [...memories.slice(0, 7).map((m) => m.src), ...videos.slice(0, 2).map((src) => "video:" + src)]).map((src, i) => {
+          {(heroConfig.memorySignal || []).map((src, i) => {
             const isVideo = src.startsWith("video:");
             const media = isVideo ? src.slice(6) : src;
             const memoryIndex = memories.findIndex((m) => m.src === media);
