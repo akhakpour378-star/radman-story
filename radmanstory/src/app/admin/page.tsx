@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
-  LogOut, Save, ShieldCheck, Sparkles, LoaderCircle,
+  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle,
 } from "lucide-react";
 import "./admin.css";
 
@@ -46,6 +46,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero">("dashboard");
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
@@ -139,8 +140,9 @@ export default function AdminPage() {
     <main className="admin-shell" dir="rtl">
       <aside className="admin-sidebar">
         <div className="admin-brand"><span>R</span><b>RADMAN</b></div>
-        <div className="admin-sidebar__label">CONTENT MANAGEMENT</div>
-        <button type="button" className="admin-nav admin-nav--active" onClick={() => document.getElementById("hero-editor")?.scrollIntoView({ behavior: "smooth", block: "start" })}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
+        <div className="admin-sidebar__label">CONTROL CENTER</div>
+        <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
         <div className="admin-nav" aria-disabled="true"><Sparkles size={16} /><span>Story / معرفی</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
@@ -151,6 +153,39 @@ export default function AdminPage() {
       </aside>
 
       <section className="admin-content">
+        {activeSection === "dashboard" ? (
+          <div className="admin-dashboard">
+            <header className="admin-dashboard__hero">
+              <div>
+                <span className="admin-kicker">RADMAN / CONTENT SYSTEM</span>
+                <h1>خوش آمدی به <em>داشبورد</em></h1>
+                <p>مرکز مدیریت و کنترل محتوای داستان رادمان.</p>
+              </div>
+              <div className="admin-dashboard__status"><i /> SYSTEM ONLINE</div>
+            </header>
+            <div className="admin-dashboard__grid">
+              <button className="admin-dashboard__card admin-dashboard__card--hero" onClick={() => setActiveSection("hero")}>
+                <div className="admin-dashboard__icon"><ImageIcon size={19} /></div>
+                <span>01 / MODULE</span>
+                <h2>Hero</h2>
+                <p>ویرایش تصویر، تاریخ، ساعت، وزن، قد، محل تولد و متن ورود به داستان.</p>
+                <b>EDIT HERO <ArrowLeft size={14} /></b>
+              </button>
+              <div className="admin-dashboard__card admin-dashboard__card--stat">
+                <span>PUBLIC STATUS</span><strong>LIVE</strong><p>سایت عمومی فعال و متصل به سیستم مدیریت است.</p>
+              </div>
+              <div className="admin-dashboard__card admin-dashboard__card--stat">
+                <span>ACTIVE MODULE</span><strong>HERO</strong><p>تنها ماژول قابل ویرایش فعلی در پنل.</p>
+              </div>
+            </div>
+            <div className="admin-dashboard__footer">
+              <span>QUICK ACCESS</span>
+              <button onClick={() => setActiveSection("hero")}><ImageIcon size={15} /> ویرایش Hero <ArrowLeft size={14} /></button>
+              <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
+            </div>
+          </div>
+        ) : (
+          <>
         <header className="admin-header">
           <div>
             <span className="admin-kicker">01 / HERO CONTROL</span>
@@ -237,6 +272,8 @@ export default function AdminPage() {
         </div>
 
         <footer className="admin-bottom"><span>RADMAN / CONTENT SYSTEM</span><span>HERO MODULE <b>CONNECTED</b></span></footer>
+          </>
+        )}
       </section>
     </main>
   );
