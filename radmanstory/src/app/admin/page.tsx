@@ -91,7 +91,7 @@ export default function AdminPage() {
     return () => { alive = false; };
   }, []);
 
-  const update = (key: keyof HeroConfig, value: string) => {
+  const update = <K extends keyof HeroConfig>(key: K, value: HeroConfig[K]) => {
     setSaved(false); setError("");
     setConfig((current) => ({ ...current, [key]: value }));
   };
