@@ -15,6 +15,7 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  persianFont: "iranyekan" | "iransans";
 };
 
 const defaults: HeroConfig = {
@@ -26,6 +27,7 @@ const defaults: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  persianFont: "iranyekan",
 };
 
 const authorized = (req: NextRequest) =>
@@ -64,6 +66,7 @@ export async function PUT(req: NextRequest) {
       place: String(body.place || current.place).trim().slice(0, 100),
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
+      persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
     };
 
     if (!clean.image.startsWith("/memory/")) {
