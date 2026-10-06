@@ -29,7 +29,7 @@ const defaults: HeroConfig = {
   ],
 };
 
-const fieldMeta: Record<keyof Omit<HeroConfig, "image">, { label: string; hint: string }> = {
+const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story">, { label: string; hint: string }> = {
   date: { label: "تاریخ تولد", hint: "DEC / 01 / 2022" },
   time: { label: "ساعت تولد", hint: "14:15" },
   weight: { label: "وزن هنگام تولد", hint: "3.100 kg" },
