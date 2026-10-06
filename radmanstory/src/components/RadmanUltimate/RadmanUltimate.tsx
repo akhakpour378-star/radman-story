@@ -96,13 +96,20 @@ export default function RadmanUltimate() {
   const [videos, setVideos] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [storySlide, setStorySlide] = useState(0);
+  const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
   const storySlides = [
     { eyebrow:"THE BEGINNING", title:<>Some days<br /><em>become a lifetime.</em></>, lead:"رادمان فقط یک نام در تقویم نیست؛ شروع بخشی از زندگی من است که از همان اولین لحظه، معنای تازه‌ای پیدا کرد.", body:"این داستان از یک روز خاص شروع می‌شود؛ از لحظه‌ای که حضور کوچک او، تمام جهان را برای من تغییر داد.", image:"/memory/radman-main.JPG", label:"THE FIRST FRAME" },
     { eyebrow:"THE LITTLE YEARS", title:<>A childhood<br /><em>made of moments.</em></>, lead:"روزهای کودکی از کنارمان آرام عبور می‌کنند؛ اما بعضی لحظه‌ها آن‌قدر عمیق می‌شوند که سال‌ها بعد هم زنده می‌مانند.", body:"لبخندها، بازی‌ها، نگاه‌ها و همان اتفاق‌های ساده، امروز بخشی از بزرگ‌ترین خاطرات من هستند.", image:"/memory/radman-01.JPG", label:"LITTLE DAYS" },
     { eyebrow:"GROWING", title:<>Watching you<br /><em>become yourself.</em></>, lead:"هر روز چیزی تازه در تو شکل می‌گرفت؛ یک نگاه، یک عادت، یک لبخند و جهانی که کم‌کم مخصوص خودت می‌شد.", body:"این قاب‌ها فقط عکس نیستند؛ نشانه‌هایی هستند از اینکه چطور زمان، آرام و بی‌صدا، تو را بزرگ‌تر کرد.", image:"/memory/radman-02.JPG", label:"GROWING" },
     { eyebrow:"TOGETHER", title:<>Some memories<br /><em>never leave.</em></>, lead:"بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body:"این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image:"/memory/radman-and-me.png", label:"TOGETHER" },
   ];
-  useEffect(() => { const timer=window.setInterval(()=>setStorySlide(s=>(s+1)%storySlides.length),6500); return()=>window.clearInterval(timer); }, []);
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setStoryDirection(1);
+      setStorySlide((s) => (s + 1) % storySlides.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const particleCanvas = useRef<HTMLCanvasElement | null>(null);
 
@@ -489,8 +496,8 @@ export default function RadmanUltimate() {
         </div>
 
         <div className="u-storyCinema__copy u-storySlider u-reveal">
-          <div className="u-storySlider__viewport">{storySlides.map((slide,i)=><article className={i===storySlide?"u-storySlide is-active":"u-storySlide"} key={slide.eyebrow}><span className="u-storyCinema__eyebrow">{slide.eyebrow}</span><h2>{slide.title}</h2><p className="u-storyCinema__lead">{slide.lead}</p><p className="u-storyCinema__body">{slide.body}</p></article>)}</div>
-          <div className="u-storySlider__controls"><button type="button" onClick={()=>setStorySlide((storySlide-1+storySlides.length)%storySlides.length)} aria-label="Previous story"><ArrowLeft size={15}/></button><div className="u-storySlider__dots">{storySlides.map((slide,i)=><button type="button" key={slide.eyebrow} className={i===storySlide?"is-active":""} onClick={()=>setStorySlide(i)} aria-label={slide.eyebrow}/>)}</div><button type="button" onClick={()=>setStorySlide((storySlide+1)%storySlides.length)} aria-label="Next story"><ArrowRight size={15}/></button><span className="u-storySlider__count">{String(storySlide+1).padStart(2,"0")} / {String(storySlides.length).padStart(2,"0")}</span></div>
+          <div className="u-storySlider__viewport">{storySlides.map((slide,i)=><article className={i===storySlide?"u-storySlide is-active":"u-storySlide"} data-direction={i===storySlide?storyDirection:0} key={slide.eyebrow}><span className="u-storyCinema__eyebrow">{slide.eyebrow}</span><h2>{slide.title}</h2><p className="u-storyCinema__lead">{slide.lead}</p><p className="u-storyCinema__body">{slide.body}</p></article>)}</div>
+          <div className="u-storySlider__controls"><button type="button" onClick={()=>{setStoryDirection(-1);setStorySlide((storySlide-1+storySlides.length)%storySlides.length)}} aria-label="Previous story"><ArrowLeft size={15}/></button><div className="u-storySlider__dots">{storySlides.map((slide,i)=><button type="button" key={slide.eyebrow} className={i===storySlide?"is-active":""} onClick={()=>setStorySlide(i)} aria-label={slide.eyebrow}/>)}</div><button type="button" onClick={()=>{setStoryDirection(1);setStorySlide((storySlide+1)%storySlides.length)}} aria-label="Next story"><ArrowRight size={15}/></button><span className="u-storySlider__count">{String(storySlide+1).padStart(2,"0")} / {String(storySlides.length).padStart(2,"0")}</span></div>
           <div className="u-storySlider__progress"><i key={storySlide}/></div>
           <a className="u-manifesto__enter" href="#chapters"><span>ENTER THE CHAPTERS</span><ArrowDown size={14}/></a>
         </div>
