@@ -512,7 +512,8 @@ export default function RadmanUltimate() {
             ))}
             <div className="radman-story-slider__shade" />
             <div className="radman-story-slider__meta">
-              <span>{String(storySlide + 1).padStart(2, "0")}</span>
+              <span>RADMAN / STORY</span>
+              <i aria-hidden="true" />
               <b>{storySlides[storySlide].label}</b>
             </div>
           </div>
