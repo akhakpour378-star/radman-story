@@ -4,7 +4,7 @@ import path from "node:path";
 import { readdir } from "node:fs/promises";
 
 const mime: Record<string,string> = {
-  ".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif",".mp4":"video/mp4",".mp3":"audio/mpeg"
+  ".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif",".mp4":"video/mp4",".webm":"video/webm",".mov":"video/quicktime",".m4v":"video/x-m4v",".mp3":"audio/mpeg"
 };
 
 export async function GET(request: NextRequest) {
@@ -13,7 +13,18 @@ export async function GET(request: NextRequest) {
   if (list === "1") {
     try {
       const dir = path.join(root, "memory");
-      const names = await readdir(dir);
+      const walk = async (folder: string, relative = ""): Promise<string[]> => {
+        const entries = await readdir(folder, { withFileTypes: true });
+        const files: string[] = [];
+        for (const entry of entries) {
+          const absolute = path.join(folder, entry.name);
+          const rel = relative ? `${relative}/${entry.name}` : entry.name;
+          if (entry.isDirectory()) files.push(...await walk(absolute, rel));
+          else files.push(rel);
+        }
+        return files;
+      };
+      const names = await walk(dir);
       const images = names.filter((name) => /\\.(jpe?g|png|webp|avif)$/i.test(name)).map((name) => `/memory/${name}`);
       const videos = names.filter((name) => /\\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
       return NextResponse.json({ images, videos }, { headers: { "Cache-Control": "no-store" } });
