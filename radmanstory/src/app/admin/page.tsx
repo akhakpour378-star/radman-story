@@ -304,10 +304,16 @@ export default function AdminPage() {
             <div className="admin-mediaBlock">
               <div className="admin-subhead"><span>HERO MEDIA</span><small>{config.image.replace("/memory/", "")}</small></div>
               <div className="admin-mediaPicker">
-                <button className="admin-mediaButton" onClick={() => setImageOpen((v) => !v)} disabled={loading}>
-                  <span><ImageIcon size={15} /> انتخاب تصویر اصلی</span>
-                  <ChevronDown size={15} className={imageOpen ? "admin-rotate" : ""} />
-                </button>
+                <div className="admin-mediaActions">
+                  <button className="admin-mediaButton" onClick={() => setImageOpen((v) => !v)} disabled={loading}>
+                    <span><ImageIcon size={15} /> انتخاب از آرشیو</span>
+                    <ChevronDown size={15} className={imageOpen ? "admin-rotate" : ""} />
+                  </button>
+                  <label className="admin-uploadButton admin-uploadButton--hero">
+                    <Upload size={15} /> {uploading ? "در حال آپلود..." : "افزودن تصویر"}
+                    <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || loading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => update("image", src)); e.currentTarget.value = ""; }} />
+                  </label>
+                </div>
                 {imageOpen && (
                   <div className="admin-mediaMenu">
                     {images.length ? images.map((src) => (
