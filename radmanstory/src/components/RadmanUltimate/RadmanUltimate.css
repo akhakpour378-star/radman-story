@@ -2199,3 +2199,84 @@
     min-width:205px!important;
   }
 }
+
+
+/* ===== HERO STRUCTURAL FIX — FULL VIEWPORT / NO SECTION OVERLAP ===== */
+.u-hero--editorial{
+  position:relative!important;
+  width:100%!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  z-index:1!important;
+}
+
+.u-hero--editorial .u-hero__frame{
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+}
+
+.u-hero--editorial .u-hero__panel{
+  position:absolute!important;
+  inset:0!important;
+  z-index:20!important;
+}
+
+.u-hero--editorial .u-hero__fade{
+  z-index:25!important;
+  height:38vh!important;
+  min-height:260px!important;
+  max-height:430px!important;
+}
+
+.u-hero--editorial .u-hero__cta{
+  z-index:40!important;
+  bottom:8vh!important;
+  display:inline-flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+/* The next section starts after the real viewport-height hero.
+   No negative pull-up: it was covering the bottom of the Hero/CTA. */
+.u-hero--editorial + .u-manifesto{
+  position:relative!important;
+  z-index:2!important;
+  margin-top:0!important;
+  padding-top:15vh!important;
+}
+
+/* Remove the two small header labels at the very top of the next section. */
+.u-manifesto--story .u-manifesto__top{
+  display:none!important;
+}
+
+@media(max-width:850px){
+  .u-hero--editorial{
+    height:100dvh!important;
+    min-height:100dvh!important;
+  }
+
+  .u-hero--editorial .u-hero__fade{
+    height:34vh!important;
+    min-height:220px!important;
+    max-height:320px!important;
+  }
+
+  .u-hero--editorial .u-hero__cta{
+    left:22px!important;
+    bottom:7vh!important;
+    width:205px!important;
+    min-width:205px!important;
+  }
+
+  .u-hero--editorial + .u-manifesto{
+    margin-top:0!important;
+    padding-top:130px!important;
+  }
+}
