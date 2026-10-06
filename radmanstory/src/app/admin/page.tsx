@@ -56,6 +56,11 @@ export default function AdminPage() {
   const [savedConfig, setSavedConfig] = useState<HeroConfig>(defaults);
   const [images, setImages] = useState<string[]>([]);
   const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [allMedia, setAllMedia] = useState<string[]>([]);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [libraryTarget, setLibraryTarget] = useState<{ type: "hero" | "story"; index?: number } | null>(null);
+  const [libraryFilter, setLibraryFilter] = useState<"all" | "image" | "video">("all");
+  const [librarySearch, setLibrarySearch] = useState("");
   const [videos, setVideos] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
@@ -66,7 +71,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory" | "library">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
 
@@ -93,6 +98,7 @@ export default function AdminPage() {
           setImages(Array.isArray(media.memoryImages) ? media.memoryImages : (Array.isArray(media.images) ? media.images : []));
           setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []));
           setHeroImages(Array.isArray(media.heroImages) ? media.heroImages : []);
+          setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v: string) => "video:" + v) : [])]);
           if (!Array.isArray(heroData.memorySignal) || !heroData.memorySignal.length) {
             const initialSignal = [...(Array.isArray(media.images) ? media.images.slice(0, 7) : []), ...(Array.isArray(media.videos) ? media.videos.slice(0, 2).map((v: string) => "video:" + v) : [])];
             setConfig(current => ({ ...current, memorySignal: initialSignal }));
@@ -219,6 +225,23 @@ export default function AdminPage() {
     }
   };
 
+  const openLibrary = (target: { type: "hero" | "story"; index?: number }) => {
+    setLibraryTarget(target); setLibraryFilter("all"); setLibrarySearch(""); setLibraryOpen(true);
+  };
+  const selectLibraryMedia = (value: string) => {
+    if (!libraryTarget) return;
+    const src = value.startsWith("video:") ? value.slice(6) : value;
+    if (libraryTarget.type === "hero") update("image", src);
+    else if (libraryTarget.index !== undefined) updateStory(libraryTarget.index, "image", src);
+    setLibraryOpen(false); setLibraryTarget(null);
+  };
+  const filteredLibrary = allMedia.filter((item) => {
+    const isVideo = item.startsWith("video:");
+    const src = isVideo ? item.slice(6) : item;
+    const matchesType = libraryFilter === "all" || (libraryFilter === "video" ? isVideo : !isVideo);
+    const matchesSearch = !librarySearch.trim() || src.toLowerCase().includes(librarySearch.trim().toLowerCase());
+    return matchesType && matchesSearch;
+  });
   const removeStorySlide = (index: number) => {
     if (config.story.length <= 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
     setSaved(false); setError("");
@@ -256,6 +279,7 @@ export default function AdminPage() {
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
@@ -296,6 +320,14 @@ export default function AdminPage() {
               <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
             </div>
           </div>
+        ) : activeSection === "library" ? (
+          <>
+            <header className="admin-header"><div><span className="admin-kicker">04 / MEDIA LIBRARY</span><h1>کتابخانه <em>Media</em></h1><p>تمام تصاویر و ویدیوهای سایت را از یک آرشیو واحد ببین و برای هر بخش انتخاب کن.</p></div></header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-library"><div className="admin-library__toolbar"><div><span>MASTER MEDIA ARCHIVE</span><h2>{allMedia.length} رسانه</h2><small>فایل‌ها از تمام بخش‌های سایت در یک کتابخانه قابل انتخاب هستند.</small></div><div className="admin-library__controls"><input value={librarySearch} onChange={e=>setLibrarySearch(e.target.value)} placeholder="جستجوی نام فایل..." /><button onClick={()=>setLibraryFilter("all")}>همه</button><button onClick={()=>setLibraryFilter("image")}>تصاویر</button><button onClick={()=>setLibraryFilter("video")}>ویدیوها</button></div></div>
+              <div className="admin-library__grid">{filteredLibrary.map(item=>{const isVideo=item.startsWith("video:"),src=isVideo?item.slice(6):item;return <button key={item} className="admin-library__item" onClick={()=>openLibrary({type:"hero"})}><div className="admin-library__media">{isVideo?<video src={mediaUrl(src)} muted playsInline preload="metadata"/>:<img src={mediaUrl(src)} alt="" />}{isVideo&&<i>▶</i>}</div><div className="admin-library__meta"><strong>{src.replace("/memory/","")}</strong><span>{isVideo?"VIDEO":"IMAGE"}</span></div></button>})}</div>
+            </section>
+          </>
         ) : activeSection === "story" ? (
           <>
             <header className="admin-header">
@@ -336,7 +368,7 @@ export default function AdminPage() {
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => {
                       const slide = config.story[editingStory];
-                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "story", (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
+                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><button type="button" className="admin-libraryMini" onClick={() => openLibrary({type:"story",index:editingStory})}>انتخاب از Library</button><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "story", (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
                     })}
                   </div>
                 </div>
@@ -435,7 +467,7 @@ export default function AdminPage() {
               <div className="admin-subhead"><span>HERO MEDIA</span><small>{config.image.replace("/memory/", "")}</small></div>
               <div className="admin-mediaPicker">
                 <div className="admin-mediaActions">
-                  <button className="admin-mediaButton" onClick={() => setImageOpen((v) => !v)} disabled={loading}>
+                  <button className="admin-mediaButton" onClick={() => openLibrary({type:"hero"})} disabled={loading}>
                     <span><ImageIcon size={15} /> انتخاب از آرشیو</span>
                     <ChevronDown size={15} className={imageOpen ? "admin-rotate" : ""} />
                   </button>
@@ -444,7 +476,7 @@ export default function AdminPage() {
                     <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || loading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "hero", (src) => update("image", src)); e.currentTarget.value = ""; }} />
                   </label>
                 </div>
-                {imageOpen && (
+                {false && imageOpen && (
                   <div className="admin-mediaMenu">
                     {heroImages.length ? heroImages.map((src) => (
                       <button key={src} className={src === config.image ? "is-selected" : ""} onClick={() => { update("image", src); setImageOpen(false); }}>
@@ -492,6 +524,7 @@ export default function AdminPage() {
           </>
         )}
       </section>
+      {libraryOpen && <div className="admin-libraryModal" onMouseDown={(e)=>{if(e.currentTarget===e.target){setLibraryOpen(false);setLibraryTarget(null)}}}><div className="admin-libraryModal__card"><div className="admin-libraryModal__head"><div><span>MEDIA LIBRARY / SELECT</span><h2>انتخاب رسانه</h2></div><button onClick={()=>{setLibraryOpen(false);setLibraryTarget(null)}}>بستن</button></div><div className="admin-library__controls"><input value={librarySearch} onChange={e=>setLibrarySearch(e.target.value)} placeholder="جستجو..." /><button onClick={()=>setLibraryFilter("all")}>همه</button><button onClick={()=>setLibraryFilter("image")}>تصاویر</button><button onClick={()=>setLibraryFilter("video")}>ویدیو</button></div><div className="admin-library__grid">{filteredLibrary.map(item=>{const isVideo=item.startsWith("video:"),src=isVideo?item.slice(6):item;return <button key={item} className="admin-library__item" onClick={()=>selectLibraryMedia(item)}><div className="admin-library__media">{isVideo?<video src={mediaUrl(src)} muted playsInline preload="metadata"/>:<img src={mediaUrl(src)} alt="" />}{isVideo&&<i>▶</i>}</div><div className="admin-library__meta"><strong>{src.replace("/memory/","")}</strong><span>{isVideo?"VIDEO":"IMAGE"}</span></div></button>})}</div></div></div>}
     </main>
   );
 }
