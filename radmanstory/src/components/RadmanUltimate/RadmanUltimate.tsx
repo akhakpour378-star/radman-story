@@ -22,6 +22,17 @@ import "./RadmanUltimate.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type HeroConfig = {
+  image: string;
+  date: string;
+  time: string;
+  weight: string;
+  height: string;
+  place: string;
+  city: string;
+  cta: string;
+};
+
 type Memory = {
   src: string;
   no: string;
@@ -60,6 +71,16 @@ export default function RadmanUltimate() {
   const audio = useRef<HTMLAudioElement | null>(null);
   const [sound, setSound] = useState(false);
   const [memories, setMemories] = useState<Memory[]>(fallback);
+  const [heroConfig, setHeroConfig] = useState<HeroConfig>({
+    image: "/memory/radman-and-me.png",
+    date: "DEC / 01 / 2022",
+    time: "14:15",
+    weight: "3.100 kg",
+    height: "49 cm",
+    place: "NIKAN AQDASIEH",
+    city: "Tehran · Iran",
+    cta: "ENTER THE STORY",
+  });
   const [selected, setSelected] = useState<number | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -147,6 +168,17 @@ export default function RadmanUltimate() {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/admin/hero")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: HeroConfig | null) => {
+        if (alive && data) setHeroConfig(data);
+      })
+      .catch(() => {});
+    return () => { alive = false; };
   }, []);
 
   useEffect(() => {
@@ -368,7 +400,7 @@ export default function RadmanUltimate() {
       <section id="top" className="u-hero u-hero--editorial"><canvas ref={particleCanvas} className="u-hero__particles" aria-hidden="true" />
         <div className="u-hero__frame">
           <div className="u-hero__photo">
-            <img src={asset("/memory/radman-and-me.png")} alt="Radman and his father — archive photograph" />
+            <img src={asset(heroConfig.image)} alt="Radman and his father — archive photograph" />
           </div>
           <div className="u-hero__photoShade" />
           <div className="u-hero__halo" aria-hidden="true" />
@@ -379,30 +411,30 @@ export default function RadmanUltimate() {
           <div className="u-hero__birthData" aria-label="Radman birth details">
             <div className="u-birthData__item u-birthData__date">
               <small><CalendarDays size={11} /> DATE OF BIRTH</small>
-              <strong>DEC <span>/</span> 01 <span>/</span> 2022</strong>
+              <strong>{heroConfig.date.split(" / ").map((part, index) => <span key={part}>{index ? <> / </> : null}{part}</span>)}</strong>
             </div>
             <div className="u-birthData__item u-birthData__time">
               <small><Clock3 size={11} /> TIME OF BIRTH</small>
-              <strong>14<span>:</span>15</strong>
+              <strong>{heroConfig.time.split(":").map((part, index) => <span key={part}>{index ? <>:</> : null}{part}</span>)}</strong>
             </div>
             <div className="u-birthData__item u-birthData__weight">
               <small><Scale size={11} /> BIRTH WEIGHT</small>
-              <strong>3.100 <i>kg</i></strong>
+              <strong>{heroConfig.weight.replace(/\s*kg$/i, "")} <i>kg</i></strong>
             </div>
             <div className="u-birthData__item u-birthData__height">
               <small><Ruler size={11} /> BIRTH HEIGHT</small>
-              <strong>49 <i>cm</i></strong>
+              <strong>{heroConfig.height.replace(/\s*cm$/i, "")} <i>cm</i></strong>
             </div>
             <div className="u-birthData__item u-birthData__place">
               <small><MapPin size={11} /> PLACE OF BIRTH</small>
-              <strong>NIKAN AQDASIEH</strong>
-              <em>Tehran · Iran</em>
+              <strong>{heroConfig.place}</strong>
+              <em>{heroConfig.city}</em>
             </div>
           </div>
         </div>
         <div className="u-hero__fade" aria-hidden="true" />
         <a className="u-hero__cta" href="#story" aria-label="Enter Radman's story">
-          <span>ENTER THE STORY</span>
+          <span>{heroConfig.cta}</span>
           <ArrowDown size={13} />
           <i className="u-hero__ctaLine" aria-hidden="true" />
         </a>
