@@ -407,3 +407,25 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-memoryEditUpload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .admin-memoryManager__toolbar{align-items:center}
 @media(max-width:800px){.admin-memoryManager__toolbar{align-items:flex-start}.admin-memoryEditUpload{width:100%;justify-content:center}.admin-bulkDeleteButton{flex:1}}
+
+
+/* RECYCLE BIN */
+.admin-trashManager{max-width:1480px;margin:17px auto 0;background:#fff;border:1px solid #d8dde1;box-shadow:0 14px 40px #17202a12;overflow:hidden}
+.admin-trashManager__toolbar{padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #e0e5e8}
+.admin-trashManager__toolbar span{display:block;color:#7c8790;font:700 7px DM Sans;letter-spacing:.18em}
+.admin-trashManager__toolbar h2{margin:6px 0 4px;color:#20272d;font:500 22px Vazirmatn}
+.admin-trashManager__toolbar small{color:#8c969d;font:500 9px Vazirmatn}
+.admin-trashManager__actions{display:flex;gap:7px}
+.admin-trashManager__actions button{height:36px;padding:0 12px;border:1px solid #d8dee3;background:#fff;color:#59646d;font:700 8px Vazirmatn;cursor:pointer}
+.admin-trashManager__actions button:hover{border-color:#82cbd3;background:#f3fbfc}
+.admin-trashTableWrap{overflow:auto}
+.admin-trashTable{min-width:900px}
+.admin-trashDate{font:600 8px Vazirmatn;color:#7b858d;direction:ltr;display:inline-block}
+.admin-trashPermanent{border-color:#d7aaaa!important;background:#fff!important;color:#a35d5d!important}
+.admin-trashPermanent:hover:not(:disabled){background:#fff4f4!important;border-color:#d88f8f!important}
+.admin-trashManager .admin-memoryTable__thumb{background:#0a0d11}
+@media(max-width:800px){
+  .admin-trashManager__toolbar{align-items:flex-start;flex-direction:column}
+  .admin-trashManager__actions{width:100%}
+  .admin-trashManager__actions button{flex:1}
+}
