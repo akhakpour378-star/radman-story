@@ -2638,3 +2638,46 @@
     max-height:220px!important;
   }
 }
+
+
+/* FINAL CENTER FIX — RADMAN INFORMATION BLOCK */
+/* The birth information lives inside .u-hero__panel. The panel itself
+   must fill the Hero; otherwise centering the child against a collapsed
+   panel leaves the information visually stuck near the top. */
+.u-hero--editorial .u-hero__panel{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  right:auto!important;
+  top:0!important;
+  transform:none!important;
+  z-index:20!important;
+}
+
+.u-hero--editorial .u-hero__birthData{
+  position:absolute!important;
+  top:50%!important;
+  right:5vw!important;
+  bottom:auto!important;
+  width:min(195px,17vw)!important;
+  transform:translateY(-50%)!important;
+}
+
+@media(max-width:850px){
+  .u-hero--editorial .u-hero__panel{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    transform:none!important;
+  }
+
+  .u-hero--editorial .u-hero__birthData{
+    top:auto!important;
+    right:20px!important;
+    bottom:20px!important;
+    width:145px!important;
+    transform:none!important;
+  }
+}
