@@ -55,3 +55,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "آپلود رسانه انجام نشد." }, { status: 400 });
   }
 }
+
+
+export async function DELETE(req: NextRequest) {
+  if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const body = await req.json();
+    const src = typeof body?.src === "string" ? body.src : "";
+    if (!src.startsWith("/memory/")) return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
+    const relative = src.slice("/memory/".length);
+    const filename = path.basename(relative);
+    if (!filename || filename !== relative || filename.includes("..")) return NextResponse.json({ error: "نام فایل نامعتبر است." }, { status: 400 });
+    const filePath = path.join(path.resolve(process.cwd(), ".."), "memory", filename);
+    await fs.unlink(filePath);
+    return NextResponse.json({ ok: true, src }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    const code = error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code) : "";
+    return NextResponse.json({ error: code === "ENOENT" ? "فایل پیدا نشد." : "حذف رسانه انجام نشد." }, { status: code === "ENOENT" ? 404 : 400 });
+  }
+}
