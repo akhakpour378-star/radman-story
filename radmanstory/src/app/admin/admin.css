@@ -366,3 +366,13 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 
 /* Memory Signal upload controls */
 .admin-memoryUploadActions{display:flex;gap:8px;direction:ltr}.admin-memoryUploadButton{height:36px;padding:0 12px;display:inline-flex;align-items:center;gap:7px;position:relative;overflow:hidden;border:1px solid #d6dde1;background:#fff;color:#4f5b64;font:700 8px Vazirmatn;cursor:pointer;transition:.25s}.admin-memoryUploadButton:hover{transform:translateY(-1px);border-color:#82cbd3;background:#f3fbfc}.admin-memoryUploadButton input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.admin-memoryUploadButton--video{border-color:#d5d1ee;color:#66629b}.admin-memoryUploadButton--image{border-color:#b9dfe3;color:#438b94}@media(max-width:800px){.admin-memoryUploadActions{width:100%;direction:rtl}.admin-memoryUploadButton{flex:1;justify-content:center}}
+
+
+/* MEMORY MEDIA DELETE ACTIONS */
+.admin-memoryTable__actions{display:flex;align-items:center;gap:6px}
+.admin-memoryTable__actions .admin-memoryEditButton{white-space:nowrap}
+.admin-memoryDeleteButton{width:31px;height:31px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:1px solid #e1caca;background:#fff;color:#a45d5d;cursor:pointer;transition:.2s}
+.admin-memoryDeleteButton:hover{border-color:#d88f8f;background:#fff4f4;color:#a33;transform:translateY(-1px)}
+.admin-memoryDeleteButton--panel{width:auto;padding:0 11px;gap:6px;font:600 8px Vazirmatn}
+.admin-memoryEditPanel__headActions{display:flex;align-items:center;gap:7px}
+@media(max-width:800px){.admin-memoryTable__actions{gap:4px}.admin-memoryDeleteButton--panel{padding:0 9px}}
