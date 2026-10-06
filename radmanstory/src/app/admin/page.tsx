@@ -88,6 +88,11 @@ export default function AdminPage() {
           const media = await mediaRes.json();
           setImages(Array.isArray(media.images) ? media.images : []);
           setVideos(Array.isArray(media.videos) ? media.videos : []);
+          if (!Array.isArray((data as { memorySignal?: string[] }).memorySignal) || !(data as { memorySignal?: string[] }).memorySignal?.length) {
+            const initialSignal = [...(Array.isArray(media.images) ? media.images.slice(0, 7) : []), ...(Array.isArray(media.videos) ? media.videos.slice(0, 2).map((v: string) => "video:" + v) : [])];
+            setConfig(current => ({ ...current, memorySignal: initialSignal }));
+            setSavedConfig(current => ({ ...current, memorySignal: initialSignal }));
+          }
         }
         setAuthenticated(Boolean(auth.authenticated));
       })
