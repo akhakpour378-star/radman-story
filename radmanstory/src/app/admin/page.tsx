@@ -99,11 +99,6 @@ export default function AdminPage() {
           setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []));
           setHeroImages(Array.isArray(media.heroImages) ? media.heroImages : []);
           setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v: string) => "video:" + v) : [])]);
-          if (!Array.isArray(heroData.memorySignal) || !heroData.memorySignal.length) {
-            const initialSignal = [...(Array.isArray(media.images) ? media.images.slice(0, 7) : []), ...(Array.isArray(media.videos) ? media.videos.slice(0, 2).map((v: string) => "video:" + v) : [])];
-            setConfig(current => ({ ...current, memorySignal: initialSignal }));
-            setSavedConfig(current => ({ ...current, memorySignal: initialSignal }));
-          }
         }
         setAuthenticated(Boolean(auth.authenticated));
       })
@@ -188,7 +183,13 @@ export default function AdminPage() {
       if (!r.ok) throw new Error(data?.error || `آپلود ${prefix} انجام نشد.`);
       const src = String(data.src || (isVideo ? data.video : data.image));
       if (isVideo) setVideos(current => current.includes(src) ? current : [src, ...current]); else setImages(current => current.includes(src) ? current : [src, ...current]);
-      setConfig(current => ({ ...current, memorySignal: [...(current.memorySignal || []), ...(isVideo ? ["video:" + src] : [src])] }));
+      const next = { ...config, memorySignal: [...(config.memorySignal || []), ...(isVideo ? ["video:" + src] : [src])] };
+      const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData?.error || "اعمال رسانه روی سایت انجام نشد.");
+      const persisted = { ...defaults, ...saveData };
+      setConfig(persisted); setSavedConfig(persisted);
+      setAllMedia(current => current.includes(isVideo ? "video:" + src : src) ? current : [isVideo ? "video:" + src : src, ...current]);
     } catch (e) { setError(e instanceof Error ? e.message : `آپلود ${prefix} انجام نشد.`); }
     finally { setMemoryUploadType(null); }
   };
