@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -447,11 +447,11 @@ export default function RadmanUltimate() {
           <div className="u-hero__birthData" aria-label="Radman birth details">
             <div className="u-birthData__item u-birthData__date">
               <small><CalendarDays size={11} /> DATE OF BIRTH</small>
-              <strong>{heroConfig.date.split(" / ").map((part, index) => <span key={part}>{index ? <> / </> : null}{part}</span>)}</strong>
+              <strong>{heroConfig.date.split(" / ").map((part, index) => <React.Fragment key={index}>{index > 0 && <span> / </span>}{part}</React.Fragment>)}</strong>
             </div>
             <div className="u-birthData__item u-birthData__time">
               <small><Clock3 size={11} /> TIME OF BIRTH</small>
-              <strong>{heroConfig.time.split(":").map((part, index) => <span key={part}>{index ? <>:</> : null}{part}</span>)}</strong>
+              <strong>{heroConfig.time.split(":").map((part, index) => <React.Fragment key={index}>{index > 0 && <span>:</span>}{part}</React.Fragment>)}</strong>
             </div>
             <div className="u-birthData__item u-birthData__weight">
               <small><Scale size={11} /> BIRTH WEIGHT</small>
