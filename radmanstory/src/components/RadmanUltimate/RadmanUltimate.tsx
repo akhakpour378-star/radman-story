@@ -106,7 +106,6 @@ export default function RadmanUltimate() {
   const [selected, setSelected] = useState<number | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [heroConfig, setHeroConfig] = useState<HeroConfig>(defaultHeroConfig);
 
   const particleCanvas = useRef<HTMLCanvasElement | null>(null);
 
