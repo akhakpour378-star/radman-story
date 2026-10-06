@@ -17,6 +17,7 @@ type HeroConfig = {
   cta: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
+  memorySignal?: string[];
 };
 
 type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; label: string };
@@ -76,6 +77,7 @@ export async function PUT(req: NextRequest) {
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
+      memorySignal: Array.isArray(body.memorySignal) ? body.memorySignal.filter((item: unknown) => typeof item === "string" && (item.startsWith("/memory/") || item.startsWith("video:/memory/"))).slice(0, 100) : (current.memorySignal || []),
       story: Array.isArray(body.story) ? body.story.slice(0, 8).map((slide: any) => ({
         eyebrow: String(slide.eyebrow || "").trim().slice(0, 60),
         title: String(slide.title || "").trim().slice(0, 120),
