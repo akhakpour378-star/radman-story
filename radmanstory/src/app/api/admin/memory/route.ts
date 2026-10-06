@@ -9,6 +9,10 @@ const ALLOWED = new Map([
   ["image/png", ".png"],
   ["image/webp", ".webp"],
   ["image/avif", ".avif"],
+  ["video/mp4", ".mp4"],
+  ["video/webm", ".webm"],
+  ["video/quicktime", ".mov"],
+  ["video/x-m4v", ".m4v"],
 ]);
 
 const authorized = (req: NextRequest) =>
@@ -26,12 +30,9 @@ export async function POST(req: NextRequest) {
     }
 
     const ext = ALLOWED.get(file.type);
-    if (!ext) {
-      return NextResponse.json({ error: "فرمت مجاز: JPG، PNG، WEBP یا AVIF." }, { status: 400 });
-    }
-    if (file.size > 15 * 1024 * 1024) {
-      return NextResponse.json({ error: "حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد." }, { status: 400 });
-    }
+    if (!ext) return NextResponse.json({ error: "فرمت مجاز تصویر: JPG، PNG، WEBP، AVIF — ویدیو: MP4، WEBM، MOV، M4V." }, { status: 400 });
+    const isVideo = file.type.startsWith("video/");
+    if (file.size > (isVideo ? 100 : 15) * 1024 * 1024) return NextResponse.json({ error: isVideo ? "حجم ویدیو نباید بیشتر از ۱۰۰ مگابایت باشد." : "حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد." }, { status: 400 });
 
     const original = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-").slice(0, 80);
     const base = original.replace(/\.[^.]+$/, "") || "radman-image";
@@ -44,11 +45,13 @@ export async function POST(req: NextRequest) {
     await fs.writeFile(path.join(dir, filename), Buffer.from(await file.arrayBuffer()));
 
     return NextResponse.json({
-      image: `/memory/${filename}`,
+      image: isVideo ? undefined : `/memory/${filename}`,
+      video: isVideo ? `/memory/${filename}` : undefined,
+      src: `/memory/${filename}`,
       filename,
       size: file.size,
     }, { headers: { "Cache-Control": "no-store" } });
   } catch {
-    return NextResponse.json({ error: "آپلود تصویر انجام نشد." }, { status: 400 });
+    return NextResponse.json({ error: "آپلود رسانه انجام نشد." }, { status: 400 });
   }
 }
