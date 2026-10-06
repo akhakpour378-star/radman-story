@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+@import url('https://raw.githubusercontent.com/AmirAbbasVafaee/iran-yekan-fn-cdn/main/css/iran-yekan.css');
+@import url('https://raw.githubusercontent.com/akiarostami/iransans/master/index.css');
 
-.u{--bg:#05070b;--ink:#f4f1ea;--muted:#8a909c;--line:rgba(255,255,255,.09);--cyan:#9ce7ef;--violet:#a7adff;position:relative;min-height:100vh;background:var(--bg);color:var(--ink);overflow:clip;font-family:Manrope,Arial,sans-serif}
-.u *{box-sizing:border-box}.u img,.u video{display:block;width:100%;height:100%}.u img{object-fit:cover}.u a{color:inherit;text-decoration:none}.u button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}.u-kicker{font:600 8px/1 DM Sans,sans-serif;letter-spacing:.2em;color:#8d96a5}.u-reveal{will-change:transform,opacity}
+.u{--bg:#05070b;--ink:#f4f1ea;--muted:#8a909c;--line:rgba(255,255,255,.09);--cyan:#9ce7ef;--violet:#a7adff;--fa-font:'IranYekan',sans-serif;position:relative;min-height:100vh;background:var(--bg);color:var(--ink);overflow:clip;font-family:Manrope,Arial,sans-serif}
+.u *{box-sizing:border-box}.u [dir='rtl'],.u .u-storyCinema__lead,.u .u-storyCinema__body,.u .u-hero__lead{font-family:var(--fa-font),Manrope,sans-serif}.u.u-font-iransans{--fa-font:'IRANSans',sans-serif}.u.u-font-iranyekan{--fa-font:'IranYekan',sans-serif}.u img,.u video{display:block;width:100%;height:100%}.u img{object-fit:cover}.u a{color:inherit;text-decoration:none}.u button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}.u-kicker{font:600 8px/1 DM Sans,sans-serif;letter-spacing:.2em;color:#8d96a5}.u-reveal{will-change:transform,opacity}
 
 /* GLOBAL ATMOSPHERE */
 .u:before{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.026;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}.u:after{content:"";position:fixed;inset:0;z-index:79;pointer-events:none;background:radial-gradient(700px circle at var(--mx,50vw) var(--my,50vh),rgba(156,231,239,.045),transparent 65%)}
@@ -2770,3 +2772,18 @@
 @media(max-width:520px){.radman-story-slider__media{height:55vh;min-height:360px}.radman-story-slider__slides{height:510px}.radman-story-slider__nav>button{width:34px;height:34px}}
 
 
+
+/* STORY MEDIA — SIGNATURE HOVER */
+.radman-story-slider__media{isolation:isolate;perspective:1200px;border-color:#ffffff20;box-shadow:0 40px 110px #000c,0 0 0 1px #ffffff05;transition:transform .6s cubic-bezier(.2,.8,.2,1),border-color .45s,box-shadow .6s}
+.radman-story-slider__media:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(240px circle at var(--story-x,50%) var(--story-y,50%),#9ce7ef22,transparent 58%),linear-gradient(125deg,#ffffff12,transparent 24%,transparent 70%,#a7adff0b);opacity:.72;transition:opacity .45s}
+.radman-story-slider__media:after{content:"";position:absolute;z-index:4;inset:-30%;pointer-events:none;background:linear-gradient(115deg,transparent 38%,#ffffff22 47%,#9ce7ef12 51%,transparent 59%);transform:translateX(-48%) rotate(7deg);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.radman-story-slider__media:hover{transform:translateY(-5px) scale(1.012);border-color:#9ce7ef70;box-shadow:0 52px 130px #000e,0 0 45px #9ce7ef10,0 0 0 1px #9ce7ef16}
+.radman-story-slider__media:hover:before{opacity:1}
+.radman-story-slider__media:hover:after{opacity:1;transform:translateX(48%) rotate(7deg)}
+.radman-story-slider__media img{transition:opacity .8s ease,transform 7s cubic-bezier(.2,.8,.2,1),filter .7s ease;filter:saturate(.68) contrast(1.06) brightness(.91)}
+.radman-story-slider__media:hover img.is-active{transform:scale(1.065);filter:saturate(.9) contrast(1.07) brightness(1.02)}
+.radman-story-slider__shade{transition:opacity .5s ease}
+.radman-story-slider__media:hover .radman-story-slider__shade{opacity:.76}
+.radman-story-slider__meta{transition:transform .45s ease,opacity .45s ease}
+.radman-story-slider__media:hover .radman-story-slider__meta{transform:translateY(-3px)}
+@media(max-width:900px){.radman-story-slider__media:hover{transform:none}.radman-story-slider__media:hover:after{opacity:0}}
