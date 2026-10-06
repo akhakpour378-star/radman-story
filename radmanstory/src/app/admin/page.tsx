@@ -64,8 +64,9 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
+  const [editingMemory, setEditingMemory] = useState<string | null>(null);
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
@@ -201,6 +202,7 @@ export default function AdminPage() {
         <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
@@ -270,14 +272,6 @@ export default function AdminPage() {
                 </tbody>
               </table>
             </div>
-            <section className="admin-memorySignal">
-              <div className="admin-memorySignal__head"><div><span>MEMORY SIGNAL</span><h2>تصاویر و ویدیوهای بخش پایین Story</h2><small>ترتیب نمایش را با انتخاب رسانه‌ها کنترل کن.</small></div></div>
-              <div className="admin-memorySignal__grid">
-                {images.map((src) => { const selected = (config.memorySignal || []).includes(src); return <button type="button" key={src} className={`admin-memorySignal__item ${selected ? "is-selected" : ""}`} onClick={() => { setSaved(false); setConfig(c => { const list = c.memorySignal || []; return { ...c, memorySignal: selected ? list.filter(x => x !== src) : [...list, src] }; }); }}><img src={mediaUrl(src)} alt="" /><i>{selected ? "✓" : "+"}</i></button>; })}
-                {images.length === 0 && <div className="admin-memorySignal__empty">هنوز تصویری در آرشیو وجود ندارد.</div>}
-              </div>
-              {videos.length > 0 && <><div className="admin-memorySignal__sub">VIDEO / ویدیوها</div><div className="admin-memorySignal__grid">{videos.map((src) => { const key = "video:" + src; const selected = (config.memorySignal || []).includes(key); return <button type="button" key={key} className={`admin-memorySignal__item admin-memorySignal__item--video ${selected ? "is-selected" : ""}`} onClick={() => { setSaved(false); setConfig(c => { const list = c.memorySignal || []; return { ...c, memorySignal: selected ? list.filter(x => x !== key) : [...list, key] }; }); }}><video src={mediaUrl(src)} muted playsInline preload="metadata" /><i>{selected ? "✓" : "▶"}</i></button>; })}</div></>}
-            </section>
             {editingStory !== null && config.story[editingStory] && (
               <div className="admin-storyEditPanel">
                 <div className="admin-storyEditPanel__head">
@@ -295,6 +289,48 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+          </>
+        ) : activeSection === "memory" ? (
+          <>
+            <header className="admin-header">
+              <div><span className="admin-kicker">03 / MEMORY SIGNAL CONTROL</span><h1>مدیریت <em>Memory Signal</em></h1><p>تصاویر و ویدیوهای بخش پایین Story را انتخاب، ویرایش و برای نمایش در سایت مرتب کن.</p></div>
+              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+            </header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-memoryManager">
+              <div className="admin-memoryManager__toolbar"><div><span>MEDIA LIBRARY</span><h2>لیست تصاویر و ویدیوها</h2><small>{images.length + videos.length} رسانه در آرشیو · {config.memorySignal?.length || 0} مورد فعال</small></div><div className="admin-memoryManager__legend"><span><i className="is-image"/> IMAGE</span><span><i className="is-video"/> VIDEO</span></div></div>
+              <div className="admin-memoryTableWrap">
+                <table className="admin-memoryTable">
+                  <thead><tr><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+                  <tbody>
+                    {[...images.map((src) => ({ key: src, src, type: "image" as const })), ...videos.map((src) => ({ key: "video:" + src, src, type: "video" as const }))].map((item, index) => {
+                      const selected = (config.memorySignal || []).includes(item.key);
+                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button></td></tr>;
+                    })}
+                    {images.length + videos.length === 0 && <tr><td colSpan={6}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            {editingMemory !== null && (() => {
+              const all = [...images.map((src) => ({ key: src, src, type: "image" as const })), ...videos.map((src) => ({ key: "video:" + src, src, type: "video" as const }))];
+              const item = all.find((x) => x.key === editingMemory);
+              if (!item) return null;
+              const list = config.memorySignal || [];
+              const selected = list.includes(item.key);
+              const position = list.indexOf(item.key);
+              const toggle = () => { setSaved(false); setError(""); setConfig(current => { const currentList = current.memorySignal || []; return { ...current, memorySignal: selected ? currentList.filter(x => x !== item.key) : [...currentList, item.key] }; }); };
+              const move = (direction: -1 | 1) => { if (position < 0) return; setSaved(false); setError(""); setConfig(current => { const next = [...(current.memorySignal || [])]; const target = position + direction; if (target < 0 || target >= next.length) return current; [next[position], next[target]] = [next[target], next[position]]; return { ...current, memorySignal: next }; }); };
+              return <section className="admin-memoryEditPanel">
+                <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><button type="button" onClick={() => setEditingMemory(null)}>بستن</button></div>
+                <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
+                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label><div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
+                    <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
+                    {selected && <div className="admin-memoryOrder"><span>جایگاه نمایش</span><strong>{String(position + 1).padStart(2, "0")}</strong><div><button type="button" onClick={() => move(-1)} disabled={position <= 0}>↑ بالاتر</button><button type="button" onClick={() => move(1)} disabled={position < 0 || position >= list.length - 1}>↓ پایین‌تر</button></div></div>}
+                  </div>
+                </div>
+              </section>;
+            })()}
           </>
         ) : (
           <>\n        <header className="admin-header">
