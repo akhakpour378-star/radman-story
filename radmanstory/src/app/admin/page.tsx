@@ -17,6 +17,7 @@ const defaults: HeroConfig = {
   date: "DEC / 01 / 2022", time: "14:15", weight: "3.100 kg",
   height: "49 cm", place: "NIKAN AQDASIEH", city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  persianFont: "iranyekan",
 };
 
 const fieldMeta: Record<keyof Omit<HeroConfig, "image">, { label: string; hint: string }> = {
@@ -28,6 +29,11 @@ const fieldMeta: Record<keyof Omit<HeroConfig, "image">, { label: string; hint: 
   city: { label: "شهر / کشور", hint: "Tehran · Iran" },
   cta: { label: "متن دکمه ورود", hint: "ENTER THE STORY" },
 };
+
+const fontMeta = {
+  iranyekan: { label: "ایران یکان", description: "برای متن‌های فارسی مدرن و مینیمال" },
+  iransans: { label: "ایران سنس", description: "برای متن‌های فارسی رسمی و خوانا" },
+} as const;
 
 function mediaUrl(src: string) {
   return src.startsWith("/memory/")
@@ -218,6 +224,17 @@ export default function AdminPage() {
                   <small>{fieldMeta[key].hint}</small>
                 </label>
               ))}
+            </div>
+
+            <div className="admin-fontBlock">
+              <div className="admin-subhead"><span>PERSIAN TYPOGRAPHY</span><small>PUBLIC SITE / LIVE</small></div>
+              <div className="admin-fontOptions">
+                {(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (
+                  <button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>
+                    <strong>{fontMeta[font].label}</strong><span>{fontMeta[font].description}</span>{config.persianFont === font && <Check size={14} />}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="admin-mediaBlock">
