@@ -25,8 +25,8 @@ export async function GET(request: NextRequest) {
         return files;
       };
       const names = await walk(dir);
-      const images = names.filter((name) => /\\.(jpe?g|png|webp|avif)$/i.test(name)).map((name) => `/memory/${name}`);
-      const videos = names.filter((name) => /\\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
+      const images = names.filter((name) => /\.(jpe?g|png|webp|avif)$/i.test(name)).map((name) => `/memory/${name}`);
+      const videos = names.filter((name) => /\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
       const bySection = (section: string, type: "images" | "videos") =>
         (type === "images" ? images : videos).filter((src) => src.startsWith(`/memory/${section}/`));
       return NextResponse.json({
