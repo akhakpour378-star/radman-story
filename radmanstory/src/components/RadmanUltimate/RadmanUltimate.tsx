@@ -477,44 +477,46 @@ export default function RadmanUltimate() {
         <div className="u-grain" />
       </section>
 
-      <section id="story" className="u-manifesto u-manifesto--story">
-        <div className="u-manifesto__ambient" aria-hidden="true" />
-        <div className="u-manifesto__scan" aria-hidden="true" />
-        <div className="u-manifesto__top u-reveal">
-          <span className="u-kicker">00 / BEFORE THE CHAPTERS</span>
-          <span className="u-manifesto__index">RADMAN / A VISUAL MEMORY</span>
+      <section id="story" className="u-storyCinema">
+        <div className="u-storyCinema__noise" aria-hidden="true" />
+        <div className="u-storyCinema__glow" aria-hidden="true" />
+
+        <div className="u-storyCinema__header">
+          <span className="u-kicker">00 / THE STORY</span>
+          <span>RADMAN / VISUAL BIOGRAPHY</span>
         </div>
 
-        <div className="u-manifesto__copy u-reveal">
-          <p className="u-manifesto__eyebrow">THIS IS WHY THE ARCHIVE EXISTS.</p>
+        <div className="u-storyCinema__image u-reveal">
+          <img src={asset("/memory/radman-main.JPG")} alt="Radman — first archive frame" />
+          <div className="u-storyCinema__imageShade" />
+          <span className="u-storyCinema__imageNo">01</span>
+          <span className="u-storyCinema__imageLabel">THE FIRST FRAME</span>
+          <i className="u-storyCinema__imageLine" />
+        </div>
+
+        <div className="u-storyCinema__copy u-reveal">
+          <span className="u-storyCinema__eyebrow">BEFORE THE CHAPTERS</span>
           <h2>Some days<br /><em>become a lifetime.</em></h2>
-          <p>این آرشیو برای شمردن روزها ساخته نشده؛ برای نگه‌داشتن ردِ حضوری‌ست که از کنار ما گذشته و هنوز درون ما ادامه دارد. هر قاب، یک مکث کوتاه است؛ پیش از اینکه وارد فصل بعدی شویم.</p>
+          <p className="u-storyCinema__lead">رادمان فقط مجموعه‌ای از تاریخ‌ها و عکس‌ها نیست؛ بخشی از زندگی من است که هر قابش هنوز نفس می‌کشد.</p>
+          <p className="u-storyCinema__body">این داستان برای نگه‌داشتن زمان ساخته نشده. برای این است که لحظه‌ها جایی برای ماندن داشته باشند؛ از اولین نگاه تا کوچک‌ترین روزهایی که بعدها تبدیل به بزرگ‌ترین خاطرات شدند.</p>
           <a className="u-manifesto__enter" href="#chapters">
-            <span>OPEN THE CHAPTERS</span>
+            <span>ENTER THE CHAPTERS</span>
             <ArrowDown size={14} />
           </a>
         </div>
 
-        <div className="u-manifesto__side u-reveal">
-          <div className="u-manifesto__portrait" aria-hidden="true">
-            <img src={asset("/memory/radman-main.JPG")} alt="" />
-            <div className="u-manifesto__portraitShade" />
-            <span>ARCHIVE / 01</span>
-            <i>THE FIRST FRAME</i>
-          </div>
-          <div className="u-manifesto__quote">
-            <span>THE PURPOSE</span>
-            We don't stop time.<br /><em>We give memory a place to live.</em>
-          </div>
-          <div className="u-manifesto__principles">
-            <div><span>01</span><b>LOOK</b><small>Stay with the frame.</small></div>
-            <div><span>02</span><b>REMEMBER</b><small>Let the moment return.</small></div>
-            <div><span>03</span><b>CONTINUE</b><small>Carry the story forward.</small></div>
-          </div>
+        <div className="u-storyCinema__signal">
+          <div><span>01</span><b>ARRIVAL</b><small>The moment everything changed.</small></div>
+          <div><span>02</span><b>GROWING</b><small>Little days, becoming a life.</small></div>
+          <div><span>03</span><b>REMEMBER</b><small>What time cannot take away.</small></div>
         </div>
 
-        <div className="u-manifesto__line" aria-hidden="true" />
-        <div className="u-manifesto__scroll" aria-hidden="true"><span>SCROLL TO BEGIN</span><i /></div>
+        <div className="u-storyCinema__quote">
+          <span>THE PURPOSE OF THIS ARCHIVE</span>
+          <p>We don't stop time.<br /><em>We give memory a place to live.</em></p>
+        </div>
+
+        <div className="u-storyCinema__scroll"><span>SCROLL TO CONTINUE</span><i /></div>
       </section>
 
       <section className="u-reel" aria-label="Selected memories">
