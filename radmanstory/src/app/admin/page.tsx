@@ -12,6 +12,7 @@ type HeroConfig = {
   height: string; place: string; city: string; cta: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
+  memorySignal?: string[];
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
 
@@ -261,6 +262,14 @@ export default function AdminPage() {
                 </tbody>
               </table>
             </div>
+            <section className="admin-memorySignal">
+              <div className="admin-memorySignal__head"><div><span>MEMORY SIGNAL</span><h2>تصاویر و ویدیوهای بخش پایین Story</h2><small>ترتیب نمایش را با انتخاب رسانه‌ها کنترل کن.</small></div></div>
+              <div className="admin-memorySignal__grid">
+                {images.map((src) => { const selected = (config.memorySignal || []).includes(src); return <button type="button" key={src} className={`admin-memorySignal__item ${selected ? "is-selected" : ""}`} onClick={() => { setSaved(false); setConfig(c => { const list = c.memorySignal || []; return { ...c, memorySignal: selected ? list.filter(x => x !== src) : [...list, src] }; }); }}><img src={mediaUrl(src)} alt="" /><i>{selected ? "✓" : "+"}</i></button>; })}
+                {images.length === 0 && <div className="admin-memorySignal__empty">هنوز تصویری در آرشیو وجود ندارد.</div>}
+              </div>
+              {videos.length > 0 && <><div className="admin-memorySignal__sub">VIDEO / ویدیوها</div><div className="admin-memorySignal__grid">{videos.map((src) => { const key = "video:" + src; const selected = (config.memorySignal || []).includes(key); return <button type="button" key={key} className={`admin-memorySignal__item admin-memorySignal__item--video ${selected ? "is-selected" : ""}`} onClick={() => { setSaved(false); setConfig(c => { const list = c.memorySignal || []; return { ...c, memorySignal: selected ? list.filter(x => x !== key) : [...list, key] }; }); }}><video src={mediaUrl(src)} muted playsInline preload="metadata" /><i>{selected ? "✓" : "▶"}</i></button>; })}</div></>}
+            </section>
             {editingStory !== null && config.story[editingStory] && (
               <div className="admin-storyEditPanel">
                 <div className="admin-storyEditPanel__head">
