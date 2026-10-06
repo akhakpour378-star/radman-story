@@ -196,7 +196,19 @@ export default function AdminPage() {
       if (!r.ok) throw new Error(data?.error || "حذف رسانه انجام نشد.");
       if (item.type === "video") setVideos(current => current.filter(src => src !== item.src));
       else setImages(current => current.filter(src => src !== item.src));
-      setConfig(current => ({ ...current, memorySignal: (current.memorySignal || []).filter(x => x !== item.key) }));
+      const next = {
+        ...config,
+        memorySignal: (config.memorySignal || []).filter(x => x !== item.key),
+      };
+      const saveRes = await fetch("/api/admin/hero", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData?.error || "اعمال حذف روی سایت انجام نشد.");
+      setConfig({ ...defaults, ...saveData });
+      setSavedConfig({ ...defaults, ...saveData });
       if (editingMemory === item.key) setEditingMemory(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "حذف رسانه انجام نشد.");
