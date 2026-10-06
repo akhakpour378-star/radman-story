@@ -111,7 +111,7 @@ export default function AdminPage() {
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
 
-  useEffect(() => {
+  const restoreAdminRoute = () => {
     try {
       const params = new URLSearchParams(window.location.search);
       const urlSection = params.get("section");
@@ -126,6 +126,10 @@ export default function AdminPage() {
       const memory = params.get("memory") ?? sessionStorage.getItem("radman-admin-edit-memory");
       if (memory) setEditingMemory(memory);
     } catch {}
+  };
+
+  useEffect(() => {
+    restoreAdminRoute();
     adminUrlReady.current = true;
   }, []);
 
@@ -184,6 +188,7 @@ export default function AdminPage() {
           setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v: string) => "video:" + v) : [])]);
         }
         setAuthenticated(Boolean(auth.authenticated));
+        restoreAdminRoute();
       })
       .catch(() => setError("اتصال به سرور برقرار نشد."))
       .finally(() => alive && setLoading(false));
@@ -346,10 +351,13 @@ export default function AdminPage() {
     setError(""); setSaved(false);
     try {
       const items = [...images.map(src => ({ key: src, src, type: "image" as const })), ...videos.map(src => ({ key: "video:" + src, src, type: "video" as const }))].filter(x => selectedMemoryKeys.includes(x.key));
-      for (const item of items) {
-        const r = await fetch("/api/admin/memory", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ src: item.src }) });
-        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d?.error || "حذف یکی از رسانه‌ها انجام نشد."); }
-      }
+      const r = await fetch("/api/admin/memory", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ srcs: items.map(item => item.src) }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data?.error || "حذف یکی از رسانه‌ها انجام نشد.");
       const keys = new Set(items.map(x => x.key));
       const next = { ...config, memorySignal: Array.from(new Set(config.memorySignal || [])).filter(x => !keys.has(x)) };
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
