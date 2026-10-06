@@ -2335,3 +2335,175 @@
     max-height:390px!important;
   }
 }
+
+
+/* ═════════════════════════════════════════════════════════════
+   HERO — TRUE EXPLORE CTA MATCH + CINEMATIC EXIT
+   Final authoritative override. Keep this block last.
+   ═════════════════════════════════════════════════════════════ */
+
+/* ENTER THE STORY: literally the same underline/hover mechanics as
+   the original EXPLORE / OPEN THE CHAPTERS link. */
+.u-hero--editorial .u-hero__cta{
+  position:absolute!important;
+  left:5vw!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:8vh!important;
+  width:205px!important;
+  min-width:205px!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:12px 0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:20px!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-bottom:1px solid #ffffff25!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  color:#f1f2f1!important;
+  font:600 7px DM Sans,sans-serif!important;
+  letter-spacing:.18em!important;
+  text-decoration:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  transform:none!important;
+  transition:transform .35s ease,letter-spacing .35s ease!important;
+  z-index:40!important;
+}
+
+.u-hero--editorial .u-hero__cta::after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:auto!important;
+  bottom:-1px!important;
+  width:32%!important;
+  height:1px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:var(--cyan)!important;
+  box-shadow:0 0 15px #9ce7ef!important;
+  opacity:1!important;
+  transform:none!important;
+  pointer-events:none!important;
+  transition:width .5s cubic-bezier(.2,.8,.2,1)!important;
+}
+
+.u-hero--editorial .u-hero__cta:hover{
+  transform:translateX(5px)!important;
+  letter-spacing:.22em!important;
+  border-bottom-color:#ffffff25!important;
+  box-shadow:none!important;
+}
+
+.u-hero--editorial .u-hero__cta:hover::after,
+.u-hero--editorial .u-hero__cta:focus-visible::after{
+  width:100%!important;
+}
+
+.u-hero--editorial .u-hero__cta span{
+  position:relative!important;
+  z-index:2!important;
+  color:#f1f2f1!important;
+  font:600 7px DM Sans,sans-serif!important;
+  letter-spacing:.18em!important;
+}
+
+.u-hero--editorial .u-hero__cta svg{
+  position:relative!important;
+  z-index:2!important;
+  width:13px!important;
+  height:13px!important;
+  flex:0 0 auto!important;
+  color:var(--cyan)!important;
+}
+
+/* Cinematic exit: the image dissolves over a long distance.
+   The bottom of the Hero and the first part of the next section are
+   deliberately the exact same black, removing the visible seam. */
+.u-hero--editorial .u-hero__fade{
+  position:absolute!important;
+  left:-6%!important;
+  right:-6%!important;
+  bottom:-1px!important;
+  width:auto!important;
+  height:60vh!important;
+  min-height:420px!important;
+  max-height:700px!important;
+  z-index:25!important;
+  display:block!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(
+      ellipse 115% 80% at 50% 100%,
+      #05070b 0%,
+      rgba(5,7,11,.94) 23%,
+      rgba(5,7,11,.70) 46%,
+      rgba(5,7,11,.36) 68%,
+      rgba(5,7,11,0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(5,7,11,0) 0%,
+      rgba(5,7,11,.018) 15%,
+      rgba(5,7,11,.065) 29%,
+      rgba(5,7,11,.16) 43%,
+      rgba(5,7,11,.31) 57%,
+      rgba(5,7,11,.52) 70%,
+      rgba(5,7,11,.76) 84%,
+      #05070b 100%
+    )!important;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.12) 9%,#000 30%,#000 100%)!important;
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.12) 9%,#000 30%,#000 100%)!important;
+}
+
+/* Give the fade a quiet black landing zone before the manifesto changes
+   to its slightly lighter blue-black tone. */
+.u-hero--editorial + .u-manifesto{
+  margin-top:0!important;
+  padding-top:15vh!important;
+  background:
+    linear-gradient(
+      to bottom,
+      #05070b 0%,
+      #05070b 18%,
+      #06080d 42%,
+      #06080d 100%
+    )!important;
+}
+
+@media(max-width:850px){
+  .u-hero--editorial .u-hero__cta{
+    left:22px!important;
+    bottom:7vh!important;
+    width:205px!important;
+    min-width:205px!important;
+  }
+
+  .u-hero--editorial .u-hero__fade{
+    height:48vh!important;
+    min-height:300px!important;
+    max-height:430px!important;
+    left:-10%!important;
+    right:-10%!important;
+  }
+
+  .u-hero--editorial + .u-manifesto{
+    padding-top:130px!important;
+    background:
+      linear-gradient(
+        to bottom,
+        #05070b 0%,
+        #05070b 16%,
+        #06080d 38%,
+        #06080d 100%
+      )!important;
+  }
+}
