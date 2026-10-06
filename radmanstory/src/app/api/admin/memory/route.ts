@@ -99,10 +99,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const fileName = parts[parts.length - 1];
-    const typeDir = parts[parts.length - 2];
-    if (!fileName || !/^(images|videos)$/i.test(typeDir)) {
-      throw new Error("نام فایل نامعتبر است.");
-    }
+    if (!fileName) throw new Error("نام فایل نامعتبر است.");
     return { src, relative, parts };
   };
 
