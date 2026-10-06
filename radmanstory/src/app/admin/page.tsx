@@ -53,19 +53,22 @@ export default function AdminPage() {
   useEffect(() => {
     let alive = true;
     Promise.all([
+      fetch("/api/admin/auth", { cache: "no-store" }),
       fetch("/api/admin/hero", { cache: "no-store" }),
       fetch("/api/memory?list=1", { cache: "no-store" }),
     ])
-      .then(async ([heroRes, mediaRes]) => {
+      .then(async ([authRes, heroRes, mediaRes]) => {
         if (!alive) return;
+        const auth = authRes.ok ? await authRes.json() : { authenticated: false };
         if (heroRes.ok) {
           const data = { ...defaults, ...(await heroRes.json()) };
-          setConfig(data); setSavedConfig(data); setAuthenticated(true);
+          setConfig(data); setSavedConfig(data);
         }
         if (mediaRes.ok) {
           const media = await mediaRes.json();
           setImages(Array.isArray(media.images) ? media.images : []);
         }
+        setAuthenticated(Boolean(auth.authenticated));
       })
       .catch(() => setError("اتصال به سرور برقرار نشد."))
       .finally(() => alive && setLoading(false));
