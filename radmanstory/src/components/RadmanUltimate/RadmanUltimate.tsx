@@ -569,12 +569,13 @@ export default function RadmanUltimate() {
       <section id="chapters" className="u-chapters">
         {chapters.map(([num, title, copy, m]) => (
           <article className="u-chapter" key={num}>
-            <div className="u-chapter__top"><b>{num}</b><span>{m.tag}</span><small>STORY / 04</small></div>
+            <div className="u-chapter__top"><span>{m.tag}</span><small>STORY / 04</small></div>
             <div className="u-chapter__layout">
               <button className="u-chapter__image" onClick={() => setSelected(memories.indexOf(m))} aria-label={`Open ${m.title}`}>
                 <img src={asset(m.src)} alt={m.title} />
-                <span>{m.no}</span>
-                <i><Maximize2 size={13} /></i>
+                <div className="u-chapter__imageFrame" aria-hidden="true"><span>RADMAN / ARCHIVE</span><i /></div>
+                <div className="u-chapter__imageMeta"><b>{m.tag}</b><small>{m.title}</small></div>
+                <i className="u-chapter__imageOpen"><Maximize2 size={13} /></i>
               </button>
               <div className="u-chapter__copy u-reveal">
                 <p className="u-kicker">{m.tag} / {m.no}</p>
