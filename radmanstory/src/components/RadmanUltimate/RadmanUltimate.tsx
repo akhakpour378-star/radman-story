@@ -427,6 +427,12 @@ export default function RadmanUltimate() {
         </div>
 
         <div className="u-manifesto__side u-reveal">
+          <div className="u-manifesto__portrait" aria-hidden="true">
+            <img src={asset("/memory/radman-main.JPG")} alt="" />
+            <div className="u-manifesto__portraitShade" />
+            <span>ARCHIVE / 01</span>
+            <i>THE FIRST FRAME</i>
+          </div>
           <div className="u-manifesto__quote">
             <span>THE PURPOSE</span>
             We don't stop time.<br /><em>We give memory a place to live.</em>
