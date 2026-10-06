@@ -80,39 +80,53 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  try {
-    const body = await req.json();
-    let src = typeof body?.src === "string" ? body.src.trim() : "";
-    if (src.startsWith("video:/memory/")) src = src.slice("video:".length);
-    if (!src.startsWith("/memory/")) return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
 
+  const normalizeSrc = (value: unknown) => {
+    let src = typeof value === "string" ? value.trim() : "";
+    if (src.startsWith("video:/memory/")) src = src.slice("video:".length);
+    if (!src.startsWith("/memory/")) throw new Error("مسیر رسانه نامعتبر است.");
     const relative = src.slice("/memory/".length).replace(/\\/g, "/");
     const parts = relative.split("/").filter(Boolean);
-    // Expected: /memory/<section>/<images|videos>/<filename>
-    // Keep this validation path-based instead of relying on a fragile regex.
     if (
       parts.length !== 3 ||
       !/^[a-z0-9_-]+$/i.test(parts[0]) ||
       !/^(images|videos)$/i.test(parts[1]) ||
-      !parts[2] ||
-      parts[2] === "." ||
-      parts[2] === ".." ||
-      parts[2].includes("..")
-    ) {
-      return NextResponse.json({ error: "نام فایل نامعتبر است." }, { status: 400 });
+      !/^[^/]+$/.test(parts[2]) ||
+      parts[2] === "." || parts[2] === ".." || parts[2].includes("..")
+    ) throw new Error("نام فایل نامعتبر است.");
+    return { src, parts };
+  };
+
+  try {
+    const body = await req.json();
+    const requested = Array.isArray(body?.srcs) ? body.srcs : [body?.src];
+    if (!requested.length || !requested[0]) return NextResponse.json({ error: "رسانه‌ای برای حذف انتخاب نشده است." }, { status: 400 });
+
+    const projectRoot = path.resolve(process.cwd());
+    const roots = [
+      path.join(projectRoot, "memory"),
+      path.join(path.resolve(projectRoot, ".."), "memory"),
+      path.join(projectRoot, "public", "memory"),
+    ];
+
+    const resolvedFiles: Array<{ src: string; filePath: string }> = [];
+    for (const value of requested) {
+      const { src, parts } = normalizeSrc(value);
+      const candidates = roots.map((root) => path.resolve(root, ...parts));
+      let found = "";
+      for (const candidate of candidates) {
+        try {
+          if ((await fs.stat(candidate)).isFile()) { found = candidate; break; }
+        } catch {}
+      }
+      if (!found) return NextResponse.json({ error: "فایل پیدا نشد.", src }, { status: 404 });
+      resolvedFiles.push({ src, filePath: found });
     }
 
-    const filePath = path.join(path.resolve(process.cwd(), ".."), "memory", ...parts);
-    const memoryRoot = path.resolve(path.resolve(process.cwd(), ".."), "memory");
-    const resolved = path.resolve(filePath);
-    if (!resolved.startsWith(memoryRoot + path.sep)) {
-      return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
-    }
-
-    await fs.unlink(resolved);
-    return NextResponse.json({ ok: true, src }, { headers: { "Cache-Control": "no-store" } });
+    for (const file of resolvedFiles) await fs.unlink(file.filePath);
+    return NextResponse.json({ ok: true, deleted: resolvedFiles.map(file => file.src) }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    const code = error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code) : "";
-    return NextResponse.json({ error: code === "ENOENT" ? "فایل پیدا نشد." : "حذف رسانه انجام نشد." }, { status: code === "ENOENT" ? 404 : 400 });
+    const message = error instanceof Error ? error.message : "حذف رسانه انجام نشد.";
+    return NextResponse.json({ error: message }, { status: message === "فایل پیدا نشد." ? 404 : 400 });
   }
 }
