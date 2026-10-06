@@ -195,7 +195,6 @@ export default function AdminPage() {
           const trash = await trashRes.json();
           setTrashItems(Array.isArray(trash.items) ? trash.items : []);
         }
-        }
         setAuthenticated(Boolean(auth.authenticated));
         restoreAdminRoute();
       })
