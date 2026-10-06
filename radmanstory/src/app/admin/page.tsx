@@ -30,7 +30,7 @@ const defaults: HeroConfig = {
   ],
 };
 
-const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story">, { label: string; hint: string }> = {
+const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story" | "memorySignal">, { label: string; hint: string }> = {
   date: { label: "تاریخ تولد", hint: "DEC / 01 / 2022" },
   time: { label: "ساعت تولد", hint: "14:15" },
   weight: { label: "وزن هنگام تولد", hint: "3.100 kg" },
@@ -79,16 +79,17 @@ export default function AdminPage() {
     ])
       .then(async ([authRes, heroRes, mediaRes]) => {
         if (!alive) return;
+        let heroData: HeroConfig = defaults;
         const auth = authRes.ok ? await authRes.json() : { authenticated: false };
         if (heroRes.ok) {
-          const data = { ...defaults, ...(await heroRes.json()) };
-          setConfig(data); setSavedConfig(data);
+          heroData = { ...defaults, ...(await heroRes.json()) };
+          setConfig(heroData); setSavedConfig(heroData);
         }
         if (mediaRes.ok) {
           const media = await mediaRes.json();
           setImages(Array.isArray(media.images) ? media.images : []);
           setVideos(Array.isArray(media.videos) ? media.videos : []);
-          if (!Array.isArray((data as { memorySignal?: string[] }).memorySignal) || !(data as { memorySignal?: string[] }).memorySignal?.length) {
+          if (!Array.isArray(heroData.memorySignal) || !heroData.memorySignal.length) {
             const initialSignal = [...(Array.isArray(media.images) ? media.images.slice(0, 7) : []), ...(Array.isArray(media.videos) ? media.videos.slice(0, 2).map((v: string) => "video:" + v) : [])];
             setConfig(current => ({ ...current, memorySignal: initialSignal }));
             setSavedConfig(current => ({ ...current, memorySignal: initialSignal }));
