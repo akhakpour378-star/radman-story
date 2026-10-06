@@ -27,7 +27,17 @@ export async function GET(request: NextRequest) {
       const names = await walk(dir);
       const images = names.filter((name) => /\\.(jpe?g|png|webp|avif)$/i.test(name)).map((name) => `/memory/${name}`);
       const videos = names.filter((name) => /\\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
-      return NextResponse.json({ images, videos }, { headers: { "Cache-Control": "no-store" } });
+      const bySection = (section: string, type: "images" | "videos") =>
+        (type === "images" ? images : videos).filter((src) => src.startsWith(`/memory/${section}/`));
+      return NextResponse.json({
+        images, videos,
+        heroImages: bySection("hero", "images"),
+        heroVideos: bySection("hero", "videos"),
+        storyImages: bySection("story", "images"),
+        storyVideos: bySection("story", "videos"),
+        memoryImages: images.filter((src) => !src.startsWith("/memory/hero/") && !src.startsWith("/memory/story/")),
+        memoryVideos: videos.filter((src) => !src.startsWith("/memory/hero/") && !src.startsWith("/memory/story/")),
+      }, { headers: { "Cache-Control": "no-store" } });
     } catch { return NextResponse.json({ images: [] }); }
   }
   const file = request.nextUrl.searchParams.get("file");
