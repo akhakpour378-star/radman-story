@@ -183,6 +183,26 @@ export default function AdminPage() {
     finally { setMemoryUploadType(null); }
   };
 
+  const deleteMemoryMedia = async (item: { key: string; src: string; type: "image" | "video" }) => {
+    if (!window.confirm(`آیا از حذف این رسانه مطمئن هستید؟ این فایل از آرشیو نیز حذف می‌شود.`)) return;
+    setError(""); setSaved(false);
+    try {
+      const r = await fetch("/api/admin/memory", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ src: item.src }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "حذف رسانه انجام نشد.");
+      if (item.type === "video") setVideos(current => current.filter(src => src !== item.src));
+      else setImages(current => current.filter(src => src !== item.src));
+      setConfig(current => ({ ...current, memorySignal: (current.memorySignal || []).filter(x => x !== item.key) }));
+      if (editingMemory === item.key) setEditingMemory(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "حذف رسانه انجام نشد.");
+    }
+  };
+
   const removeStorySlide = (index: number) => {
     if (config.story.length <= 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
     setSaved(false); setError("");
@@ -322,7 +342,7 @@ export default function AdminPage() {
                   <tbody>
                     {[...images.map((src) => ({ key: src, src, type: "image" as const })), ...videos.map((src) => ({ key: "video:" + src, src, type: "video" as const }))].map((item, index) => {
                       const selected = (config.memorySignal || []).includes(item.key);
-                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button></td></tr>;
+                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
                     })}
                     {images.length + videos.length === 0 && <tr><td colSpan={6}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
                   </tbody>
@@ -339,7 +359,7 @@ export default function AdminPage() {
               const toggle = () => { setSaved(false); setError(""); setConfig(current => { const currentList = current.memorySignal || []; return { ...current, memorySignal: selected ? currentList.filter(x => x !== item.key) : [...currentList, item.key] }; }); };
               const move = (direction: -1 | 1) => { if (position < 0) return; setSaved(false); setError(""); setConfig(current => { const next = [...(current.memorySignal || [])]; const target = position + direction; if (target < 0 || target >= next.length) return current; [next[position], next[target]] = [next[target], next[position]]; return { ...current, memorySignal: next }; }); };
               return <section className="admin-memoryEditPanel">
-                <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><button type="button" onClick={() => setEditingMemory(null)}>بستن</button></div>
+                <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => setEditingMemory(null)}>بستن</button></div></div>
                 <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
                   <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label><div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
                     <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
