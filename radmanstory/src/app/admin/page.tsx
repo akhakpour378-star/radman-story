@@ -245,7 +245,7 @@ export default function AdminPage() {
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
                       <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} />
-                      {key === "image" && <label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر اسلاید
+                      {key === "image" && <span className="admin-uploadMini"><Upload size={13} /> آپلود تصویر اسلاید
                         <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(index, "image", src)); e.currentTarget.value = ""; }} />
                       </label>}
                     </label>
