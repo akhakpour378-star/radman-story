@@ -481,23 +481,48 @@ export default function RadmanUltimate() {
         <div className="u-grain" />
       </section>
 
-      <section id="story" className="u-storyCinema u-storyCinema--imageOnly">
-        <div className="radman-story-slider radman-story-slider--imageOnly">
+      <section id="story" className="u-storyCinema">
+        <div className="u-storyCinema__noise" aria-hidden="true" />
+        <div className="u-storyCinema__glow" aria-hidden="true" />
+        <div className="u-storyCinema__header">
+          <span className="u-kicker">00 / THE STORY</span><span>RADMAN / VISUAL BIOGRAPHY</span>
+        </div>
+
+        <div className="radman-story-slider">
           <div className="radman-story-slider__media">
             {storySlides.map((slide, i) => (
               <img key={slide.image} className={i === storySlide ? "is-active" : ""} src={asset(slide.image)} alt={slide.label} />
             ))}
             <div className="radman-story-slider__shade" />
-            <div className="radman-story-slider__frame" aria-hidden="true" />
-            <div className="radman-story-slider__controls">
-              <button type="button" onClick={() => { setStoryDirection(-1); setStorySlide(s => (s - 1 + storySlides.length) % storySlides.length); }} aria-label="Previous image"><ArrowLeft size={15} /></button>
+            <div className="radman-story-slider__meta">
+              <span>{String(storySlide + 1).padStart(2, "0")}</span>
+              <b>{storySlides[storySlide].label}</b>
+            </div>
+          </div>
+
+          <div className="radman-story-slider__content">
+            <div className="radman-story-slider__slides">
+              {storySlides.map((slide, i) => (
+                <article key={slide.eyebrow} className={i === storySlide ? "is-active" : ""}>
+                  <span className="u-storyCinema__eyebrow">{slide.eyebrow}</span>
+                  <h2>{slide.title}</h2>
+                  <p className="u-storyCinema__lead">{slide.lead}</p>
+                  <p className="u-storyCinema__body">{slide.body}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="radman-story-slider__nav">
+              <button type="button" onClick={() => { setStoryDirection(-1); setStorySlide(s => (s - 1 + storySlides.length) % storySlides.length); }} aria-label="Previous slide"><ArrowLeft /></button>
               <div className="radman-story-slider__dots">
                 {storySlides.map((slide, i) => (
-                  <button key={slide.eyebrow} type="button" className={i === storySlide ? "is-active" : ""} onClick={() => { setStoryDirection(i > storySlide ? 1 : -1); setStorySlide(i); }} aria-label={`Image ${i + 1}`} />
+                  <button key={slide.eyebrow} type="button" className={i === storySlide ? "is-active" : ""} onClick={() => { setStoryDirection(i > storySlide ? 1 : -1); setStorySlide(i); }} aria-label={`Go to slide ${i + 1}`} />
                 ))}
               </div>
-              <button type="button" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} aria-label="Next image"><ArrowRight size={15} /></button>
+              <button type="button" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} aria-label="Next slide"><ArrowRight /></button>
+              <span>{String(storySlide + 1).padStart(2, "0")} / {String(storySlides.length).padStart(2, "0")}</span>
             </div>
+            <div className="radman-story-slider__progress"><i key={storySlide} /></div>
           </div>
         </div>
       </section>
