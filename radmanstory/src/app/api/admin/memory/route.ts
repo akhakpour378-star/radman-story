@@ -82,12 +82,34 @@ export async function DELETE(req: NextRequest) {
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = await req.json();
-    const src = typeof body?.src === "string" ? body.src : "";
+    let src = typeof body?.src === "string" ? body.src.trim() : "";
+    if (src.startsWith("video:/memory/")) src = src.slice("video:".length);
     if (!src.startsWith("/memory/")) return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
+
     const relative = src.slice("/memory/".length).replace(/\\/g, "/");
-    if (!relative || relative.includes("..") || relative.startsWith("/") || !/^([a-z]+)\/(images|videos)\/[^/]+$/i.test(relative)) return NextResponse.json({ error: "نام فایل نامعتبر است." }, { status: 400 });
-    const filePath = path.join(path.resolve(process.cwd(), ".."), "memory", relative);
-    await fs.unlink(filePath);
+    const parts = relative.split("/").filter(Boolean);
+    // Expected: /memory/<section>/<images|videos>/<filename>
+    // Keep this validation path-based instead of relying on a fragile regex.
+    if (
+      parts.length !== 3 ||
+      !/^[a-z0-9_-]+$/i.test(parts[0]) ||
+      !/^(images|videos)$/i.test(parts[1]) ||
+      !parts[2] ||
+      parts[2] === "." ||
+      parts[2] === ".." ||
+      parts[2].includes("..")
+    ) {
+      return NextResponse.json({ error: "نام فایل نامعتبر است." }, { status: 400 });
+    }
+
+    const filePath = path.join(path.resolve(process.cwd(), ".."), "memory", ...parts);
+    const memoryRoot = path.resolve(path.resolve(process.cwd(), ".."), "memory");
+    const resolved = path.resolve(filePath);
+    if (!resolved.startsWith(memoryRoot + path.sep)) {
+      return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
+    }
+
+    await fs.unlink(resolved);
     return NextResponse.json({ ok: true, src }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code) : "";
