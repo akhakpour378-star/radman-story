@@ -552,7 +552,7 @@ export default function RadmanUltimate() {
         <div className="u-reel__track">
           {memories.slice(0, Math.min(7, memories.length)).map((m, i) => (
             <button className="u-reel__item" key={m.src} onClick={() => setSelected(i)} aria-label={m.title}>
-              <img src={asset(m.src)} alt={m.title} loading="lazy" /><div className="u-reel__frame" aria-hidden="true"><span>RADMAN / MEMORY</span><i /></div><div className="u-reel__meta"><b>{m.title}</b><small>MEMORY SIGNAL</small></div>
+              <img src={asset(m.src)} alt={m.title} loading="lazy" /><div className="u-reel__frame" aria-hidden="true"><span>RADMAN / MEMORY</span><i /></div>
             </button>
           ))}
           {videos.slice(0, 2).map((src, i) => (
