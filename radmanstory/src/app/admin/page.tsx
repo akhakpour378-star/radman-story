@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
-  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle,
+  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload,
 } from "lucide-react";
 import "./admin.css";
 
@@ -57,6 +57,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [imageOpen, setImageOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -134,6 +135,26 @@ export default function AdminPage() {
     setSaved(false); setError("");
     setConfig(c => ({ ...c, story: [...c.story, { eyebrow:"NEW CHAPTER", title:"A new memory / begins here.", lead:"متن اصلی این اسلاید را وارد کنید.", body:"توضیحات این اسلاید را وارد کنید.", image:c.image, label:"NEW MEMORY" }] }));
   };
+  const uploadImage = async (file: File, apply?: (src: string) => void) => {
+    if (!file.type.startsWith("image/")) { setError("فقط فایل تصویری قابل آپلود است."); return; }
+    if (file.size > 15 * 1024 * 1024) { setError("حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد."); return; }
+    setUploading(true); setError(""); setSaved(false);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const r = await fetch("/api/admin/memory", { method: "POST", body: form });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
+      const src = String(data.image);
+      setImages(current => current.includes(src) ? current : [src, ...current]);
+      if (apply) apply(src);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "آپلود تصویر انجام نشد.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const removeStorySlide = (index: number) => {
     if (config.story.length <= 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
     setSaved(false); setError("");
@@ -223,7 +244,11 @@ export default function AdminPage() {
                   <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>{String(index + 1).padStart(2, "0")}</span><button className="admin-removeStory" type="button" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1} aria-label="حذف اسلاید">حذف</button></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
-                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /></label>
+                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} />
+                      {key === "image" && <label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر اسلاید
+                        <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(index, "image", src)); e.currentTarget.value = ""; }} />
+                      </label>}
+                    </label>
                     ))}
                   </div>
                 </article>
