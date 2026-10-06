@@ -83,35 +83,50 @@ export async function DELETE(req: NextRequest) {
 
   const normalizeSrc = (value: unknown) => {
     let src = typeof value === "string" ? value.trim() : "";
-    if (src.startsWith("video:/memory/")) src = src.slice("video:".length);
+    if (src.startsWith("video:")) src = src.slice(6);
+    src = "/" + src.replace(/^[/\\]+/, "").replace(/\\/g, "/");
     if (!src.startsWith("/memory/")) throw new Error("مسیر رسانه نامعتبر است.");
-    const relative = src.slice("/memory/".length).replace(/\\/g, "/");
+
+    const relative = src.slice("/memory/".length);
     const parts = relative.split("/").filter(Boolean);
     if (
-      parts.length !== 3 ||
-      !/^[a-z0-9_-]+$/i.test(parts[0]) ||
-      !/^(images|videos)$/i.test(parts[1]) ||
-      !/^[^/]+$/.test(parts[2]) ||
-      parts[2] === "." || parts[2] === ".." || parts[2].includes("..")
-    ) throw new Error("نام فایل نامعتبر است.");
-    return { src, parts };
+      parts.length < 2 ||
+      parts.length > 20 ||
+      parts.some((part) => part === "." || part === ".." || part.includes("\\0") || part.includes("..")) ||
+      parts.some((part) => !/^[a-zA-Z0-9._-]+$/.test(part))
+    ) {
+      throw new Error("نام فایل نامعتبر است.");
+    }
+
+    const fileName = parts[parts.length - 1];
+    const typeDir = parts[parts.length - 2];
+    if (!fileName || !/^(images|videos)$/i.test(typeDir)) {
+      throw new Error("نام فایل نامعتبر است.");
+    }
+    return { src, relative, parts };
   };
 
   try {
     const body = await req.json();
     const requested = Array.isArray(body?.srcs) ? body.srcs : [body?.src];
-    if (!requested.length || !requested[0]) return NextResponse.json({ error: "رسانه‌ای برای حذف انتخاب نشده است." }, { status: 400 });
+    const values = requested.filter((value: unknown) => typeof value === "string" && value.trim());
+    if (!values.length) return NextResponse.json({ error: "رسانه‌ای برای حذف انتخاب نشده است." }, { status: 400 });
 
     const projectRoot = path.resolve(process.cwd());
     const roots = [
       path.join(projectRoot, "memory"),
-      path.join(path.resolve(projectRoot, ".."), "memory"),
       path.join(projectRoot, "public", "memory"),
+      path.join(path.resolve(projectRoot, ".."), "memory"),
     ];
 
-    const resolvedFiles: Array<{ src: string; filePath: string }> = [];
-    for (const value of requested) {
-      const { src, parts } = normalizeSrc(value);
+    const trashRoot = path.join(path.resolve(projectRoot, ".."), ".radman-trash");
+    await fs.mkdir(trashRoot, { recursive: true });
+
+    const moved: Array<{ src: string; trashId: string; original: string }> = [];
+    const missing: string[] = [];
+
+    for (const value of values) {
+      const { src, relative, parts } = normalizeSrc(value);
       const candidates = roots.map((root) => path.resolve(root, ...parts));
       let found = "";
       for (const candidate of candidates) {
@@ -119,14 +134,37 @@ export async function DELETE(req: NextRequest) {
           if ((await fs.stat(candidate)).isFile()) { found = candidate; break; }
         } catch {}
       }
-      if (!found) return NextResponse.json({ error: "فایل پیدا نشد.", src }, { status: 404 });
-      resolvedFiles.push({ src, filePath: found });
+
+      if (!found) {
+        missing.push(src);
+        continue;
+      }
+
+      const stamp = Date.now().toString(36);
+      const random = crypto.randomBytes(5).toString("hex");
+      const trashId = stamp + "-" + random;
+      const trashFile = path.join(trashRoot, trashId + path.extname(found));
+      await fs.rename(found, trashFile);
+      moved.push({ src, trashId, original: relative });
     }
 
-    for (const file of resolvedFiles) await fs.unlink(file.filePath);
-    return NextResponse.json({ ok: true, deleted: resolvedFiles.map(file => file.src) }, { headers: { "Cache-Control": "no-store" } });
+    const manifestPath = path.join(trashRoot, "index.json");
+    let manifest: Array<{ id:string; src:string; original:string; trashedAt:string; file:string }> = [];
+    try { manifest = JSON.parse(await fs.readFile(manifestPath, "utf8")); } catch {}
+    const now = new Date().toISOString();
+    for (const item of moved) {
+      manifest.unshift({ id:item.trashId, src:item.src, original:item.original, trashedAt:now, file:item.trashId + path.extname(item.original) });
+    }
+    await fs.writeFile(manifestPath, JSON.stringify(manifest.slice(0, 500), null, 2) + "\n", "utf8");
+
+    return NextResponse.json({
+      ok: true,
+      deleted: moved.map((item) => item.src),
+      missing,
+      trashed: moved.length,
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "حذف رسانه انجام نشد.";
-    return NextResponse.json({ error: message }, { status: message === "فایل پیدا نشد." ? 404 : 400 });
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
