@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
   LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2,
@@ -76,25 +76,71 @@ export default function AdminPage() {
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
   const [selectedMemoryKeys, setSelectedMemoryKeys] = useState<string[]>([]);
   const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
+  const adminUrlReady = useRef(false);
+
+  const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library") => {
+    setActiveSection(section);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (section === "dashboard") params.delete("section"); else params.set("section", section);
+      if (section !== "story") params.delete("story");
+      if (section !== "memory") params.delete("memory");
+      const query = params.toString();
+      window.history.replaceState(null, "", query ? "/admin?" + query : "/admin");
+    } catch {}
+  };
+
+  const openStoryEditor = (index: number) => {
+    goToSection("story"); setEditingStory(index);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set("section", "story"); params.set("story", String(index)); params.delete("memory");
+      window.history.replaceState(null, "", "/admin?" + params.toString());
+    } catch {}
+  };
+
+  const openMemoryEditor = (key: string) => {
+    goToSection("memory"); setEditingMemory(key);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set("section", "memory"); params.set("memory", key); params.delete("story");
+      window.history.replaceState(null, "", "/admin?" + params.toString());
+    } catch {}
+  };
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
 
   useEffect(() => {
     try {
-      const section = sessionStorage.getItem("radman-admin-section");
-      const story = sessionStorage.getItem("radman-admin-edit-story");
-      const memory = sessionStorage.getItem("radman-admin-edit-memory");
-      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library") {
-        setActiveSection(section);
-      }
-      if (story !== null) {
+      const params = new URLSearchParams(window.location.search);
+      const urlSection = params.get("section");
+      const sessionSection = sessionStorage.getItem("radman-admin-section");
+      const section = urlSection || sessionSection;
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library") setActiveSection(section);
+      const story = params.get("story") ?? sessionStorage.getItem("radman-admin-edit-story");
+      if (story !== null && story !== "") {
         const n = Number(story);
         if (Number.isInteger(n) && n >= 0) setEditingStory(n);
       }
+      const memory = params.get("memory") ?? sessionStorage.getItem("radman-admin-edit-memory");
       if (memory) setEditingMemory(memory);
     } catch {}
+    adminUrlReady.current = true;
   }, []);
+
+  useEffect(() => {
+    if (!adminUrlReady.current) return;
+    try {
+      const params = new URLSearchParams();
+      if (activeSection !== "dashboard") params.set("section", activeSection);
+      if (editingStory !== null) params.set("story", String(editingStory));
+      if (editingMemory !== null) params.set("memory", editingMemory);
+      const query = params.toString();
+      const next = query ? "/admin?" + query : "/admin";
+      if (window.location.pathname === "/admin" && window.location.search !== (query ? "?" + query : "")) window.history.replaceState(null, "", next);
+    } catch {}
+  }, [activeSection, editingStory, editingMemory]);
 
   useEffect(() => {
     try { sessionStorage.setItem("radman-admin-section", activeSection); } catch {}
@@ -240,7 +286,7 @@ export default function AdminPage() {
       const r = await fetch("/api/admin/memory", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ src: item.src }),
+        body: JSON.stringify({ src: item.src.startsWith("video:") ? item.src.slice(6) : item.src }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "حذف رسانه انجام نشد.");
@@ -261,7 +307,7 @@ export default function AdminPage() {
       setConfig(persisted);
       setSavedConfig(persisted);
       setSelectedMemoryKeys(current => current.filter(x => x !== item.key));
-      if (editingMemory === item.key) setEditingMemory(null);
+      if (editingMemory === item.key) { setEditingMemory(null); goToSection("memory"); }
     } catch (e) {
       setError(e instanceof Error ? e.message : "حذف رسانه انجام نشد.");
     }
@@ -283,7 +329,7 @@ export default function AdminPage() {
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
       const saveData = await saveRes.json();
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال تصویر جدید انجام نشد.");
-      const delRes = await fetch("/api/admin/memory", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ src: item.src }) });
+      const delRes = await fetch("/api/admin/memory", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ src: item.src.startsWith("video:") ? item.src.slice(6) : item.src }) });
       if (!delRes.ok) throw new Error("تصویر قبلی حذف نشد.");
       const persisted = { ...defaults, ...saveData };
       setConfig(persisted); setSavedConfig(persisted);
@@ -312,7 +358,7 @@ export default function AdminPage() {
       setImages(current => current.filter(x => !items.some(i => i.type === "image" && i.src === x)));
       setVideos(current => current.filter(x => !items.some(i => i.type === "video" && i.src === x)));
       setConfig({ ...defaults, ...saveData }); setSavedConfig({ ...defaults, ...saveData });
-      setSelectedMemoryKeys([]); setEditingMemory(null);
+      setSelectedMemoryKeys([]); setEditingMemory(null); goToSection("memory");
     } catch (e) { setError(e instanceof Error ? e.message : "حذف گروهی انجام نشد."); }
   };
 
@@ -321,7 +367,7 @@ export default function AdminPage() {
     if (config.story.length - selectedStoryIndexes.length < 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
     if (!window.confirm(`آیا از حذف ${selectedStoryIndexes.length} اسلاید انتخاب‌شده مطمئن هستید؟`)) return;
     setConfig(current => ({ ...current, story: current.story.filter((_, i) => !selectedStoryIndexes.includes(i)) }));
-    setSelectedStoryIndexes([]); setEditingStory(null); setSaved(false); setError("");
+    setSelectedStoryIndexes([]); setEditingStory(null); goToSection("story"); setSaved(false); setError("");
   };
 
   const openLibrary = (target: { type: "hero" | "story"; index?: number }) => {
@@ -374,11 +420,11 @@ export default function AdminPage() {
       <aside className="admin-sidebar">
         <div className="admin-brand"><span>R</span><b>RADMAN</b></div>
         <div className="admin-sidebar__label">CONTROL CENTER</div>
-        <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => goToSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => goToSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
@@ -399,7 +445,7 @@ export default function AdminPage() {
               <div className="admin-dashboard__status"><i /> SYSTEM ONLINE</div>
             </header>
             <div className="admin-dashboard__grid">
-              <button className="admin-dashboard__card admin-dashboard__card--hero" onClick={() => setActiveSection("hero")}>
+              <button className="admin-dashboard__card admin-dashboard__card--hero" onClick={() => goToSection("hero")}>
                 <div className="admin-dashboard__icon"><ImageIcon size={19} /></div>
                 <span>01 / MODULE</span>
                 <h2>Hero</h2>
@@ -415,7 +461,7 @@ export default function AdminPage() {
             </div>
             <div className="admin-dashboard__footer">
               <span>QUICK ACCESS</span>
-              <button onClick={() => setActiveSection("hero")}><ImageIcon size={15} /> ویرایش Hero <ArrowLeft size={14} /></button>
+              <button onClick={() => goToSection("hero")}><ImageIcon size={15} /> ویرایش Hero <ArrowLeft size={14} /></button>
               <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
             </div>
           </div>
@@ -440,7 +486,7 @@ export default function AdminPage() {
                 <thead><tr><th><input type="checkbox" checked={selectedStoryIndexes.length === config.story.length && config.story.length > 0} onChange={(e) => setSelectedStoryIndexes(e.target.checked ? config.story.map((_,i) => i) : [])} /></th><th>#</th><th>تصویر</th><th>عنوان اسلایدر</th><th>برچسب</th><th>عملیات</th></tr></thead>
                 <tbody>
                   {config.story.map((slide,index) => (
-                    <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => setEditingStory(index)}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedStoryIndexes.includes(index)} onChange={(e) => setSelectedStoryIndexes(current => e.target.checked ? [...current,index] : current.filter(x => x !== index))} /></td>
+                    <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => openStoryEditor(index)}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedStoryIndexes.includes(index)} onChange={(e) => setSelectedStoryIndexes(current => e.target.checked ? [...current,index] : current.filter(x => x !== index))} /></td>
                       <td className="admin-storyTable__index">{String(index + 1).padStart(2, "0")}</td>
                       <td><img className="admin-storyTable__thumb" src={mediaUrl(slide.image)} alt="" /></td>
                       <td><div className="admin-storyTable__title">{slide.title}</div><small>{slide.eyebrow}</small></td>
@@ -489,7 +535,7 @@ export default function AdminPage() {
                   <tbody>
                     {(config.memorySignal || []).map((key) => { const isVideo = key.startsWith("video:"); const src = isVideo ? key.slice(6) : key; const item = { key, src, type: isVideo ? ("video" as const) : ("image" as const) }; const index = (config.memorySignal || []).indexOf(key);
                       const selected = selectedMemoryKeys.includes(item.key);
-                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedMemoryKeys.includes(item.key)} onChange={(e) => setSelectedMemoryKeys(current => e.target.checked ? [...current,item.key] : current.filter(x => x !== item.key))} /></td><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
+                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedMemoryKeys.includes(item.key)} onChange={(e) => setSelectedMemoryKeys(current => e.target.checked ? [...current,item.key] : current.filter(x => x !== item.key))} /></td><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => openMemoryEditor(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
                     })}
                     {(config.memorySignal || []).length === 0 && <tr><td colSpan={7}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
                   </tbody>
