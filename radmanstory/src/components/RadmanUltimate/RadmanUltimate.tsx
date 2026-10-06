@@ -481,52 +481,26 @@ export default function RadmanUltimate() {
         <div className="u-grain" />
       </section>
 
-      <section id="story" className="u-storyCinema">
-        <div className="u-storyCinema__noise" aria-hidden="true" />
-        <div className="u-storyCinema__glow" aria-hidden="true" />
-        <div className="u-storyCinema__header">
-          <span className="u-kicker">00 / THE STORY</span><span>RADMAN / VISUAL BIOGRAPHY</span>
-        </div>
-
-        <div className="radman-story-slider">
+      <section id="story" className="u-storyCinema u-storyCinema--imageOnly">
+        <div className="radman-story-slider radman-story-slider--imageOnly">
           <div className="radman-story-slider__media">
             {storySlides.map((slide, i) => (
               <img key={slide.image} className={i === storySlide ? "is-active" : ""} src={asset(slide.image)} alt={slide.label} />
             ))}
             <div className="radman-story-slider__shade" />
-            <div className="radman-story-slider__meta"><span>{String(storySlide + 1).padStart(2, "0")}</span><b>{storySlides[storySlide].label}</b></div>
-          </div>
-
-          <div className="radman-story-slider__content">
-            <div className="radman-story-slider__slides">
-              {storySlides.map((slide, i) => (
-                <article key={slide.eyebrow} className={i === storySlide ? "is-active" : ""}>
-                  <span className="u-storyCinema__eyebrow">{slide.eyebrow}</span>
-                  <h2>{slide.title}</h2>
-                  <p className="u-storyCinema__lead">{slide.lead}</p>
-                  <p className="u-storyCinema__body">{slide.body}</p>
-                </article>
-              ))}
-            </div>
-
-            <div className="radman-story-slider__nav">
-              <button type="button" onClick={() => { setStoryDirection(-1); setStorySlide(s => (s - 1 + storySlides.length) % storySlides.length); }} aria-label="Previous story"><ArrowLeft size={16} /></button>
+            <div className="radman-story-slider__frame" aria-hidden="true" />
+            <div className="radman-story-slider__controls">
+              <button type="button" onClick={() => { setStoryDirection(-1); setStorySlide(s => (s - 1 + storySlides.length) % storySlides.length); }} aria-label="Previous image"><ArrowLeft size={15} /></button>
               <div className="radman-story-slider__dots">
-                {storySlides.map((slide, i) => <button key={slide.eyebrow} type="button" className={i === storySlide ? "is-active" : ""} onClick={() => { setStoryDirection(i > storySlide ? 1 : -1); setStorySlide(i); }} aria-label={slide.eyebrow} />)}
+                {storySlides.map((slide, i) => (
+                  <button key={slide.eyebrow} type="button" className={i === storySlide ? "is-active" : ""} onClick={() => { setStoryDirection(i > storySlide ? 1 : -1); setStorySlide(i); }} aria-label={`Image ${i + 1}`} />
+                ))}
               </div>
-              <button type="button" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} aria-label="Next story"><ArrowRight size={16} /></button>
-              <span>{String(storySlide + 1).padStart(2, "0")} / {String(storySlides.length).padStart(2, "0")}</span>
+              <button type="button" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} aria-label="Next image"><ArrowRight size={15} /></button>
             </div>
-            <div className="radman-story-slider__progress"><i key={storySlide} /></div>
-            <a className="u-manifesto__enter" href="#chapters"><span>ENTER THE CHAPTERS</span><ArrowDown size={14} /></a>
           </div>
         </div>
-
-        <div className="u-storyCinema__signal"><div><span>01</span><b>ARRIVAL</b><small>The moment everything changed.</small></div><div><span>02</span><b>GROWING</b><small>Little days, becoming a life.</small></div><div><span>03</span><b>REMEMBER</b><small>What time cannot take away.</small></div></div>
-        <div className="u-storyCinema__quote"><span>THE PURPOSE OF THIS ARCHIVE</span><p>We don't stop time.<br /><em>We give memory a place to live.</em></p></div>
-        <div className="u-storyCinema__scroll"><span>SCROLL TO CONTINUE</span><i /></div>
       </section>
-
       <section className="u-reel" aria-label="Selected memories">
         <div className="u-reel__head">
           <span className="u-kicker">00.5 / MEMORY SIGNAL</span>
