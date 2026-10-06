@@ -60,6 +60,7 @@ export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [imageOpen, setImageOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [memoryUploadType, setMemoryUploadType] = useState<"image" | "video" | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -164,6 +165,22 @@ export default function AdminPage() {
     } finally {
       setUploading(false);
     }
+  };
+
+  const uploadMemoryMedia = async (file: File, type: "image" | "video") => {
+    const isVideo = type === "video"; const prefix = isVideo ? "ویدیو" : "تصویر";
+    if (isVideo ? !file.type.startsWith("video/") : !file.type.startsWith("image/")) { setError(`فقط فایل ${prefix} قابل آپلود است.`); return; }
+    if (file.size > 100 * 1024 * 1024) { setError(`حجم ${prefix} نباید بیشتر از ۱۰۰ مگابایت باشد.`); return; }
+    setMemoryUploadType(type); setError(""); setSaved(false);
+    try {
+      const form = new FormData(); form.append("file", file);
+      const r = await fetch("/api/admin/memory", { method: "POST", body: form }); const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || `آپلود ${prefix} انجام نشد.`);
+      const src = String(data.src || (isVideo ? data.video : data.image));
+      if (isVideo) setVideos(current => current.includes(src) ? current : [src, ...current]); else setImages(current => current.includes(src) ? current : [src, ...current]);
+      setConfig(current => ({ ...current, memorySignal: [...(current.memorySignal || []), ...(isVideo ? ["video:" + src] : [src])] }));
+    } catch (e) { setError(e instanceof Error ? e.message : `آپلود ${prefix} انجام نشد.`); }
+    finally { setMemoryUploadType(null); }
   };
 
   const removeStorySlide = (index: number) => {
@@ -298,7 +315,7 @@ export default function AdminPage() {
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-memoryManager">
-              <div className="admin-memoryManager__toolbar"><div><span>MEDIA LIBRARY</span><h2>لیست تصاویر و ویدیوها</h2><small>{images.length + videos.length} رسانه در آرشیو · {config.memorySignal?.length || 0} مورد فعال</small></div><div className="admin-memoryManager__legend"><span><i className="is-image"/> IMAGE</span><span><i className="is-video"/> VIDEO</span></div></div>
+              <div className="admin-memoryManager__toolbar"><div><span>MEDIA LIBRARY</span><h2>لیست تصاویر و ویدیوها</h2><small>{images.length + videos.length} رسانه در آرشیو · {config.memorySignal?.length || 0} مورد فعال</small></div><div className="admin-memoryUploadActions"><label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/> {memoryUploadType === "image" ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"image"); e.currentTarget.value=""; }}/></label><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/> {memoryUploadType === "video" ? "در حال آپلود..." : "افزودن ویدیو"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"video"); e.currentTarget.value=""; }}/></label></div></div>
               <div className="admin-memoryTableWrap">
                 <table className="admin-memoryTable">
                   <thead><tr><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
