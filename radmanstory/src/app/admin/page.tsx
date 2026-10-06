@@ -238,17 +238,14 @@ export default function AdminPage() {
               <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
-            <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div>\n            <div className="admin-storyEditor">
+            <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><div className="admin-storyToolbar__actions"><div className="admin-storyFontPicker"><span>فونت فارسی</span>{(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (<button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>{fontMeta[font].label}</button>))}</div><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div></div>
+            <div className="admin-storyEditor">
               {config.story.map((slide,index) => (
                 <article className="admin-storyCard" key={index}>
                   <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>{String(index + 1).padStart(2, "0")}</span><button className="admin-removeStory" type="button" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1} aria-label="حذف اسلاید">حذف</button></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
-                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} />
-                      {key === "image" && <span className="admin-uploadMini"><Upload size={13} /> آپلود تصویر اسلاید
-                        <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(index, "image", src)); e.currentTarget.value = ""; }} />
-                      </span>}
-                    </label>
+                      <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(index, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} />)}</label>
                     ))}
                   </div>
                 </article>
