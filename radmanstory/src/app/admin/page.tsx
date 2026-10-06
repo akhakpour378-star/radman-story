@@ -81,6 +81,40 @@ export default function AdminPage() {
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
 
   useEffect(() => {
+    try {
+      const section = sessionStorage.getItem("radman-admin-section");
+      const story = sessionStorage.getItem("radman-admin-edit-story");
+      const memory = sessionStorage.getItem("radman-admin-edit-memory");
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library") {
+        setActiveSection(section);
+      }
+      if (story !== null) {
+        const n = Number(story);
+        if (Number.isInteger(n) && n >= 0) setEditingStory(n);
+      }
+      if (memory) setEditingMemory(memory);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try { sessionStorage.setItem("radman-admin-section", activeSection); } catch {}
+  }, [activeSection]);
+
+  useEffect(() => {
+    try {
+      if (editingStory === null) sessionStorage.removeItem("radman-admin-edit-story");
+      else sessionStorage.setItem("radman-admin-edit-story", String(editingStory));
+    } catch {}
+  }, [editingStory]);
+
+  useEffect(() => {
+    try {
+      if (editingMemory === null) sessionStorage.removeItem("radman-admin-edit-memory");
+      else sessionStorage.setItem("radman-admin-edit-memory", editingMemory);
+    } catch {}
+  }, [editingMemory]);
+
+  useEffect(() => {
     let alive = true;
     Promise.all([
       fetch("/api/admin/auth", { cache: "no-store" }),
@@ -93,6 +127,7 @@ export default function AdminPage() {
         const auth = authRes.ok ? await authRes.json() : { authenticated: false };
         if (heroRes.ok) {
           heroData = { ...defaults, ...(await heroRes.json()) };
+          heroData.memorySignal = Array.from(new Set(heroData.memorySignal || []));
           setConfig(heroData); setSavedConfig(heroData);
         }
         if (mediaRes.ok) {
@@ -122,7 +157,8 @@ export default function AdminPage() {
     });
     if (!r.ok) { setError("رمز ورود صحیح نیست."); return; }
     const data = await fetch("/api/admin/hero", { cache: "no-store" }).then((x) => x.json());
-    setConfig({ ...defaults, ...data }); setSavedConfig({ ...defaults, ...data });
+    const nextData = { ...defaults, ...data, memorySignal: Array.from(new Set(data?.memorySignal || [])) };
+    setConfig(nextData); setSavedConfig(nextData);
     setAuthenticated(true); setPassword("");
   };
 
@@ -185,7 +221,8 @@ export default function AdminPage() {
       if (!r.ok) throw new Error(data?.error || `آپلود ${prefix} انجام نشد.`);
       const src = String(data.src || (isVideo ? data.video : data.image));
       if (isVideo) setVideos(current => current.includes(src) ? current : [src, ...current]); else setImages(current => current.includes(src) ? current : [src, ...current]);
-      const next = { ...config, memorySignal: [...(config.memorySignal || []), ...(isVideo ? ["video:" + src] : [src])] };
+      const mediaKey = isVideo ? "video:" + src : src;
+      const next = { ...config, memorySignal: Array.from(new Set([...(config.memorySignal || []), mediaKey])) };
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
       const saveData = await saveRes.json();
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال رسانه روی سایت انجام نشد.");
@@ -220,8 +257,10 @@ export default function AdminPage() {
       });
       const saveData = await saveRes.json();
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال حذف روی سایت انجام نشد.");
-      setConfig({ ...defaults, ...saveData });
-      setSavedConfig({ ...defaults, ...saveData });
+      const persisted = { ...defaults, ...saveData, memorySignal: Array.from(new Set(saveData?.memorySignal || [])) };
+      setConfig(persisted);
+      setSavedConfig(persisted);
+      setSelectedMemoryKeys(current => current.filter(x => x !== item.key));
       if (editingMemory === item.key) setEditingMemory(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "حذف رسانه انجام نشد.");
@@ -240,7 +279,7 @@ export default function AdminPage() {
       if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
       const src = String(data.src || data.image);
       const oldKey = item.key;
-      const next = { ...config, memorySignal: (config.memorySignal || []).map(x => x === oldKey ? src : x) };
+      const next = { ...config, memorySignal: Array.from(new Set((config.memorySignal || []).map(x => x === oldKey ? src : x))) };
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
       const saveData = await saveRes.json();
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال تصویر جدید انجام نشد.");
@@ -266,7 +305,7 @@ export default function AdminPage() {
         if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d?.error || "حذف یکی از رسانه‌ها انجام نشد."); }
       }
       const keys = new Set(items.map(x => x.key));
-      const next = { ...config, memorySignal: (config.memorySignal || []).filter(x => !keys.has(x)) };
+      const next = { ...config, memorySignal: Array.from(new Set(config.memorySignal || [])).filter(x => !keys.has(x)) };
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
       const saveData = await saveRes.json();
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال حذف‌ها روی سایت انجام نشد.");
@@ -446,13 +485,13 @@ export default function AdminPage() {
               <div className="admin-memoryManager__toolbar"><div><span>MEMORY SIGNAL</span><h2>رسانه‌های استفاده‌شده</h2><small>{config.memorySignal?.length || 0} رسانه فعال در سایت</small></div><div className="admin-memoryUploadActions"><button type="button" className="admin-bulkDeleteButton" onClick={bulkDeleteMemory} disabled={!selectedMemoryKeys.length}>حذف انتخاب‌شده ({selectedMemoryKeys.length})</button><label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/> {memoryUploadType === "image" ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"image"); e.currentTarget.value=""; }}/></label><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/> {memoryUploadType === "video" ? "در حال آپلود..." : "افزودن ویدیو"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"video"); e.currentTarget.value=""; }}/></label></div></div>
               <div className="admin-memoryTableWrap">
                 <table className="admin-memoryTable">
-                  <thead><tr><th><input type="checkbox" checked={([...images.map(src => src), ...videos.map(src => "video:" + src)].filter(k => (config.memorySignal || []).includes(k))).length > 0 && selectedMemoryKeys.length === (config.memorySignal || []).length} onChange={(e) => setSelectedMemoryKeys(e.target.checked ? (config.memorySignal || []) : [])} /></th><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+                  <thead><tr><th><input type="checkbox" checked={(config.memorySignal || []).length > 0 && selectedMemoryKeys.length === (config.memorySignal || []).length} onChange={(e) => setSelectedMemoryKeys(e.target.checked ? (config.memorySignal || []) : [])} /></th><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
                   <tbody>
                     {(config.memorySignal || []).map((key) => { const isVideo = key.startsWith("video:"); const src = isVideo ? key.slice(6) : key; const item = { key, src, type: isVideo ? ("video" as const) : ("image" as const) }; const index = (config.memorySignal || []).indexOf(key);
-                      const selected = (config.memorySignal || []).includes(item.key);
+                      const selected = selectedMemoryKeys.includes(item.key);
                       return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedMemoryKeys.includes(item.key)} onChange={(e) => setSelectedMemoryKeys(current => e.target.checked ? [...current,item.key] : current.filter(x => x !== item.key))} /></td><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
                     })}
-                    {images.length + videos.length === 0 && <tr><td colSpan={6}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
+                    {(config.memorySignal || []).length === 0 && <tr><td colSpan={7}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
                   </tbody>
                 </table>
               </div>
