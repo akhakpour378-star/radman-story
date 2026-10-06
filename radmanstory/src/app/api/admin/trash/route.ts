@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { readFile } from "node:fs/promises";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,19 @@ function safeOriginal(value: string) {
 }
 
 export async function GET(req: NextRequest) {
+  if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const preview = req.nextUrl.searchParams.get("file");
+  if (preview) {
+    const safe = preview.replace(/[^a-zA-Z0-9._-]/g, "");
+    if (!safe || safe !== preview) return NextResponse.json({error:"Invalid file"}, {status:400});
+    try {
+      const target = path.join(root(), safe);
+      const data = await readFile(target);
+      const ext = path.extname(target).toLowerCase();
+      const mime: Record<string,string> = {".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif",".mp4":"video/mp4",".webm":"video/webm",".mov":"video/quicktime",".m4v":"video/x-m4v"};
+      return new NextResponse(data,{headers:{"Content-Type":mime[ext]||"application/octet-stream","Cache-Control":"no-store"}});
+    } catch { return NextResponse.json({error:"File not found"},{status:404}); }
+  }
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const items = await readManifest();
   const existing = [];
