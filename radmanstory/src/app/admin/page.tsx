@@ -147,13 +147,14 @@ export default function AdminPage() {
     setSaved(false); setError("");
     setConfig(c => ({ ...c, story: [...c.story, { eyebrow:"NEW CHAPTER", title:"A new memory / begins here.", lead:"متن اصلی این اسلاید را وارد کنید.", body:"توضیحات این اسلاید را وارد کنید.", image:c.image, label:"NEW MEMORY" }] }));
   };
-  const uploadImage = async (file: File, apply?: (src: string) => void) => {
+  const uploadImage = async (file: File, section: "hero" | "story", apply?: (src: string) => void) => {
     if (!file.type.startsWith("image/")) { setError("فقط فایل تصویری قابل آپلود است."); return; }
     if (file.size > 15 * 1024 * 1024) { setError("حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد."); return; }
     setUploading(true); setError(""); setSaved(false);
     try {
       const form = new FormData();
       form.append("file", file);
+      form.append("section", section);
       const r = await fetch("/api/admin/memory", { method: "POST", body: form });
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
@@ -173,7 +174,7 @@ export default function AdminPage() {
     if (file.size > 100 * 1024 * 1024) { setError(`حجم ${prefix} نباید بیشتر از ۱۰۰ مگابایت باشد.`); return; }
     setMemoryUploadType(type); setError(""); setSaved(false);
     try {
-      const form = new FormData(); form.append("file", file);
+      const form = new FormData(); form.append("file", file); form.append("section", "memory");
       const r = await fetch("/api/admin/memory", { method: "POST", body: form }); const data = await r.json();
       if (!r.ok) throw new Error(data?.error || `آپلود ${prefix} انجام نشد.`);
       const src = String(data.src || (isVideo ? data.video : data.image));
@@ -332,7 +333,7 @@ export default function AdminPage() {
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => {
                       const slide = config.story[editingStory];
-                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
+                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "story", (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
                     })}
                   </div>
                 </div>
@@ -437,7 +438,7 @@ export default function AdminPage() {
                   </button>
                   <label className="admin-uploadButton admin-uploadButton--hero">
                     <Upload size={15} /> {uploading ? "در حال آپلود..." : "افزودن تصویر"}
-                    <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || loading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => update("image", src)); e.currentTarget.value = ""; }} />
+                    <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || loading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "hero", (src) => update("image", src)); e.currentTarget.value = ""; }} />
                   </label>
                 </div>
                 {imageOpen && (
