@@ -28,6 +28,7 @@ const defaults: HeroConfig = {
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
   persianFont: "iranyekan",
+  story: [],
 };
 
 const authorized = (req: NextRequest) =>
@@ -67,6 +68,14 @@ export async function PUT(req: NextRequest) {
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
+      story: Array.isArray(body.story) ? body.story.slice(0, 8).map((slide: any) => ({
+        eyebrow: String(slide.eyebrow || "").trim().slice(0, 60),
+        title: String(slide.title || "").trim().slice(0, 120),
+        lead: String(slide.lead || "").trim().slice(0, 500),
+        body: String(slide.body || "").trim().slice(0, 500),
+        image: String(slide.image || "").trim(),
+        label: String(slide.label || "").trim().slice(0, 80),
+      })) : current.story || [],
     };
 
     if (!clean.image.startsWith("/memory/")) {
