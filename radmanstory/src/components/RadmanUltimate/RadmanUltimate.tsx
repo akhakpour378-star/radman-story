@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Maximize2,
+  Play,
   CalendarDays,
   Clock3,
   Scale,
@@ -552,15 +553,13 @@ export default function RadmanUltimate() {
         <div className="u-reel__track">
           {memories.slice(0, Math.min(7, memories.length)).map((m, i) => (
             <button className="u-reel__item" key={m.src} onClick={() => setSelected(i)} aria-label={m.title}>
-              <img src={asset(m.src)} alt={m.title} loading="lazy" /><div className="u-reel__frame" aria-hidden="true"><span>RADMAN / MEMORY</span><i /></div>
+              <img src={asset(m.src)} alt={m.title} loading="lazy" />
             </button>
           ))}
           {videos.slice(0, 2).map((src, i) => (
             <button className="u-reel__item u-reel__item--video" key={src} onClick={() => setSelectedVideo(src)} aria-label="Play memory video">
-              <span>V{String(i + 1).padStart(2, "0")}</span>
               <video src={asset(src)} muted playsInline preload="metadata" />
-              <i className="u-mediaPlay">PLAY</i>
-              <b>Moving Memory</b>
+              <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
             </button>
           ))}
         </div>
