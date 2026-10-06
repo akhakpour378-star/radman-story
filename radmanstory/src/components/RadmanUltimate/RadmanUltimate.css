@@ -1845,3 +1845,103 @@
   .u-manifesto__portrait i{font-size:17px!important}
   .u-manifesto--story .u-manifesto__quote:before{display:none!important}
 }
+
+
+/* ═════════════════════════════════════════════════════════════
+   RADMAN — DEFINITIVE HERO EXIT
+   The hero should disappear into darkness, not end with a cut.
+   ═════════════════════════════════════════════════════════════ */
+.u-hero--editorial .u-hero__cta{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+
+.u-hero--editorial{
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#05070b!important;
+}
+
+/* Atmospheric veil — very subtle in the middle, almost black at the edge. */
+.u-hero--editorial::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:40!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(
+      ellipse 78% 48% at 50% 106%,
+      rgba(5,7,11,.98) 0%,
+      rgba(5,7,11,.86) 31%,
+      rgba(5,7,11,.42) 59%,
+      rgba(5,7,11,0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 56%,
+      rgba(5,7,11,.035) 64%,
+      rgba(5,7,11,.16) 72%,
+      rgba(5,7,11,.42) 82%,
+      rgba(5,7,11,.76) 92%,
+      #05070b 100%
+    )!important;
+}
+
+/* Long optical fade. This is intentionally much taller than a normal
+   section transition so the photograph dissolves before the next chapter. */
+.u-hero--editorial::after{
+  content:""!important;
+  position:absolute!important;
+  left:-8%!important;
+  right:-8%!important;
+  bottom:-1px!important;
+  height:38vh!important;
+  min-height:300px!important;
+  max-height:460px!important;
+  z-index:41!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(
+      ellipse 88% 70% at 50% 100%,
+      #05070b 0%,
+      rgba(5,7,11,.94) 25%,
+      rgba(5,7,11,.72) 48%,
+      rgba(5,7,11,.34) 69%,
+      rgba(5,7,11,0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(5,7,11,0) 0%,
+      rgba(5,7,11,.035) 18%,
+      rgba(5,7,11,.14) 38%,
+      rgba(5,7,11,.34) 58%,
+      rgba(5,7,11,.66) 79%,
+      #05070b 100%
+    )!important;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 13%,#000 100%)!important;
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 13%,#000 100%)!important;
+}
+
+/* Let the next section emerge from the same black instead of snapping in. */
+.u-hero--editorial + .u-manifesto{
+  position:relative!important;
+  z-index:2!important;
+  margin-top:-72px!important;
+  padding-top:72px!important;
+  background:#06080d!important;
+}
+
+@media(max-width:850px){
+  .u-hero--editorial::after{
+    height:34vh!important;
+    min-height:230px!important;
+    max-height:330px!important;
+  }
+  .u-hero--editorial + .u-manifesto{
+    margin-top:-48px!important;
+    padding-top:48px!important;
+  }
+}
