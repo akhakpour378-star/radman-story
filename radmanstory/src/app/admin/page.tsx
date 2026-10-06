@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
-  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2,
+  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2, RotateCcw, ArchiveRestore,
 } from "lucide-react";
 import "./admin.css";
 
@@ -15,6 +15,7 @@ type HeroConfig = {
   memorySignal?: string[];
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
+type TrashItem = { id:string; src:string; original:string; trashedAt:string; file:string };
 
 const defaults: HeroConfig = {
   image: "/memory/radman-and-me.png",
@@ -71,14 +72,16 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory" | "library">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory" | "library" | "trash">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
   const [selectedMemoryKeys, setSelectedMemoryKeys] = useState<string[]>([]);
   const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
+  const [trashItems, setTrashItems] = useState<TrashItem[]>([]);
+  const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
   const adminUrlReady = useRef(false);
 
-  const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library") => {
+  const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library" | "trash") => {
     setActiveSection(section);
     try {
       const params = new URLSearchParams(window.location.search);
@@ -117,7 +120,7 @@ export default function AdminPage() {
       const urlSection = params.get("section");
       const sessionSection = sessionStorage.getItem("radman-admin-section");
       const section = urlSection || sessionSection;
-      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library") setActiveSection(section);
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
       const story = params.get("story") ?? sessionStorage.getItem("radman-admin-edit-story");
       if (story !== null && story !== "") {
         const n = Number(story);
@@ -170,8 +173,9 @@ export default function AdminPage() {
       fetch("/api/admin/auth", { cache: "no-store" }),
       fetch("/api/admin/hero", { cache: "no-store" }),
       fetch("/api/memory?list=1", { cache: "no-store" }),
+      fetch("/api/admin/trash", { cache: "no-store" }),
     ])
-      .then(async ([authRes, heroRes, mediaRes]) => {
+      .then(async ([authRes, heroRes, mediaRes, trashRes]) => {
         if (!alive) return;
         let heroData: HeroConfig = defaults;
         const auth = authRes.ok ? await authRes.json() : { authenticated: false };
@@ -186,6 +190,11 @@ export default function AdminPage() {
           setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []));
           setHeroImages(Array.isArray(media.heroImages) ? media.heroImages : []);
           setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v: string) => "video:" + v) : [])]);
+        }
+        if (trashRes.ok) {
+          const trash = await trashRes.json();
+          setTrashItems(Array.isArray(trash.items) ? trash.items : []);
+        }
         }
         setAuthenticated(Boolean(auth.authenticated));
         restoreAdminRoute();
@@ -370,6 +379,43 @@ export default function AdminPage() {
     } catch (e) { setError(e instanceof Error ? e.message : "حذف گروهی انجام نشد."); }
   };
 
+  const refreshTrash = async () => {
+    const r = await fetch("/api/admin/trash", { cache: "no-store" });
+    if (r.ok) {
+      const data = await r.json();
+      setTrashItems(Array.isArray(data.items) ? data.items : []);
+    }
+  };
+
+  const restoreTrash = async (ids: string[]) => {
+    if (!ids.length) return;
+    setError("");
+    try {
+      const r = await fetch("/api/admin/trash", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"restore",ids}) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "بازیابی انجام نشد.");
+      await refreshTrash();
+      setSelectedTrashIds([]);
+      setSaved(false);
+      const media = await fetch("/api/memory?list=1", {cache:"no-store"}).then(x=>x.json());
+      setImages(Array.isArray(media.memoryImages) ? media.memoryImages : []);
+      setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : []);
+      setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v:string)=>"video:"+v) : [])]);
+    } catch(e) { setError(e instanceof Error ? e.message : "بازیابی انجام نشد."); }
+  };
+
+  const permanentDeleteTrash = async (ids: string[]) => {
+    if (!ids.length || !window.confirm("این موارد برای همیشه حذف شوند؟ این عملیات قابل بازگشت نیست.")) return;
+    setError("");
+    try {
+      const r = await fetch("/api/admin/trash", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"permanent",ids}) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "حذف دائمی انجام نشد.");
+      await refreshTrash();
+      setSelectedTrashIds([]);
+    } catch(e) { setError(e instanceof Error ? e.message : "حذف دائمی انجام نشد."); }
+  };
+
   const bulkDeleteStory = () => {
     if (!selectedStoryIndexes.length) return;
     if (config.story.length - selectedStoryIndexes.length < 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
@@ -432,6 +478,7 @@ export default function AdminPage() {
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => goToSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "trash" ? "admin-nav--active" : ""}`} onClick={() => goToSection("trash")}><ArchiveRestore size={16} /><span>سطل آشغال</span><i>{trashItems.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
@@ -560,7 +607,7 @@ export default function AdminPage() {
               const toggle = () => { setSaved(false); setError(""); setConfig(current => { const currentList = current.memorySignal || []; return { ...current, memorySignal: selected ? currentList.filter(x => x !== item.key) : [...currentList, item.key] }; }); };
               const move = (direction: -1 | 1) => { if (position < 0) return; setSaved(false); setError(""); setConfig(current => { const next = [...(current.memorySignal || [])]; const target = position + direction; if (target < 0 || target >= next.length) return current; [next[position], next[target]] = [next[target], next[position]]; return { ...current, memorySignal: next }; }); };
               return <section className="admin-memoryEditPanel">
-                <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => setEditingMemory(null)}>بستن</button></div></div>
+                <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => { setEditingMemory(null); goToSection("memory"); }}>بستن</button></div></div>
                 <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
                   <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
                     <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
