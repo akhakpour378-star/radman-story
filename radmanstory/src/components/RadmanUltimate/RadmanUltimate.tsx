@@ -490,12 +490,12 @@ export default function RadmanUltimate() {
           <span>RADMAN / VISUAL BIOGRAPHY</span>
         </div>
 
-        <div className="u-storyCinema__image u-storySliderImage u-reveal">
+        <div className="u-storyCinema__image u-storySliderImage">
           {storySlides.map((slide,i)=><img key={slide.image} className={i===storySlide?"is-active":""} src={asset(slide.image)} alt={slide.label}/>) }
           <div className="u-storyCinema__imageShade"/><span className="u-storyCinema__imageNo">{String(storySlide+1).padStart(2,"0")}</span><span className="u-storyCinema__imageLabel">{storySlides[storySlide].label}</span><i className="u-storyCinema__imageLine"/>
         </div>
 
-        <div className="u-storyCinema__copy u-storySlider u-reveal">
+        <div className="u-storyCinema__copy u-storySlider">
           <div className="u-storySlider__viewport">{storySlides.map((slide,i)=><article className={i===storySlide?"u-storySlide is-active":"u-storySlide"} data-direction={i===storySlide?storyDirection:0} key={slide.eyebrow}><span className="u-storyCinema__eyebrow">{slide.eyebrow}</span><h2>{slide.title}</h2><p className="u-storyCinema__lead">{slide.lead}</p><p className="u-storyCinema__body">{slide.body}</p></article>)}</div>
           <div className="u-storySlider__controls"><button type="button" onClick={()=>{setStoryDirection(-1);setStorySlide((storySlide-1+storySlides.length)%storySlides.length)}} aria-label="Previous story"><ArrowLeft size={15}/></button><div className="u-storySlider__dots">{storySlides.map((slide,i)=><button type="button" key={slide.eyebrow} className={i===storySlide?"is-active":""} onClick={()=>setStorySlide(i)} aria-label={slide.eyebrow}/>)}</div><button type="button" onClick={()=>{setStoryDirection(1);setStorySlide((storySlide+1)%storySlides.length)}} aria-label="Next story"><ArrowRight size={15}/></button><span className="u-storySlider__count">{String(storySlide+1).padStart(2,"0")} / {String(storySlides.length).padStart(2,"0")}</span></div>
           <div className="u-storySlider__progress"><i key={storySlide}/></div>
