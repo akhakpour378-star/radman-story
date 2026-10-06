@@ -182,6 +182,7 @@ export default function RadmanUltimate() {
         .from(".u-hero__panelTop span", { y: 14, opacity: 0, stagger: 0.08, duration: 0.7, delay: 0.15 })
         .from(".u-hero__titleLine", { yPercent: 105, opacity: 0, duration: 1.1, stagger: 0.1 }, "-=.3")
         .from(".u-hero__lead", { y: 18, opacity: 0, duration: 0.75 }, "-=.4")
+        .from(".u-hero__cta", { y: 12, opacity: 0, duration: 0.65 }, "-=.45")
         .from(".u-birthData__item", { y: 14, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=.45")
         .from(".u-hero__tattoo", { opacity: 0, duration: 0.6 }, "-=.3");
 
@@ -399,6 +400,11 @@ export default function RadmanUltimate() {
             </div>
           </div>
         </div>
+        <div className="u-hero__fade" aria-hidden="true" />
+        <a className="u-hero__cta" href="#story" aria-label="Enter Radman's story">
+          <span>ENTER THE STORY</span>
+          <ArrowDown size={13} />
+        </a>
         <div className="u-orb" />
         <div className="u-grain" />
       </section>
