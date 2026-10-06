@@ -10,7 +10,10 @@ import "./admin.css";
 type HeroConfig = {
   image: string; date: string; time: string; weight: string;
   height: string; place: string; city: string; cta: string;
+  persianFont: "iranyekan" | "iransans";
+  story: StorySlide[];
 };
+type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
 
 const defaults: HeroConfig = {
   image: "/memory/radman-and-me.png",
@@ -18,6 +21,12 @@ const defaults: HeroConfig = {
   height: "49 cm", place: "NIKAN AQDASIEH", city: "Tehran · Iran",
   cta: "ENTER THE STORY",
   persianFont: "iranyekan",
+  story: [
+    { eyebrow:"THE BEGINNING", title:"Some days / become a lifetime.", lead:"رادمان فقط یک نام در تقویم نیست؛ شروع بخشی از زندگی من است که از همان اولین لحظه، معنای تازه‌ای پیدا کرد.", body:"این داستان از یک روز خاص شروع می‌شود؛ از لحظه‌ای که حضور کوچک او، تمام جهان را برای من تغییر داد.", image:"/memory/radman-main.JPG", label:"THE FIRST FRAME" },
+    { eyebrow:"THE LITTLE YEARS", title:"A childhood / made of moments.", lead:"روزهای کودکی از کنارمان آرام عبور می‌کنند؛ اما بعضی لحظه‌ها آن‌قدر عمیق می‌شوند که سال‌ها بعد هم زنده می‌مانند.", body:"لبخندها، بازی‌ها، نگاه‌ها و همان اتفاق‌های ساده، امروز بخشی از بزرگ‌ترین خاطرات من هستند.", image:"/memory/radman-01.JPG", label:"LITTLE DAYS" },
+    { eyebrow:"GROWING", title:"Watching you / become yourself.", lead:"هر روز چیزی تازه در تو شکل می‌گرفت؛ یک نگاه، یک عادت، یک لبخند و جهانی که کم‌کم مخصوص خودت می‌شد.", body:"این قاب‌ها فقط عکس نیستند؛ نشانه‌هایی هستند از اینکه چطور زمان، آرام و بی‌صدا، تو را بزرگ‌تر کرد.", image:"/memory/radman-02.JPG", label:"GROWING" },
+    { eyebrow:"TOGETHER", title:"Some memories / never leave.", lead:"بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body:"این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image:"/memory/radman-and-me.png", label:"TOGETHER" },
+  ],
 };
 
 const fieldMeta: Record<keyof Omit<HeroConfig, "image">, { label: string; hint: string }> = {
@@ -52,7 +61,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story">("dashboard");
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
@@ -119,6 +128,7 @@ export default function AdminPage() {
 
   const reset = () => { setConfig(savedConfig); setSaved(false); setError(""); };
   const restoreDefaults = () => { setConfig(defaults); setSaved(false); setError(""); };
+  const updateStory = (index: number, key: keyof StorySlide, value: string) => { setSaved(false); setError(""); setConfig(c => ({ ...c, story: c.story.map((slide,i) => i === index ? { ...slide, [key]: value } : slide) })); };
 
   const logout = async () => {
     await fetch("/api/admin/auth", { method: "DELETE" });
@@ -149,7 +159,7 @@ export default function AdminPage() {
         <div className="admin-sidebar__label">CONTROL CENTER</div>
         <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
-        <div className="admin-nav" aria-disabled="true"><Sparkles size={16} /><span>Story / معرفی</span><small>SOON</small></div>
+        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => setActiveSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
@@ -190,9 +200,28 @@ export default function AdminPage() {
               <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
             </div>
           </div>
-        ) : (
+        ) : activeSection === "story" ? (
           <>
-        <header className="admin-header">
+            <header className="admin-header">
+              <div><span className="admin-kicker">02 / STORY CONTROL</span><h1>ویرایش <em>Story</em></h1><p>متن، عنوان و تصویر هر اسلاید بخش داستان را مستقیم از پنل مدیریت کن.</p></div>
+              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+            </header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <div className="admin-storyEditor">
+              {config.story.map((slide,index) => (
+                <article className="admin-storyCard" key={index}>
+                  <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>0{index+1}</span></div>
+                  <div className="admin-storyCard__fields">
+                    {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
+                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}<input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /></label>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>\n        <header className="admin-header">
           <div>
             <span className="admin-kicker">01 / HERO CONTROL</span>
             <h1>کنترل <em>Hero</em></h1>
