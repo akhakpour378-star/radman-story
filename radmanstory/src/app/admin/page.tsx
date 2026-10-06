@@ -129,6 +129,16 @@ export default function AdminPage() {
   const reset = () => { setConfig(savedConfig); setSaved(false); setError(""); };
   const restoreDefaults = () => { setConfig(defaults); setSaved(false); setError(""); };
   const updateStory = (index: number, key: keyof StorySlide, value: string) => { setSaved(false); setError(""); setConfig(c => ({ ...c, story: c.story.map((slide,i) => i === index ? { ...slide, [key]: value } : slide) })); };
+  const addStorySlide = () => {
+    if (config.story.length >= 8) { setError("حداکثر ۸ اسلاید برای Story قابل تعریف است."); return; }
+    setSaved(false); setError("");
+    setConfig(c => ({ ...c, story: [...c.story, { eyebrow:"NEW CHAPTER", title:"A new memory / begins here.", lead:"متن اصلی این اسلاید را وارد کنید.", body:"توضیحات این اسلاید را وارد کنید.", image:c.image, label:"NEW MEMORY" }] }));
+  };
+  const removeStorySlide = (index: number) => {
+    if (config.story.length <= 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
+    setSaved(false); setError("");
+    setConfig(c => ({ ...c, story: c.story.filter((_, i) => i !== index) }));
+  };
 
   const logout = async () => {
     await fetch("/api/admin/auth", { method: "DELETE" });
@@ -207,10 +217,10 @@ export default function AdminPage() {
               <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
-            <div className="admin-storyEditor">
+            <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div>\n            <div className="admin-storyEditor">
               {config.story.map((slide,index) => (
                 <article className="admin-storyCard" key={index}>
-                  <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>0{index+1}</span></div>
+                  <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>{String(index + 1).padStart(2, "0")}</span><button className="admin-removeStory" type="button" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1} aria-label="حذف اسلاید">حذف</button></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
                       <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /></label>
