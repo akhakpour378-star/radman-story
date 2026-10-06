@@ -31,3 +31,30 @@
 @media(max-width:1050px){.admin-sidebar{width:215px}.admin-content{padding:32px 24px 45px}.admin-header{align-items:flex-start;flex-direction:column}.admin-workspace{grid-template-columns:1fr}.admin-preview{min-height:480px}}
 @media(max-width:720px){.admin-shell{display:block}.admin-sidebar{width:auto;min-height:auto;padding:18px 15px;border-left:0;border-right:0;border-bottom:1px solid var(--admin-line)}.admin-sidebar__label,.admin-sidebar__bottom{display:none}.admin-nav{min-height:37px}.admin-content{padding:24px 14px 35px}.admin-header__actions{width:100%}.admin-header__actions>*{flex:1}.admin-fields{grid-template-columns:1fr;padding-left:15px;padding-right:15px}.admin-field--wide{grid-column:auto}.admin-mediaBlock{padding-left:15px;padding-right:15px}.admin-card__footer{align-items:flex-start;flex-direction:column}.admin-footerActions{width:100%;justify-content:space-between}.admin-preview{min-height:390px}}
 @media(max-width:480px){.admin-header h1{font-size:38px}.admin-primary,.admin-secondary{padding:0 10px;font-size:9px}.admin-preview__data{right:6%;width:49%}}
+
+.admin-nav{font-family:Vazirmatn,sans-serif}
+.admin-dashboard{max-width:1480px;margin:0 auto}
+.admin-dashboard__hero{min-height:220px;padding:46px 42px;border:1px solid var(--admin-line);background:radial-gradient(circle at 15% 20%,#9ce7ef0d,transparent 38%),linear-gradient(135deg,#0e141b,#080b10);display:flex;align-items:flex-end;justify-content:space-between;gap:30px}
+.admin-dashboard__hero h1{margin:0;font:500 clamp(38px,4.4vw,66px)/.95 "Playfair Display",serif;letter-spacing:-.06em}
+.admin-dashboard__hero h1 em{font-style:italic;color:var(--admin-violet)}
+.admin-dashboard__hero p{margin:13px 0 0;color:var(--admin-muted);font:400 11px Vazirmatn}
+.admin-dashboard__status{display:flex;align-items:center;gap:8px;color:#7d8992;font:600 7px DM Sans;letter-spacing:.16em;white-space:nowrap}
+.admin-dashboard__status i{width:6px;height:6px;border-radius:50%;background:var(--admin-cyan);box-shadow:0 0 15px var(--admin-cyan)}
+.admin-dashboard__grid{display:grid;grid-template-columns:minmax(0,1.7fr) 1fr 1fr;gap:16px;margin-top:16px}
+.admin-dashboard__card{min-height:190px;border:1px solid var(--admin-line);background:#0b0f15;color:var(--admin-text);text-align:right;padding:25px;position:relative;overflow:hidden}
+button.admin-dashboard__card{font:inherit;cursor:pointer}
+.admin-dashboard__card--hero{background:radial-gradient(circle at 90% 0,#9ce7ef0c,transparent 45%),#0b0f15;transition:.3s}
+.admin-dashboard__card--hero:hover{border-color:#9ce7ef45;transform:translateY(-2px)}
+.admin-dashboard__icon{width:38px;height:38px;border:1px solid #9ce7ef30;display:grid;place-items:center;color:var(--admin-cyan);margin-bottom:22px}
+.admin-dashboard__card>span{display:block;color:#66717c;font:600 6px DM Sans;letter-spacing:.18em;direction:ltr;text-align:right}
+.admin-dashboard__card h2{margin:7px 0 8px;font:400 30px "Playfair Display",serif}
+.admin-dashboard__card p{max-width:500px;margin:0;color:#707b86;font:400 9px/2 Vazirmatn}
+.admin-dashboard__card b{position:absolute;left:24px;bottom:23px;display:flex;align-items:center;gap:7px;color:#aeeaf0;font:600 6px DM Sans;letter-spacing:.14em;direction:ltr}
+.admin-dashboard__card--stat{display:flex;flex-direction:column;align-items:flex-start}
+.admin-dashboard__card--stat strong{margin-top:24px;font:400 30px "Playfair Display",serif;color:#e8ecec;direction:ltr}
+.admin-dashboard__footer{margin-top:16px;border-top:1px solid var(--admin-line);padding:18px 3px;display:flex;align-items:center;gap:12px;color:#59646f;font:600 7px DM Sans;letter-spacing:.14em}
+.admin-dashboard__footer span{margin-left:auto}
+.admin-dashboard__footer button,.admin-dashboard__footer a{border:1px solid #ffffff10;background:#ffffff05;color:#aab2b8;padding:10px 14px;display:flex;align-items:center;gap:8px;text-decoration:none;font:500 8px Vazirmatn;cursor:pointer}
+.admin-dashboard__footer button:hover,.admin-dashboard__footer a:hover{border-color:#9ce7ef35;color:#eefcff}
+@media(max-width:1050px){.admin-dashboard__grid{grid-template-columns:1fr 1fr}.admin-dashboard__card--hero{grid-column:1/-1}}
+@media(max-width:720px){.admin-dashboard__hero{padding:30px 22px;min-height:210px;display:block}.admin-dashboard__status{margin-top:25px}.admin-dashboard__grid{grid-template-columns:1fr}.admin-dashboard__card--hero{grid-column:auto}.admin-dashboard__footer{flex-wrap:wrap}.admin-dashboard__footer span{width:100%;margin:0}.admin-dashboard__footer button,.admin-dashboard__footer a{flex:1;justify-content:center}}
