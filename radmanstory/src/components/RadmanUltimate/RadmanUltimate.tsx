@@ -503,10 +503,6 @@ export default function RadmanUltimate() {
       <section id="story" className="u-storyCinema">
         <div className="u-storyCinema__noise" aria-hidden="true" />
         <div className="u-storyCinema__glow" aria-hidden="true" />
-        <div className="u-storyCinema__header">
-          <span className="u-kicker">00 / THE STORY</span><span>RADMAN / VISUAL BIOGRAPHY</span>
-        </div>
-
         <div className="radman-story-slider">
           <div className="radman-story-slider__media">
             {storySlides.map((slide, i) => (
