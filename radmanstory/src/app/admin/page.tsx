@@ -74,6 +74,8 @@ export default function AdminPage() {
   const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory" | "library">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
+  const [selectedMemoryKeys, setSelectedMemoryKeys] = useState<string[]>([]);
+  const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
@@ -226,6 +228,63 @@ export default function AdminPage() {
     }
   };
 
+  const replaceMemoryImage = async (item: { key: string; src: string; type: "image" | "video" }, file: File) => {
+    if (item.type !== "image") return;
+    if (!file.type.startsWith("image/")) { setError("فقط فایل تصویری قابل آپلود است."); return; }
+    if (file.size > 15 * 1024 * 1024) { setError("حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد."); return; }
+    setUploading(true); setError(""); setSaved(false);
+    try {
+      const form = new FormData(); form.append("file", file); form.append("section", "memory");
+      const r = await fetch("/api/admin/memory", { method: "POST", body: form });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
+      const src = String(data.src || data.image);
+      const oldKey = item.key;
+      const next = { ...config, memorySignal: (config.memorySignal || []).map(x => x === oldKey ? src : x) };
+      const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData?.error || "اعمال تصویر جدید انجام نشد.");
+      const delRes = await fetch("/api/admin/memory", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ src: item.src }) });
+      if (!delRes.ok) throw new Error("تصویر قبلی حذف نشد.");
+      const persisted = { ...defaults, ...saveData };
+      setConfig(persisted); setSavedConfig(persisted);
+      setImages(current => [src, ...current.filter(x => x !== item.src)]);
+      setSelectedMemoryKeys(current => current.map(x => x === oldKey ? src : x));
+      setEditingMemory(src);
+    } catch (e) { setError(e instanceof Error ? e.message : "جایگزینی تصویر انجام نشد."); }
+    finally { setUploading(false); }
+  };
+
+  const bulkDeleteMemory = async () => {
+    if (!selectedMemoryKeys.length) return;
+    if (!window.confirm(`آیا از حذف ${selectedMemoryKeys.length} رسانه انتخاب‌شده مطمئن هستید؟`)) return;
+    setError(""); setSaved(false);
+    try {
+      const items = [...images.map(src => ({ key: src, src, type: "image" as const })), ...videos.map(src => ({ key: "video:" + src, src, type: "video" as const }))].filter(x => selectedMemoryKeys.includes(x.key));
+      for (const item of items) {
+        const r = await fetch("/api/admin/memory", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ src: item.src }) });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d?.error || "حذف یکی از رسانه‌ها انجام نشد."); }
+      }
+      const keys = new Set(items.map(x => x.key));
+      const next = { ...config, memorySignal: (config.memorySignal || []).filter(x => !keys.has(x)) };
+      const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData?.error || "اعمال حذف‌ها روی سایت انجام نشد.");
+      setImages(current => current.filter(x => !items.some(i => i.type === "image" && i.src === x)));
+      setVideos(current => current.filter(x => !items.some(i => i.type === "video" && i.src === x)));
+      setConfig({ ...defaults, ...saveData }); setSavedConfig({ ...defaults, ...saveData });
+      setSelectedMemoryKeys([]); setEditingMemory(null);
+    } catch (e) { setError(e instanceof Error ? e.message : "حذف گروهی انجام نشد."); }
+  };
+
+  const bulkDeleteStory = () => {
+    if (!selectedStoryIndexes.length) return;
+    if (config.story.length - selectedStoryIndexes.length < 1) { setError("حداقل یک اسلاید باید باقی بماند."); return; }
+    if (!window.confirm(`آیا از حذف ${selectedStoryIndexes.length} اسلاید انتخاب‌شده مطمئن هستید؟`)) return;
+    setConfig(current => ({ ...current, story: current.story.filter((_, i) => !selectedStoryIndexes.includes(i)) }));
+    setSelectedStoryIndexes([]); setEditingStory(null); setSaved(false); setError("");
+  };
+
   const openLibrary = (target: { type: "hero" | "story"; index?: number }) => {
     setLibraryTarget(target); setLibraryFilter("all"); setLibrarySearch(""); setLibraryOpen(true);
   };
@@ -336,13 +395,13 @@ export default function AdminPage() {
               <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
-            <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><div className="admin-storyToolbar__actions"><div className="admin-storyFontPicker"><span>فونت فارسی</span>{(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (<button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>{fontMeta[font].label}</button>))}</div><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div></div>
+            <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><div className="admin-storyToolbar__actions"><div className="admin-storyFontPicker"><span>فونت فارسی</span>{(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (<button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>{fontMeta[font].label}</button>))}</div><button className="admin-bulkDeleteButton" type="button" onClick={bulkDeleteStory} disabled={!selectedStoryIndexes.length}>حذف انتخاب‌شده ({selectedStoryIndexes.length})</button><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div></div>
             <div className="admin-storyTableWrap">
               <table className="admin-storyTable">
-                <thead><tr><th>#</th><th>تصویر</th><th>عنوان اسلایدر</th><th>برچسب</th><th>عملیات</th></tr></thead>
+                <thead><tr><th><input type="checkbox" checked={selectedStoryIndexes.length === config.story.length && config.story.length > 0} onChange={(e) => setSelectedStoryIndexes(e.target.checked ? config.story.map((_,i) => i) : [])} /></th><th>#</th><th>تصویر</th><th>عنوان اسلایدر</th><th>برچسب</th><th>عملیات</th></tr></thead>
                 <tbody>
                   {config.story.map((slide,index) => (
-                    <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => setEditingStory(index)}>
+                    <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => setEditingStory(index)}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedStoryIndexes.includes(index)} onChange={(e) => setSelectedStoryIndexes(current => e.target.checked ? [...current,index] : current.filter(x => x !== index))} /></td>
                       <td className="admin-storyTable__index">{String(index + 1).padStart(2, "0")}</td>
                       <td><img className="admin-storyTable__thumb" src={mediaUrl(slide.image)} alt="" /></td>
                       <td><div className="admin-storyTable__title">{slide.title}</div><small>{slide.eyebrow}</small></td>
@@ -384,14 +443,14 @@ export default function AdminPage() {
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-memoryManager">
-              <div className="admin-memoryManager__toolbar"><div><span>MEDIA LIBRARY</span><h2>لیست تصاویر و ویدیوها</h2><small>{images.length + videos.length} رسانه در آرشیو · {config.memorySignal?.length || 0} مورد فعال</small></div><div className="admin-memoryUploadActions"><label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/> {memoryUploadType === "image" ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"image"); e.currentTarget.value=""; }}/></label><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/> {memoryUploadType === "video" ? "در حال آپلود..." : "افزودن ویدیو"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"video"); e.currentTarget.value=""; }}/></label></div></div>
+              <div className="admin-memoryManager__toolbar"><div><span>MEMORY SIGNAL</span><h2>رسانه‌های استفاده‌شده</h2><small>{config.memorySignal?.length || 0} رسانه فعال در سایت</small></div><div className="admin-memoryUploadActions"><button type="button" className="admin-bulkDeleteButton" onClick={bulkDeleteMemory} disabled={!selectedMemoryKeys.length}>حذف انتخاب‌شده ({selectedMemoryKeys.length})</button><label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/> {memoryUploadType === "image" ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"image"); e.currentTarget.value=""; }}/></label><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/> {memoryUploadType === "video" ? "در حال آپلود..." : "افزودن ویدیو"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={memoryUploadType !== null} onChange={(e) => { const f=e.target.files?.[0]; if(f) void uploadMemoryMedia(f,"video"); e.currentTarget.value=""; }}/></label></div></div>
               <div className="admin-memoryTableWrap">
                 <table className="admin-memoryTable">
-                  <thead><tr><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+                  <thead><tr><th><input type="checkbox" checked={([...images.map(src => src), ...videos.map(src => "video:" + src)].filter(k => (config.memorySignal || []).includes(k))).length > 0 && selectedMemoryKeys.length === (config.memorySignal || []).length} onChange={(e) => setSelectedMemoryKeys(e.target.checked ? (config.memorySignal || []) : [])} /></th><th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>نوع</th><th>وضعیت</th><th>عملیات</th></tr></thead>
                   <tbody>
-                    {[...images.map((src) => ({ key: src, src, type: "image" as const })), ...videos.map((src) => ({ key: "video:" + src, src, type: "video" as const }))].map((item, index) => {
+                    {(config.memorySignal || []).map((key) => { const isVideo = key.startsWith("video:"); const src = isVideo ? key.slice(6) : key; const item = { key, src, type: isVideo ? ("video" as const) : ("image" as const) }; const index = (config.memorySignal || []).indexOf(key);
                       const selected = (config.memorySignal || []).includes(item.key);
-                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
+                      return <tr key={item.key} className={editingMemory === item.key ? "is-editing" : ""}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedMemoryKeys.includes(item.key)} onChange={(e) => setSelectedMemoryKeys(current => e.target.checked ? [...current,item.key] : current.filter(x => x !== item.key))} /></td><td className="admin-memoryTable__index">{String(index + 1).padStart(2, "0")}</td><td><div className="admin-memoryTable__thumb">{item.type === "video" ? <video src={mediaUrl(item.src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>▶</i>}</div></td><td><div className="admin-memoryTable__name">{item.src.replace("/memory/", "")}</div></td><td><span className={`admin-memoryType admin-memoryType--${item.type}`}>{item.type === "video" ? "VIDEO" : "IMAGE"}</span></td><td><span className={`admin-memoryStatus ${selected ? "is-active" : ""}`}>{selected ? "نمایش در سایت" : "غیرفعال"}</span></td><td><div className="admin-memoryTable__actions"><button type="button" className="admin-memoryEditButton" onClick={() => setEditingMemory(item.key)}><Pencil size={14}/> ویرایش</button><button type="button" className="admin-memoryDeleteButton" title="حذف رسانه" aria-label="حذف رسانه" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/></button></div></td></tr>;
                     })}
                     {images.length + videos.length === 0 && <tr><td colSpan={6}><div className="admin-memoryEmpty">هنوز تصویر یا ویدیویی در آرشیو وجود ندارد.</div></td></tr>}
                   </tbody>
@@ -399,7 +458,7 @@ export default function AdminPage() {
               </div>
             </section>
             {editingMemory !== null && (() => {
-              const all = [...images.map((src) => ({ key: src, src, type: "image" as const })), ...videos.map((src) => ({ key: "video:" + src, src, type: "video" as const }))];
+              const all = (config.memorySignal || []).map((key) => { const isVideo = key.startsWith("video:"); return { key, src: isVideo ? key.slice(6) : key, type: isVideo ? ("video" as const) : ("image" as const) }; });
               const item = all.find((x) => x.key === editingMemory);
               if (!item) return null;
               const list = config.memorySignal || [];
@@ -410,7 +469,7 @@ export default function AdminPage() {
               return <section className="admin-memoryEditPanel">
                 <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => setEditingMemory(null)}>بستن</button></div></div>
                 <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
-                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label><div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
+                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
                     <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
                     {selected && <div className="admin-memoryOrder"><span>جایگاه نمایش</span><strong>{String(position + 1).padStart(2, "0")}</strong><div><button type="button" onClick={() => move(-1)} disabled={position <= 0}>↑ بالاتر</button><button type="button" onClick={() => move(1)} disabled={position < 0 || position >= list.length - 1}>↓ پایین‌تر</button></div></div>}
                   </div>
