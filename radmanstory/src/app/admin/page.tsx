@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
-  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload,
+  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2,
 } from "lucide-react";
 import "./admin.css";
 
@@ -63,6 +63,7 @@ export default function AdminPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story">("dashboard");
+  const [editingStory, setEditingStory] = useState<number | null>(null);
 
   const dirty = JSON.stringify(config) !== JSON.stringify(savedConfig);
   const preview = useMemo(() => mediaUrl(config.image), [config.image]);
@@ -239,18 +240,44 @@ export default function AdminPage() {
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><div className="admin-storyToolbar__actions"><div className="admin-storyFontPicker"><span>فونت فارسی</span>{(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (<button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>{fontMeta[font].label}</button>))}</div><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div></div>
-            <div className="admin-storyEditor">
-              {config.story.map((slide,index) => (
-                <article className="admin-storyCard" key={index}>
-                  <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>{String(index + 1).padStart(2, "0")}</span><button className="admin-removeStory" type="button" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1} aria-label="حذف اسلاید">حذف</button></div>
-                  <div className="admin-storyCard__fields">
-                    {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
-                      <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(index, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} />)}</label>
-                    ))}
-                  </div>
-                </article>
-              ))}
+            <div className="admin-storyTableWrap">
+              <table className="admin-storyTable">
+                <thead><tr><th>#</th><th>تصویر</th><th>عنوان اسلایدر</th><th>برچسب</th><th>عملیات</th></tr></thead>
+                <tbody>
+                  {config.story.map((slide,index) => (
+                    <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => setEditingStory(index)}>
+                      <td className="admin-storyTable__index">{String(index + 1).padStart(2, "0")}</td>
+                      <td><img className="admin-storyTable__thumb" src={mediaUrl(slide.image)} alt="" /></td>
+                      <td><div className="admin-storyTable__title">{slide.title}</div><small>{slide.eyebrow}</small></td>
+                      <td>{slide.label}</td>
+                      <td>
+                        <div className="admin-storyTable__actions" onClick={(e) => e.stopPropagation()}>
+                          <button type="button" title="ویرایش" aria-label="ویرایش" onClick={() => setEditingStory(index)}><Pencil size={15}/></button>
+                          <button type="button" title="حذف" aria-label="حذف" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1}><Trash2 size={15}/></button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+            {editingStory !== null && config.story[editingStory] && (
+              <div className="admin-storyEditPanel">
+                <div className="admin-storyEditPanel__head">
+                  <div><span>EDIT STORY / {String(editingStory + 1).padStart(2, "0")}</span><h2>ویرایش اسلاید</h2></div>
+                  <button type="button" onClick={() => setEditingStory(null)}>بستن</button>
+                </div>
+                <div className="admin-storyEditPanel__body">
+                  <div className="admin-storyCard__image"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><span>{String(editingStory + 1).padStart(2, "0")}</span></div>
+                  <div className="admin-storyCard__fields">
+                    {(["eyebrow","label","title","lead","body","image"] as const).map((key) => {
+                      const slide = config.story[editingStory];
+                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <>\n        <header className="admin-header">
