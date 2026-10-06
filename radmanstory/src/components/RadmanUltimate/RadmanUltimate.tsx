@@ -269,7 +269,7 @@ export default function RadmanUltimate() {
       document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
       document.documentElement.style.setProperty("--my", `${e.clientY}px`);
     };
-    const cards = Array.from(document.querySelectorAll<HTMLElement>(".u-card button, .u-chapter__image, .u-hero__cta, .u-manifesto__enter"));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>(".u-card button, .u-chapter__image, .u-manifesto__enter"));
     const tilt = (e: MouseEvent) => {
       const el = e.currentTarget as HTMLElement;
       const r = el.getBoundingClientRect();
@@ -404,6 +404,7 @@ export default function RadmanUltimate() {
         <a className="u-hero__cta" href="#story" aria-label="Enter Radman's story">
           <span>ENTER THE STORY</span>
           <ArrowDown size={13} />
+          <i className="u-hero__ctaLine" aria-hidden="true" />
         </a>
         <div className="u-orb" />
         <div className="u-grain" />
