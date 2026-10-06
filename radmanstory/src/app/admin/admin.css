@@ -82,3 +82,38 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-storyCard:hover .admin-removeStory{opacity:1;transform:none}
 .admin-removeStory:disabled{opacity:.25!important;cursor:not-allowed}
 @media(max-width:800px){.admin-storyToolbar{align-items:flex-start;flex-direction:column}.admin-addStory{width:100%}}
+
+
+/* ADMIN IMAGE UPLOAD + HARD PREVIEW CLIP */
+.admin-preview{
+  isolation:isolate!important;
+  clip-path:inset(0)!important;
+  contain:layout paint!important;
+}
+.admin-preview>img{
+  z-index:0!important;
+  clip-path:inset(0)!important;
+  transform:none!important;
+}
+.admin-preview__shade,
+.admin-preview__top,
+.admin-preview__data,
+.admin-preview__cta,
+.admin-preview__draft{z-index:2}
+.admin-uploadRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.admin-uploadButton,.admin-uploadMini{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:1px solid #82cbd3;background:#eefbfc;color:#26383d;cursor:pointer;
+  font:600 9px Vazirmatn;transition:.25s
+}
+.admin-uploadButton{min-height:38px;padding:0 14px}
+.admin-uploadMini{margin-top:8px;min-height:30px;padding:0 10px;width:max-content}
+.admin-uploadButton:hover,.admin-uploadMini:hover{background:#dff7f9;border-color:#62b9c2;transform:translateY(-1px)}
+.admin-uploadButton input,.admin-uploadMini input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.admin-uploadButton span,.admin-uploadRow>span{color:#8a949d;font:500 8px Vazirmatn}
+.admin-uploadRow>span{direction:ltr;font-family:DM Sans}
+.admin-storyCard .admin-uploadMini{grid-column:1/-1}
+@media(max-width:720px){
+  .admin-uploadRow{align-items:stretch;flex-direction:column}
+  .admin-uploadButton{width:100%}
+}
