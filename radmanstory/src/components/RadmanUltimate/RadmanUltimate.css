@@ -2733,3 +2733,21 @@
 .u-storyCinema .u-storySlider__progress{position:relative;z-index:10}
 @media(max-width:900px){.u-storyCinema .u-storySlider__viewport{height:480px;min-height:480px}}
 @media(max-width:520px){.u-storyCinema .u-storySlider__viewport{height:520px;min-height:520px}}
+
+/* REAL STORY CAROUSEL */
+.u-storySliderSection{display:block!important;position:relative!important;min-height:100svh!important;padding:11vh 8vw 10vh!important;background:#06080d!important;overflow:hidden!important}
+.u-storyCarousel{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:7vw;align-items:center;min-height:72vh;margin-top:5vh}
+.u-storyCarousel__media{position:relative;height:min(68vh,700px);overflow:hidden;border:1px solid #ffffff18;background:#090c12;box-shadow:0 45px 120px #0009}
+.u-storyCarousel__media img{position:absolute!important;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;opacity:0;transform:scale(1.08) translateX(35px);filter:saturate(.72) contrast(1.04);transition:opacity .8s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+.u-storyCarousel__media img.is-active{opacity:1;transform:scale(1.035) translateX(0);z-index:2}
+.u-storyCarousel__shade{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,#03050a08 35%,#03050ac9 100%)}
+.u-storyCarousel__number{position:absolute;z-index:4;top:18px;left:18px;padding:7px 10px;border:1px solid #ffffff25;background:#05070b99;color:#f3f2ed;font:600 7px DM Sans;letter-spacing:.18em}
+.u-storyCarousel__label{position:absolute;z-index:4;left:20px;bottom:20px;color:#d7d9da;font:600 7px DM Sans;letter-spacing:.2em}
+.u-storyCarousel__content{position:relative;min-height:500px;display:flex;flex-direction:column;justify-content:center}
+.u-storyCarousel__content article{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translateX(45px);pointer-events:none;transition:opacity .65s ease,transform .75s cubic-bezier(.2,.8,.2,1),visibility 0s linear .75s}
+.u-storyCarousel__content article.is-active{position:relative;opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto;z-index:2;transition:opacity .65s ease,transform .75s cubic-bezier(.2,.8,.2,1)}
+.u-storyCarousel__content h2{margin:24px 0 0;font:500 clamp(58px,7vw,108px)/.77 Playfair Display;letter-spacing:-.085em}.u-storyCarousel__content h2 em{font-weight:400;color:#abb1ff;font-style:italic}
+.u-storyCarousel__content .u-storyCinema__lead{max-width:500px;margin:34px 0 0;color:#d7d9dc;font:400 15px/2.05 Manrope;text-align:right;direction:rtl}.u-storyCarousel__content .u-storyCinema__body{max-width:460px;margin:18px 0 0;color:#778290;font:400 10px/2.15 Manrope;text-align:right;direction:rtl}
+.u-storyCarousel__controls{position:relative;z-index:10;display:flex;align-items:center;gap:13px;margin-top:32px}.u-storyCarousel__controls>button{width:36px;height:36px;border:1px solid #ffffff22!important;border-radius:50%;display:grid;place-items:center;color:#aeb6c0;background:transparent!important}.u-storyCarousel__controls>button:hover{border-color:#9ce7ef88!important;color:#9ce7ef}.u-storyCarousel__controls>span{margin-left:auto;color:#667381;font:600 7px DM Sans;letter-spacing:.16em}.u-storyCarousel__dots{display:flex;align-items:center;gap:7px}.u-storyCarousel__dots button{width:24px;height:1px;padding:0!important;border:0!important;border-radius:0!important;background:#ffffff1c!important}.u-storyCarousel__dots button.is-active{width:42px;background:#9ce7ef!important;box-shadow:0 0 12px #9ce7ef66}.u-storyCarousel__progress{height:1px;margin-top:16px;background:#ffffff0c}.u-storyCarousel__progress i{display:block;width:100%;height:100%;background:#9ce7ef;transform-origin:left;animation:storyCarouselProgress 6.5s linear both}@keyframes storyCarouselProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(max-width:900px){.u-storySliderSection{padding:100px 24px 80px!important}.u-storyCarousel{grid-template-columns:1fr;gap:35px;min-height:0}.u-storyCarousel__media{height:62vh;min-height:420px}.u-storyCarousel__content{min-height:510px}.u-storyCarousel__content h2{font-size:clamp(52px,14vw,86px)}}
+@media(max-width:520px){.u-storyCarousel__media{height:55vh;min-height:360px}.u-storyCarousel__content{min-height:560px}.u-storyCarousel__dots button{width:17px}.u-storyCarousel__dots button.is-active{width:30px}}
