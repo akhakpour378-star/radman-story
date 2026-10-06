@@ -34,6 +34,7 @@ type HeroConfig = {
   cta: string;
   persianFont: "iranyekan" | "iransans";
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
+  memorySignal?: string[];
 };
 
 type Memory = {
@@ -546,22 +547,22 @@ export default function RadmanUltimate() {
         </div>
       </section>
       <section className="u-reel" aria-label="Selected memories">
-        <div className="u-reel__head">
-          <span className="u-kicker">00.5 / MEMORY SIGNAL</span>
-          <p>Twenty photographs. One childhood. No two frames carry the same weight.</p>
-        </div>
         <div className="u-reel__track">
-          {memories.slice(0, Math.min(7, memories.length)).map((m, i) => (
-            <button className="u-reel__item" key={m.src} onClick={() => setSelected(i)} aria-label={m.title}>
-              <img src={asset(m.src)} alt={m.title} loading="lazy" />
-            </button>
-          ))}
-          {videos.slice(0, 2).map((src, i) => (
-            <button className="u-reel__item u-reel__item--video" key={src} onClick={() => setSelectedVideo(src)} aria-label="Play memory video">
-              <video src={asset(src)} muted playsInline preload="metadata" />
-              <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
-            </button>
-          ))}
+          {(heroConfig.memorySignal?.length ? heroConfig.memorySignal : [...memories.slice(0, 7).map((m) => m.src), ...videos.slice(0, 2).map((src) => "video:" + src)]).map((src, i) => {
+            const isVideo = src.startsWith("video:");
+            const media = isVideo ? src.slice(6) : src;
+            const memoryIndex = memories.findIndex((m) => m.src === media);
+            return isVideo ? (
+              <button className="u-reel__item u-reel__item--video" key={src} onClick={() => setSelectedVideo(media)} aria-label="Play memory video">
+                <video src={asset(media)} muted playsInline preload="metadata" />
+                <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
+              </button>
+            ) : (
+              <button className="u-reel__item" key={src} onClick={() => memoryIndex >= 0 && setSelected(memoryIndex)} aria-label={memories[memoryIndex]?.title || "Memory"}>
+                <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
+              </button>
+            );
+          })}
         </div>
       </section>
 
