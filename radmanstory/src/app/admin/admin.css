@@ -395,3 +395,15 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-library__meta{position:relative;transition:background .35s ease}
 .admin-library__meta:before{content:"";position:absolute;left:11px;top:0;width:0;height:1px;background:#9ce7ef;box-shadow:0 0 10px #9ce7ef;transition:width .45s cubic-bezier(.2,.8,.2,1)}
 .admin-library__item:hover .admin-library__meta:before{width:42px}
+
+/* Bulk selection / media management */
+.admin-bulkDeleteButton{height:36px;padding:0 12px;border:1px solid #e2caca;background:#fff;color:#a45d5d;font:700 8px Vazirmatn;cursor:pointer;transition:.2s}
+.admin-bulkDeleteButton:hover:not(:disabled){border-color:#d88f8f;background:#fff4f4;transform:translateY(-1px)}
+.admin-bulkDeleteButton:disabled{opacity:.4;cursor:not-allowed}
+.admin-storyTable th:first-child,.admin-storyTable td:first-child,
+.admin-memoryTable th:first-child,.admin-memoryTable td:first-child{width:38px;text-align:center}
+.admin-storyTable input[type=checkbox],.admin-memoryTable input[type=checkbox]{width:14px;height:14px;accent-color:#6ab9c2;cursor:pointer}
+.admin-memoryEditUpload{height:38px;padding:0 12px;display:inline-flex;align-items:center;gap:7px;width:max-content;border:1px solid #b8e1e5;background:#eefbfc;color:#438b94;font:700 8px Vazirmatn;cursor:pointer;position:relative;overflow:hidden}
+.admin-memoryEditUpload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.admin-memoryManager__toolbar{align-items:center}
+@media(max-width:800px){.admin-memoryManager__toolbar{align-items:flex-start}.admin-memoryEditUpload{width:100%;justify-content:center}.admin-bulkDeleteButton{flex:1}}
