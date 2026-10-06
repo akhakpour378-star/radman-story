@@ -268,7 +268,7 @@ export default function AdminPage() {
                   <button type="button" onClick={() => setEditingStory(null)}>بستن</button>
                 </div>
                 <div className="admin-storyEditPanel__body">
-                  <div className="admin-storyCard__image"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><span>{String(editingStory + 1).padStart(2, "0")}</span></div>
+                  <div className="admin-storyCard__image admin-storyEditVisual"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><div className="admin-storyEditVisual__veil" /><div className="admin-storyEditVisual__meta"><span>RADMAN / STORY</span><i /></div><div className="admin-storyEditVisual__label">MEMORY FRAME</div></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => {
                       const slide = config.story[editingStory];
