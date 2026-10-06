@@ -31,6 +31,7 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  persianFont: "iranyekan" | "iransans";
 };
 
 type Memory = {
@@ -49,6 +50,7 @@ const defaultHeroConfig: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  persianFont: "iranyekan",
 };
 
 const fallback: Memory[] = [
@@ -336,6 +338,20 @@ export default function RadmanUltimate() {
   }, [memories.length]);
 
   useEffect(() => {
+    const storyMedia = Array.from(document.querySelectorAll<HTMLElement>(".radman-story-slider__media"));
+    const storyMove = (e: MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--story-x", ((e.clientX - r.left) / r.width * 100) + "%");
+      el.style.setProperty("--story-y", ((e.clientY - r.top) / r.height * 100) + "%");
+    };
+    const storyReset = (e: MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      el.style.setProperty("--story-x", "50%");
+      el.style.setProperty("--story-y", "50%");
+    };
+    storyMedia.forEach((el) => { el.addEventListener("mousemove", storyMove); el.addEventListener("mouseleave", storyReset); });
+
     const move = (e: MouseEvent) => {
       document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
       document.documentElement.style.setProperty("--my", `${e.clientY}px`);
@@ -361,6 +377,7 @@ export default function RadmanUltimate() {
     return () => {
       window.removeEventListener("mousemove", move);
       cards.forEach((el) => { el.removeEventListener("mousemove", tilt); el.removeEventListener("mouseleave", reset); });
+      storyMedia.forEach((el) => { el.removeEventListener("mousemove", storyMove); el.removeEventListener("mouseleave", storyReset); });
     };
   }, [memories.length]);
 
@@ -416,7 +433,7 @@ export default function RadmanUltimate() {
   }, [memories]);
 
   return (
-    <main ref={root} className="u">
+    <main ref={root} className={"u u-font-" + heroConfig.persianFont}>
       <div className="u-cursorLight" aria-hidden="true" />
       <div className="u-cursorDot" aria-hidden="true" />
       <div className="u-progress"><i /></div>
