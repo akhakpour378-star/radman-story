@@ -213,7 +213,7 @@ export default function AdminPage() {
                   <div className="admin-storyCard__image"><img src={mediaUrl(slide.image)} alt="" /><span>0{index+1}</span></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image"] as const).map((key) => (
-                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}<input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /></label>
+                      <label className="admin-field" key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span><input value={slide[key]} onChange={e => updateStory(index,key,e.target.value)} /></label>
                     ))}
                   </div>
                 </article>
