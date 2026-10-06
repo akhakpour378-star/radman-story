@@ -55,6 +55,7 @@ export default function AdminPage() {
   const [config, setConfig] = useState<HeroConfig>(defaults);
   const [savedConfig, setSavedConfig] = useState<HeroConfig>(defaults);
   const [images, setImages] = useState<string[]>([]);
+  const [videos, setVideos] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [imageOpen, setImageOpen] = useState(false);
@@ -86,6 +87,7 @@ export default function AdminPage() {
         if (mediaRes.ok) {
           const media = await mediaRes.json();
           setImages(Array.isArray(media.images) ? media.images : []);
+          setVideos(Array.isArray(media.videos) ? media.videos : []);
         }
         setAuthenticated(Boolean(auth.authenticated));
       })
