@@ -40,17 +40,6 @@ type Memory = {
   tag: string;
 };
 
-type HeroConfig = {
-  image: string;
-  date: string;
-  time: string;
-  weight: string;
-  height: string;
-  place: string;
-  city: string;
-  cta: string;
-};
-
 const defaultHeroConfig: HeroConfig = {
   image: "/memory/radman-and-me.png",
   date: "DEC / 01 / 2022",
