@@ -78,16 +78,8 @@ const asset = (src: string) =>
     ? `/api/memory?file=${encodeURIComponent(src.slice(1))}`
     : src;
 
-const prettyTitle = (file: string, index: number) => {
-  const clean = file
-    .replace(/^\/memory\//, "")
-    .replace(/\.[^.]+$/, "")
-    .replace(/\s*\(\d+\)\s*$/, "")
-    .replace(/[-_]+/g, " ")
-    .trim();
-  if (!clean || /^radman$/i.test(clean)) return `Memory ${String(index + 1).padStart(2, "0")}`;
-  return clean.replace(/\b\w/g, (c) => c.toUpperCase());
-};
+const prettyTitle = (_file: string, index: number) =>
+  `Memory Signal · ${String(index + 1).padStart(2, "0")}`;
 
 export default function RadmanUltimate() {
   const root = useRef<HTMLElement>(null);
