@@ -137,19 +137,6 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (!adminUrlReady.current) return;
-    try {
-      const params = new URLSearchParams();
-      if (activeSection !== "dashboard") params.set("section", activeSection);
-      if (editingStory !== null) params.set("story", String(editingStory));
-      if (editingMemory !== null) params.set("memory", editingMemory);
-      const query = params.toString();
-      const next = query ? "/admin?" + query : "/admin";
-      if (window.location.pathname === "/admin" && window.location.search !== (query ? "?" + query : "")) window.history.replaceState(null, "", next);
-    } catch {}
-  }, [activeSection, editingStory, editingMemory]);
-
-  useEffect(() => {
     try { sessionStorage.setItem("radman-admin-section", activeSection); } catch {}
   }, [activeSection]);
 
@@ -217,7 +204,6 @@ export default function AdminPage() {
           setTrashItems(Array.isArray(trash.items) ? trash.items : []);
         }
         setAuthenticated(Boolean(auth.authenticated));
-        restoreAdminRoute();
       })
       .catch(() => setError("اتصال به سرور برقرار نشد."))
       .finally(() => alive && setLoading(false));
@@ -549,6 +535,62 @@ export default function AdminPage() {
               <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
             </div>
           </div>
+        ) : activeSection === "trash" ? (
+          <>
+            <header className="admin-header">
+              <div>
+                <span className="admin-kicker">05 / RECYCLE BIN</span>
+                <h1>سطل <em>آشغال</em></h1>
+                <p>رسانه‌های حذف‌شده موقتاً اینجا نگهداری می‌شوند و هر زمان خواستی قابل بازیابی هستند.</p>
+              </div>
+              <div className="admin-header__actions">
+                <button className="admin-secondary" type="button" onClick={() => void refreshTrash()}><RotateCcw size={14}/> بروزرسانی</button>
+              </div>
+            </header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-trashManager">
+              <div className="admin-trashManager__toolbar">
+                <div>
+                  <span>RECOVERABLE MEDIA</span>
+                  <h2>{trashItems.length} مورد در سطل آشغال</h2>
+                  <small>حذف‌های جدید ابتدا به اینجا منتقل می‌شوند و حذف دائمی جداگانه انجام می‌شود.</small>
+                </div>
+                <div className="admin-trashManager__actions">
+                  <button type="button" onClick={() => setSelectedTrashIds(trashItems.map(item => item.id))} disabled={!trashItems.length}>انتخاب همه</button>
+                  <button type="button" onClick={() => setSelectedTrashIds([])} disabled={!selectedTrashIds.length}>لغو انتخاب</button>
+                  <button type="button" onClick={() => void restoreTrash(selectedTrashIds)} disabled={!selectedTrashIds.length}><RotateCcw size={13}/> بازیابی</button>
+                  <button type="button" className="admin-trashPermanent" onClick={() => void permanentDeleteTrash(selectedTrashIds)} disabled={!selectedTrashIds.length}>حذف دائمی</button>
+                </div>
+              </div>
+              <div className="admin-trashTableWrap">
+                <table className="admin-memoryTable admin-trashTable">
+                  <thead><tr>
+                    <th><input type="checkbox" checked={trashItems.length > 0 && selectedTrashIds.length === trashItems.length} onChange={(e) => setSelectedTrashIds(e.target.checked ? trashItems.map(item => item.id) : [])}/></th>
+                    <th>#</th><th>پیش‌نمایش</th><th>نام فایل</th><th>مسیر اصلی</th><th>تاریخ حذف</th><th>عملیات</th>
+                  </tr></thead>
+                  <tbody>
+                    {trashItems.map((item,index) => {
+                      const preview = "/api/admin/trash?file=" + encodeURIComponent(item.file);
+                      const isVideo = /\.(mp4|webm|mov|m4v)$/i.test(item.file);
+                      return <tr key={item.id}>
+                        <td><input type="checkbox" checked={selectedTrashIds.includes(item.id)} onChange={(e) => setSelectedTrashIds(current => e.target.checked ? [...current,item.id] : current.filter(id => id !== item.id))}/></td>
+                        <td className="admin-memoryTable__index">{String(index + 1).padStart(2,"0")}</td>
+                        <td><div className="admin-memoryTable__thumb">{isVideo ? <video src={preview} muted playsInline preload="metadata"/> : <img src={preview} alt=""/>}</div></td>
+                        <td><div className="admin-memoryTable__name">{item.file}</div></td>
+                        <td><div className="admin-memoryTable__name">{item.original}</div></td>
+                        <td><span className="admin-trashDate">{new Date(item.trashedAt).toLocaleString("fa-IR")}</span></td>
+                        <td><div className="admin-memoryTable__actions">
+                          <button type="button" className="admin-memoryEditButton" onClick={() => void restoreTrash([item.id])}><RotateCcw size={14}/> بازیابی</button>
+                          <button type="button" className="admin-memoryDeleteButton" title="حذف دائمی" aria-label="حذف دائمی" onClick={() => void permanentDeleteTrash([item.id])}><Trash2 size={14}/></button>
+                        </div></td>
+                      </tr>;
+                    })}
+                    {!trashItems.length && <tr><td colSpan={7}><div className="admin-memoryEmpty">سطل آشغال خالی است.</div></td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </>
         ) : activeSection === "library" ? (
           <>
             <header className="admin-header"><div><span className="admin-kicker">04 / MEDIA LIBRARY</span><h1>کتابخانه <em>Media</em></h1><p>تمام تصاویر و ویدیوهای سایت را از یک آرشیو واحد ببین و برای هر بخش انتخاب کن.</p></div></header>
@@ -577,7 +619,7 @@ export default function AdminPage() {
                       <td>{slide.label}</td>
                       <td>
                         <div className="admin-storyTable__actions" onClick={(e) => e.stopPropagation()}>
-                          <button type="button" title="ویرایش" aria-label="ویرایش" onClick={() => setEditingStory(index)}><Pencil size={15}/></button>
+                          <button type="button" title="ویرایش" aria-label="ویرایش" onClick={() => openStoryEditor(index)}><Pencil size={15}/></button>
                           <button type="button" title="حذف" aria-label="حذف" onClick={() => removeStorySlide(index)} disabled={config.story.length <= 1}><Trash2 size={15}/></button>
                         </div>
                       </td>
