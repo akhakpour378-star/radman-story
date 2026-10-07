@@ -79,6 +79,7 @@ export default function AdminPage() {
   const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
   const [trashItems, setTrashItems] = useState<TrashItem[]>([]);
   const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
+  const [memoryNameDraft, setMemoryNameDraft] = useState("");
 
   const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library" | "trash") => {
     setActiveSection(section);
@@ -102,7 +103,7 @@ export default function AdminPage() {
   };
 
   const openMemoryEditor = (key: string) => {
-    goToSection("memory"); setEditingMemory(key);
+    goToSection("memory"); setEditingMemory(key); setMemoryNameDraft(key.split("/").pop()?.replace(/^video:/, "") || "");
     try {
       const params = new URLSearchParams(window.location.search);
       params.set("section", "memory"); params.set("memory", key); params.delete("story");
@@ -331,6 +332,7 @@ export default function AdminPage() {
       setConfig(persisted); setSavedConfig(persisted);
       setSelectedMemoryKeys(current => current.map(x => x === oldKey ? nextKey : x));
       setEditingMemory(nextKey);
+      setMemoryNameDraft(nextKey.split("/").pop() || "");
       await new Promise<void>(resolve => setTimeout(resolve, 0));
     } catch(e) { setError(e instanceof Error ? e.message : "ویرایش نام فایل انجام نشد."); }
   };
@@ -681,7 +683,7 @@ export default function AdminPage() {
               return <section className="admin-memoryEditPanel">
                 <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => { setEditingMemory(null); goToSection("memory"); }}>بستن</button></div></div>
                 <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
-                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input key={item.key} defaultValue={item.src.split("/").pop() || ""} onBlur={(e) => { const value=e.currentTarget.value.trim(); const currentName=item.src.split("/").pop() || ""; if(value && value !== currentName) void renameMemoryMedia(item, value); }} /><small>نام فایل قابل ویرایش است؛ پسوند فایل حفظ می‌شود.</small></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
+                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><div className="admin-memoryNameRow"><input value={memoryNameDraft || item.src.split("/").pop() || ""} onChange={(e) => setMemoryNameDraft(e.target.value)} onKeyDown={(e) => { if(e.key === "Enter"){ e.preventDefault(); void renameMemoryMedia(item, memoryNameDraft); } }} /><button type="button" className="admin-memoryNameSave" onClick={() => void renameMemoryMedia(item, memoryNameDraft)} disabled={!memoryNameDraft.trim() || memoryNameDraft.trim() === (item.src.split("/").pop() || "")}><Check size={14}/> ذخیره نام</button></div><small>نام فایل قابل ویرایش است؛ پسوند فایل حفظ می‌شود.</small></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
                     <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
                     {selected && <div className="admin-memoryOrder"><span>جایگاه نمایش</span><strong>{String(position + 1).padStart(2, "0")}</strong><div><button type="button" onClick={() => move(-1)} disabled={position <= 0}>↑ بالاتر</button><button type="button" onClick={() => move(1)} disabled={position < 0 || position >= list.length - 1}>↓ پایین‌تر</button></div></div>}
                   </div>
