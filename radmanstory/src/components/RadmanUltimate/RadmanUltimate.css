@@ -3318,3 +3318,22 @@
 @keyframes reelDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 @keyframes reelDriftFromCurrent{from{transform:translate3d(var(--reel-start,0px),0,0)}to{transform:translate3d(calc(var(--reel-start,0px) - var(--reel-distance,50vw)),0,0)}}
 @media(max-width:850px){.u-reel__group{gap:12px;padding-left:20px}.u-reel__track{animation-duration:25s}}
+
+/* Memory Signal modal — 90% canvas / compact right gallery */
+.u-lightbox__shell{width:94vw;height:90vh;max-width:none;max-height:900px;grid-template-columns:minmax(0,9fr) minmax(86px,1fr);gap:14px;padding:14px;border-radius:22px}
+.u-lightbox__main{min-width:0;min-height:0;height:100%}
+.u-lightbox__image{height:100%;min-height:0;border-radius:16px}
+.u-lightbox__image img,.u-lightbox__image video{object-fit:contain!important}
+.u-lightbox__thumbs{gap:8px;padding:0 2px 0 0}
+.u-lightbox__thumbsTitle{position:sticky;top:0;z-index:3;display:flex;flex-direction:column;gap:5px;padding:4px 3px 10px;background:linear-gradient(#080b10 78%,transparent);text-align:right}
+.u-lightbox__thumbsTitle span{font-size:7px;letter-spacing:.18em;opacity:.42}
+.u-lightbox__thumbsTitle b{font-size:10px;font-weight:500;line-height:1.5;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u-lightbox__thumbs button{flex:0 0 92px}
+.u-lightbox__thumbs button.is-active{transform:translateX(-2px)}
+.u-lightbox__info{display:none}
+@media(max-width:760px){
+.u-lightbox__shell{width:96vw;height:90vh;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 92px}
+.u-lightbox__thumbs{flex-direction:row;overflow-x:auto;overflow-y:hidden}
+.u-lightbox__thumbsTitle{min-width:90px;position:relative;padding:3px}
+.u-lightbox__thumbs button{flex:0 0 82px;height:70px}
+}
