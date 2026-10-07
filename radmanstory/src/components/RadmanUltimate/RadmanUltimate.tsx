@@ -774,8 +774,17 @@ export default function RadmanUltimate() {
               setSelectedMemorySrc(memories[next]?.src || null);
             }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
-            <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
-            <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
+            <div className="u-lightbox__main">
+              <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
+              <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
+            </div>
+            <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
+              {memories.map((memory, idx) => (
+                <button type="button" key={memory.src} className={idx === selected ? "is-active" : ""} onClick={() => { setSelected(idx); setSelectedMemorySrc(memory.src); }} aria-label={memory.title}>
+                  <img src={asset(memory.src)} alt="" /><span>{String(idx + 1).padStart(2, "0")}</span>
+                </button>
+              ))}
+            </aside>
           </div>
           <button type="button" className="u-lightbox__next" onClick={(e) => {
               e.stopPropagation();
