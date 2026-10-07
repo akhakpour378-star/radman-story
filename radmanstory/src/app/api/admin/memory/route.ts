@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       await fs.writeFile(path.join(dir, filename), buffer);
     }
 
-    const src = `/memory/${section}/${typeDir}/${filename}`;
+    const src = `/memory/${section}/${filename}`;
     return NextResponse.json({
       image: isVideo ? undefined : src,
       video: isVideo ? src : undefined,
@@ -219,5 +219,42 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     const message = error instanceof Error ? error.message : "حذف رسانه انجام نشد.";
     return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+
+export async function PATCH(req: NextRequest) {
+  if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const body = await req.json().catch(() => ({}));
+    let raw = String(body?.src || "").trim();
+    let newName = String(body?.name || "").trim();
+    if (raw.startsWith("video:")) raw = raw.slice(6);
+    if (!raw.startsWith("/memory/")) raw = "/memory/" + raw.replace(/^memory\//, "");
+    raw = "/" + raw.replace(/^[/\\]+/, "").replace(/\\/g, "/");
+    try { raw = decodeURIComponent(raw); } catch {}
+    const parts = raw.slice("/memory/".length).split("/").filter(Boolean);
+    if (!parts.length || parts.some((part) => part === "." || part === ".." || part.includes("..") || /[\u0000-\u001F\u007F]/.test(part))) {
+      return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
+    }
+    if (!newName) return NextResponse.json({ error: "نام فایل را وارد کنید." }, { status: 400 });
+    newName = newName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-").replace(/^[-.]+|[-.]+$/g, "").slice(0, 90);
+    if (!newName) return NextResponse.json({ error: "نام فایل نامعتبر است." }, { status: 400 });
+    const oldName = parts[parts.length - 1];
+    const ext = path.extname(oldName).toLowerCase();
+    if (!path.extname(newName)) newName += ext;
+    if (path.extname(newName).toLowerCase() !== ext) return NextResponse.json({ error: "پسوند فایل نباید تغییر کند." }, { status: 400 });
+    const root = path.resolve(process.cwd(), "..", "memory");
+    const oldPath = path.resolve(root, ...parts);
+    const dir = path.dirname(oldPath);
+    if (!oldPath.startsWith(root + path.sep) || !dir.startsWith(root + path.sep)) return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
+    const newPath = path.join(dir, newName);
+    if (oldPath === newPath) return NextResponse.json({ ok: true, src: raw });
+    if (await fs.stat(newPath).then(() => true).catch(() => false)) return NextResponse.json({ error: "فایلی با این نام از قبل وجود دارد." }, { status: 409 });
+    await fs.rename(oldPath, newPath);
+    const src = "/memory/" + parts.slice(0, -1).concat(newName).join("/");
+    return NextResponse.json({ ok: true, src, filename: newName }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "ویرایش نام فایل انجام نشد." }, { status: 400 });
   }
 }
