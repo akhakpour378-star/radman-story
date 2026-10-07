@@ -626,37 +626,39 @@ export default function RadmanUltimate() {
           </div>
         </div>
       </section>
-      <section className="u-reel" aria-label="Selected memories">
+      <section
+        className="u-reel"
+        aria-label="Selected memories"
+        onPointerUp={(e) => {
+          const target = (e.target as HTMLElement).closest<HTMLButtonElement>(".u-reel__item");
+          if (!target || Math.abs(e.clientX - reelDrag.current.startX) >= 8) return;
+          const media = target.dataset.media;
+          const video = target.dataset.video === "true";
+          if (!media) return;
+          e.preventDefault();
+          e.stopPropagation();
+          if (video) setSelectedVideo(media);
+          else {
+            setSelectedMemorySrc(media);
+            const idx = memories.findIndex((m) => m.src === media);
+            setSelected(idx >= 0 ? idx : null);
+          }
+        }}
+      >
         <div className="u-reel__track">
           {(heroConfig.memorySignal || []).map((src, i) => {
             const isVideo = src.startsWith("video:");
             const media = isVideo ? src.slice(6) : src;
             const memoryIndex = memories.findIndex((m) => m.src === media);
-            const openMedia = () => {
-              if (isVideo) {
-                setSelectedVideo(media);
-                return;
-              }
-              setSelectedMemorySrc(media);
-              setSelected(memoryIndex >= 0 ? memoryIndex : null);
-            };
-            const openOnPointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
-              // The reel owns the pointer for dragging. A short press must still open the modal.
-              if (Math.abs(e.clientX - reelDrag.current.startX) < 8) {
-                e.preventDefault();
-                e.stopPropagation();
-                openMedia();
-              }
-            };
             return isVideo ? (
               <button type="button" className="u-reel__item u-reel__item--video" key={src}
-                onPointerUp={openOnPointerUp} aria-label="Play memory video">
+                data-media={media} data-video="true" aria-label="Play memory video">
                 <video src={asset(media)} muted playsInline preload="metadata" />
                 <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
               </button>
             ) : (
               <button type="button" className="u-reel__item" key={src}
-                onPointerUp={openOnPointerUp} aria-label={memories[memoryIndex]?.title || "Memory"}>
+                data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"}>
                 <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
               </button>
             );
