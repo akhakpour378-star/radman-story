@@ -182,14 +182,35 @@ export default function AdminPage() {
         if (heroRes.ok) {
           heroData = { ...defaults, ...(await heroRes.json()) };
           heroData.memorySignal = Array.from(new Set(heroData.memorySignal || []));
-          setConfig(heroData); setSavedConfig(heroData);
         }
         if (mediaRes.ok) {
           const media = await mediaRes.json();
-          setImages(Array.isArray(media.memoryImages) ? media.memoryImages : (Array.isArray(media.images) ? media.images : []));
-          setVideos(Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []));
+          const memoryImages = Array.isArray(media.memoryImages) ? media.memoryImages : (Array.isArray(media.images) ? media.images : []);
+          const memoryVideos = Array.isArray(media.memoryVideos) ? media.memoryVideos : (Array.isArray(media.videos) ? media.videos : []);
+          const availableMemory = new Set<string>([
+            ...memoryImages,
+            ...memoryVideos.map((v: string) => "video:" + v),
+          ]);
+          const normalizedSignal = (heroData.memorySignal || []).filter((key) => availableMemory.has(key));
+          const cleanedHero = { ...heroData, memorySignal: normalizedSignal };
+          setConfig(cleanedHero);
+          setSavedConfig(cleanedHero);
+          setImages(memoryImages);
+          setVideos(memoryVideos);
           setHeroImages(Array.isArray(media.heroImages) ? media.heroImages : []);
           setAllMedia([...(Array.isArray(media.images) ? media.images : []), ...(Array.isArray(media.videos) ? media.videos.map((v: string) => "video:" + v) : [])]);
+
+          // پاک‌سازی ارجاع‌های قدیمی که فایل فیزیکی آن‌ها دیگر وجود ندارد.
+          if (normalizedSignal.length !== (heroData.memorySignal || []).length) {
+            void fetch("/api/admin/hero", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(cleanedHero),
+            });
+          }
+        } else {
+          setConfig(heroData);
+          setSavedConfig(heroData);
         }
         if (trashRes.ok) {
           const trash = await trashRes.json();
@@ -358,14 +379,20 @@ export default function AdminPage() {
     if (!window.confirm(`آیا از حذف ${selectedMemoryKeys.length} رسانه انتخاب‌شده مطمئن هستید؟`)) return;
     setError(""); setSaved(false);
     try {
-      const items = [...images.map(src => ({ key: src, src, type: "image" as const })), ...videos.map(src => ({ key: "video:" + src, src, type: "video" as const }))].filter(x => selectedMemoryKeys.includes(x.key));
+      // انتخاب‌ها را مستقیماً از Memory Signal می‌گیریم؛ حتی اگر فایل فیزیکی قبلاً حذف شده باشد.
+      // API در این حالت آن را از سطل زباله صرفاً به‌عنوان فایل موجود منتقل نمی‌کند،
+      // اما ارجاع قدیمی از تنظیمات حذف می‌شود و کل عملیات موفق تلقی می‌شود.
+      const items = selectedMemoryKeys.map((key) => {
+        const isVideo = key.startsWith("video:");
+        return { key, src: isVideo ? key.slice(6) : key, type: isVideo ? ("video" as const) : ("image" as const) };
+      });
       const r = await fetch("/api/admin/memory", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ srcs: items.map(item => item.src) }),
       });
       const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data?.error || "حذف یکی از رسانه‌ها انجام نشد.");
+      if (!r.ok) throw new Error(data?.error || "حذف رسانه‌ها انجام نشد.");
       const keys = new Set(items.map(x => x.key));
       const next = { ...config, memorySignal: Array.from(new Set(config.memorySignal || [])).filter(x => !keys.has(x)) };
       const saveRes = await fetch("/api/admin/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
@@ -373,8 +400,10 @@ export default function AdminPage() {
       if (!saveRes.ok) throw new Error(saveData?.error || "اعمال حذف‌ها روی سایت انجام نشد.");
       setImages(current => current.filter(x => !items.some(i => i.type === "image" && i.src === x)));
       setVideos(current => current.filter(x => !items.some(i => i.type === "video" && i.src === x)));
-      setConfig({ ...defaults, ...saveData }); setSavedConfig({ ...defaults, ...saveData });
+      setConfig({ ...defaults, ...saveData, memorySignal: Array.from(new Set(saveData?.memorySignal || [])) });
+      setSavedConfig({ ...defaults, ...saveData, memorySignal: Array.from(new Set(saveData?.memorySignal || [])) });
       setSelectedMemoryKeys([]); setEditingMemory(null); goToSection("memory");
+      await refreshTrash();
     } catch (e) { setError(e instanceof Error ? e.message : "حذف گروهی انجام نشد."); }
   };
 
