@@ -109,7 +109,7 @@ export default function RadmanUltimate() {
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   const [storySlide, setStorySlide] = useState(0);
   const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
   const storySlides = heroConfig.story?.length ? heroConfig.story : defaultStorySlides;
@@ -252,6 +252,10 @@ export default function RadmanUltimate() {
     };
   }, []);
 
+  const selectedSignalEntry = selectedMemorySrc
+    ? (heroConfig.memorySignal || []).find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
+    : null;
+  const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:"));
   const selectedMemory = selectedMemorySrc
     ? memories.find((m) => m.src === selectedMemorySrc) || {
         src: selectedMemorySrc,
@@ -449,13 +453,9 @@ export default function RadmanUltimate() {
       const finalOffset = drag.lastOffset;
 
       if (wasClick && pressedMedia) {
-        if (pressedVideo) {
-          setSelectedVideo(pressedMedia);
-        } else {
-          setSelectedMemorySrc(pressedMedia);
-          const idx = memories.findIndex((m) => m.src === pressedMedia);
-          setSelected(idx >= 0 ? idx : null);
-        }
+        setSelectedMemorySrc(pressedMedia);
+        const idx = memories.findIndex((m) => m.src === pressedMedia);
+        setSelected(idx >= 0 ? idx : null);
       }
       drag.pressedMedia = null;
       drag.pressedVideo = false;
@@ -492,17 +492,17 @@ export default function RadmanUltimate() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
-      if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); setSelectedVideo(null); }
+      if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); }
       if (e.key === "ArrowRight") setSelected((v) => (v === null ? 0 : (v + 1) % memories.length));
       if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
     };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = (selected !== null || selectedVideo !== null) ? "hidden" : "";
+    document.body.style.overflow = (selected !== null || selectedMemorySrc !== null) ? "hidden" : "";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [selected, selectedVideo, memories.length]);
+  }, [selected, selectedMemorySrc, memories.length]);
 
   const toggleSound = () => {
     if (!audio.current) {
@@ -776,25 +776,33 @@ export default function RadmanUltimate() {
             }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
-              <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
+              <div className="u-lightbox__image">
+                {selectedIsVideo
+                  ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
+                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} />}
+              </div>
             </div>
             <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
               <div className="u-lightbox__thumbsTitle">
                 <span>MEMORY SIGNAL</span>
                 <b>{selectedMemory.title}</b>
               </div>
-              {heroConfig.memorySignal.map((entry, idx) => {
-                const src = entry.startsWith("video:") ? entry.slice(6) : entry;
+              {(heroConfig.memorySignal || []).map((entry, idx) => {
+                const isVideo = entry.startsWith("video:");
+                const src = isVideo ? entry.slice(6) : entry;
                 const memory = memories.find((item) => item.src === src);
-                if (!memory) return null;
                 const active = src === selectedMemory.src;
                 return (
-                  <button type="button" key={src} className={active ? "is-active" : ""} onClick={(e) => {
+                  <button type="button" key={entry} className={active ? "is-active" : ""} onClick={(e) => {
                     e.stopPropagation();
                     setSelected(idx);
                     setSelectedMemorySrc(src);
-                  }} aria-label={memory.title}>
-                    <img src={asset(src)} alt="" /><span>{String(idx + 1).padStart(2, "0")}</span>
+                  }} aria-label={memory?.title || "Memory Signal"}>
+                    {isVideo
+                      ? <video src={asset(src)} muted playsInline preload="metadata" />
+                      : <img src={asset(src)} alt="" />}
+                    {isVideo && <i className="u-lightbox__thumbPlay"><Play size={12} fill="currentColor" /></i>}
+                    <span>{String(idx + 1).padStart(2, "0")}</span>
                   </button>
                 );
               })}
@@ -810,18 +818,7 @@ export default function RadmanUltimate() {
             }} aria-label="Next"><ArrowRight /></button>
         </div>
       )}
-      {selectedVideo && (
-        <div className="u-lightbox u-lightbox--video" role="dialog" aria-modal="true" aria-label="Memory video" onClick={() => setSelectedVideo(null)}>
-          <button className="u-lightbox__close" onClick={() => setSelectedVideo(null)} aria-label="Close"><X /></button>
-          <div className="u-lightbox__videoShell" onClick={(e) => e.stopPropagation()}>
-            <div className="u-lightbox__videoFrame">
-              <video src={asset(selectedVideo)} controls autoPlay playsInline preload="metadata" />
-              <span>ORIGINAL MEMORY / VIDEO</span>
-            </div>
-            <div className="u-lightbox__videoMeta"><span>RADMAN / MOTION ARCHIVE</span><b>Memory in motion</b></div>
-          </div>
-        </div>
-      )}
+
     </main>
   );
 }
