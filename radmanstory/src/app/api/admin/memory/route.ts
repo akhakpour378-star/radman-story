@@ -82,28 +82,38 @@ export async function DELETE(req: NextRequest) {
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const normalizeSrc = (value: unknown) => {
-    let src = typeof value === "string" ? value.trim() : "";
-    if (src.startsWith("video:")) src = src.slice(6);
-    src = "/" + src.replace(/^[/\\]+/, "").replace(/\\/g, "/");
-    if (!src.startsWith("/memory/")) throw new Error("مسیر رسانه نامعتبر است.");
+    let raw = typeof value === "string" ? value.trim() : "";
+    if (raw.startsWith("video:")) raw = raw.slice(6);
+    if (!raw) throw new Error("رسانه‌ای برای حذف انتخاب نشده است.");
 
-    const relative = src.slice("/memory/".length);
-    const parts = relative.split("/").filter(Boolean);
-    if (
-      parts.length < 2 ||
-      parts.length > 20 ||
-      parts.some((part) => !part || part === "." || part === ".." || /[\u0000-\u001F\u007F]/.test(part))
-    ) {
-      throw new Error("نام فایل نامعتبر است.");
+    // بعضی رکوردهای قدیمی ممکن است URL کامل یا URL-encoded باشند.
+    try {
+      if (/^https?:\/\//i.test(raw)) raw = new URL(raw).pathname;
+    } catch {}
+    raw = raw.split(/[?#]/, 1)[0];
+    try { raw = decodeURIComponent(raw); } catch {}
+    raw = "/" + raw.replace(/^[/\\]+/, "").replace(/\\/g, "/");
+
+    if (!raw.startsWith("/memory/")) {
+      raw = "/memory/" + raw.replace(/^memory\//, "");
     }
 
-    const fileName = parts[parts.length - 1];
-    if (!fileName) throw new Error("نام فایل نامعتبر است.");
-    return { src, relative, parts };
+    const relative = raw.slice("/memory/".length);
+    const parts = relative.split("/").filter(Boolean);
+    if (!parts.length || parts.length > 30 || parts.some((part) =>
+      part === "." ||
+      part === ".." ||
+      part.includes("..") ||
+      /[\u0000-\u001F\u007F]/.test(part)
+    )) {
+      throw new Error("مسیر رسانه نامعتبر است.");
+    }
+
+    return { src: raw, relative, parts, fileName: parts[parts.length - 1] };
   };
 
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const requested = Array.isArray(body?.srcs) ? body.srcs : [body?.src];
     const values = requested.filter((value: unknown) => typeof value === "string" && value.trim());
     if (!values.length) return NextResponse.json({ error: "رسانه‌ای برای حذف انتخاب نشده است." }, { status: 400 });
@@ -112,44 +122,90 @@ export async function DELETE(req: NextRequest) {
     const roots = [
       path.join(projectRoot, "memory"),
       path.join(projectRoot, "public", "memory"),
-      path.join(path.resolve(projectRoot, ".."), "memory"),
-    ];
+      path.join(projectRoot, "..", "memory"),
+    ].map((root) => path.resolve(root));
 
-    const trashRoot = path.join(path.resolve(projectRoot, ".."), ".radman-trash");
+    const trashRoot = path.resolve(projectRoot, "..", ".radman-trash");
     await fs.mkdir(trashRoot, { recursive: true });
 
     const moved: Array<{ src: string; trashId: string; original: string }> = [];
     const missing: string[] = [];
 
-    for (const value of values) {
-      const { src, relative, parts } = normalizeSrc(value);
-      const candidates = roots.map((root) => path.resolve(root, ...parts));
-      let found = "";
-      for (const candidate of candidates) {
+    const findFile = async (parts: string[], fileName: string) => {
+      // ابتدا مسیر دقیق را امتحان می‌کنیم.
+      for (const root of roots) {
+        const candidate = path.resolve(root, ...parts);
+        if (!candidate.startsWith(root + path.sep)) continue;
         try {
-          if ((await fs.stat(candidate)).isFile()) { found = candidate; break; }
+          if ((await fs.stat(candidate)).isFile()) return { candidate, root };
         } catch {}
       }
 
+      // برای فایل‌های قدیمی که مسیر پوشه‌شان تغییر کرده، با نام فایل جستجو می‌کنیم.
+      const walk = async (dir: string): Promise<string> => {
+        let entries: Array<{ name: string; isDirectory(): boolean; isFile(): boolean }> = [];
+        try { entries = await fs.readdir(dir, { withFileTypes: true }); } catch { return ""; }
+        for (const entry of entries) {
+          if (entry.name === ".radman-trash") continue;
+          const full = path.join(dir, entry.name);
+          if (entry.isFile() && entry.name.toLowerCase() === fileName.toLowerCase()) return full;
+          if (entry.isDirectory()) {
+            const hit = await walk(full);
+            if (hit) return hit;
+          }
+        }
+        return "";
+      };
+
+      for (const root of roots) {
+        const hit = await walk(root);
+        if (hit) return { candidate: hit, root };
+      }
+      return null;
+    };
+
+    for (const value of values) {
+      let normalized: ReturnType<typeof normalizeSrc>;
+      try {
+        normalized = normalizeSrc(value);
+      } catch (error) {
+        // یک رکورد خراب نباید حذف دسته‌جمعی را متوقف کند.
+        missing.push(String(value));
+        continue;
+      }
+
+      const found = await findFile(normalized.parts, normalized.fileName);
       if (!found) {
-        missing.push(src);
+        missing.push(normalized.src);
         continue;
       }
 
       const stamp = Date.now().toString(36);
       const random = crypto.randomBytes(5).toString("hex");
       const trashId = stamp + "-" + random;
-      const trashFile = path.join(trashRoot, trashId + path.extname(found));
-      await fs.rename(found, trashFile);
-      moved.push({ src, trashId, original: relative });
+      const ext = path.extname(found.candidate) || path.extname(normalized.fileName);
+      const trashFile = path.join(trashRoot, trashId + ext);
+      await fs.rename(found.candidate, trashFile);
+      const original = path.relative(found.root, found.candidate).replace(/\\/g, "/");
+      moved.push({ src: normalized.src, trashId, original });
     }
 
     const manifestPath = path.join(trashRoot, "index.json");
     let manifest: Array<{ id:string; src:string; original:string; trashedAt:string; file:string }> = [];
-    try { manifest = JSON.parse(await fs.readFile(manifestPath, "utf8")); } catch {}
+    try {
+      const parsed = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+      if (Array.isArray(parsed)) manifest = parsed;
+    } catch {}
+
     const now = new Date().toISOString();
     for (const item of moved) {
-      manifest.unshift({ id:item.trashId, src:item.src, original:item.original, trashedAt:now, file:item.trashId + path.extname(item.original) });
+      manifest.unshift({
+        id: item.trashId,
+        src: item.src,
+        original: item.original,
+        trashedAt: now,
+        file: item.trashId + (path.extname(item.original) || ""),
+      });
     }
     await fs.writeFile(manifestPath, JSON.stringify(manifest.slice(0, 500), null, 2) + "\n", "utf8");
 
