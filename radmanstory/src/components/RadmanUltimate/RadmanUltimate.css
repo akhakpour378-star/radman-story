@@ -3368,3 +3368,65 @@
   .u-lightbox__thumbs{flex-direction:row;overflow-x:auto;overflow-y:hidden}
   .u-lightbox__thumbs button{flex:0 0 76px!important;height:62px!important}
 }
+
+/* FINAL FIX — Memory Signal cards touch the next cycle seamlessly */
+.u-reel__track{
+  display:flex!important;
+  gap:0!important;
+  width:max-content!important;
+  padding-left:7vw!important;
+  padding-right:0!important;
+  animation-name:reelDrift!important;
+  animation-duration:35s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+.u-reel__group{
+  display:flex!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  gap:22px!important;
+  padding-left:0!important;
+  padding-right:22px!important;
+  margin:0!important;
+}
+@keyframes reelDrift{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(calc(-1 * var(--reel-distance)),0,0)}
+}
+
+/* FINAL FIX — show the complete original media, never crop/clip it */
+.u-lightbox__image{
+  min-width:0!important;
+  min-height:0!important;
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  background:#020407!important;
+}
+.u-lightbox__image img,
+.u-lightbox__image video{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  flex:0 1 auto!important;
+}
+.u-lightbox__main{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+@media(max-width:850px){
+  .u-reel__group{gap:12px!important;padding-right:12px!important}
+  .u-reel__track{padding-left:20px!important}
+}
