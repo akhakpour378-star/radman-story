@@ -79,7 +79,6 @@ export default function AdminPage() {
   const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
   const [trashItems, setTrashItems] = useState<TrashItem[]>([]);
   const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
-  const adminUrlReady = useRef(false);
 
   const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library" | "trash") => {
     setActiveSection(section);
@@ -117,42 +116,21 @@ export default function AdminPage() {
   const restoreAdminRoute = () => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const urlSection = params.get("section");
-      const sessionSection = sessionStorage.getItem("radman-admin-section");
-      const section = urlSection || sessionSection;
+      const section = params.get("section");
       if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
-      const story = params.get("story") ?? sessionStorage.getItem("radman-admin-edit-story");
+      const story = params.get("story");
       if (story !== null && story !== "") {
         const n = Number(story);
         if (Number.isInteger(n) && n >= 0) setEditingStory(n);
       }
-      const memory = params.get("memory") ?? sessionStorage.getItem("radman-admin-edit-memory");
+      const memory = params.get("memory");
       if (memory) setEditingMemory(memory);
     } catch {}
   };
 
   useEffect(() => {
     restoreAdminRoute();
-    adminUrlReady.current = true;
   }, []);
-
-  useEffect(() => {
-    try { sessionStorage.setItem("radman-admin-section", activeSection); } catch {}
-  }, [activeSection]);
-
-  useEffect(() => {
-    try {
-      if (editingStory === null) sessionStorage.removeItem("radman-admin-edit-story");
-      else sessionStorage.setItem("radman-admin-edit-story", String(editingStory));
-    } catch {}
-  }, [editingStory]);
-
-  useEffect(() => {
-    try {
-      if (editingMemory === null) sessionStorage.removeItem("radman-admin-edit-memory");
-      else sessionStorage.setItem("radman-admin-edit-memory", editingMemory);
-    } catch {}
-  }, [editingMemory]);
 
   useEffect(() => {
     let alive = true;
