@@ -92,8 +92,7 @@ export async function DELETE(req: NextRequest) {
     if (
       parts.length < 2 ||
       parts.length > 20 ||
-      parts.some((part) => part === "." || part === ".." || part.includes("\\0") || part.includes("..")) ||
-      parts.some((part) => !/^[a-zA-Z0-9._-]+$/.test(part))
+      parts.some((part) => !part || part === "." || part === ".." || /[\u0000-\u001F\u007F]/.test(part))
     ) {
       throw new Error("نام فایل نامعتبر است.");
     }
