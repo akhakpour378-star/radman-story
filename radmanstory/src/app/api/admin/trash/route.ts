@@ -36,7 +36,7 @@ async function writeManifest(items: TrashItem[]) {
 function safeOriginal(value: string) {
   const clean = String(value || "").replace(/\\/g, "/").replace(/^\/+/, "");
   const parts = clean.split("/").filter(Boolean);
-  if (!parts.length || parts.length > 20 || parts.some(p => p === "." || p === ".." || p.includes("..") || !/^[a-zA-Z0-9._-]+$/.test(p))) {
+  if (!parts.length || parts.length > 20 || parts.some(p => !p || p === "." || p === ".." || /[\u0000-\u001F\u007F]/.test(p))) {
     throw new Error("مسیر بازیابی نامعتبر است.");
   }
   return parts;
