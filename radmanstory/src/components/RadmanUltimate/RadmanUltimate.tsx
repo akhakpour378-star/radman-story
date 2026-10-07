@@ -470,7 +470,7 @@ export default function RadmanUltimate() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
-      if (e.key === "Escape") { setSelected(null); setSelectedVideo(null); }
+      if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); setSelectedVideo(null); }
       if (e.key === "ArrowRight") setSelected((v) => (v === null ? 0 : (v + 1) % memories.length));
       if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
     };
@@ -632,16 +632,31 @@ export default function RadmanUltimate() {
             const isVideo = src.startsWith("video:");
             const media = isVideo ? src.slice(6) : src;
             const memoryIndex = memories.findIndex((m) => m.src === media);
+            const openMedia = () => {
+              if (isVideo) {
+                setSelectedVideo(media);
+                return;
+              }
+              setSelectedMemorySrc(media);
+              setSelected(memoryIndex >= 0 ? memoryIndex : null);
+            };
+            const openOnPointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+              // The reel owns the pointer for dragging. A short press must still open the modal.
+              if (Math.abs(e.clientX - reelDrag.current.startX) < 8) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMedia();
+              }
+            };
             return isVideo ? (
-              <button className="u-reel__item u-reel__item--video" key={src} onClick={() => setSelectedVideo(media)} aria-label="Play memory video">
+              <button type="button" className="u-reel__item u-reel__item--video" key={src}
+                onPointerUp={openOnPointerUp} aria-label="Play memory video">
                 <video src={asset(media)} muted playsInline preload="metadata" />
                 <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
               </button>
             ) : (
-              <button className="u-reel__item" key={src} onClick={() => {
-                  setSelectedMemorySrc(media);
-                  if (memoryIndex >= 0) setSelected(memoryIndex);
-                }} aria-label={memories[memoryIndex]?.title || "Memory"}>
+              <button type="button" className="u-reel__item" key={src}
+                onPointerUp={openOnPointerUp} aria-label={memories[memoryIndex]?.title || "Memory"}>
                 <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
               </button>
             );
