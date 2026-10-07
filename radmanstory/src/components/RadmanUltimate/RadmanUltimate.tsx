@@ -108,6 +108,7 @@ export default function RadmanUltimate() {
     persianFont: "iranyekan",
   });
   const [selected, setSelected] = useState<number | null>(null);
+  const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [storySlide, setStorySlide] = useState(0);
@@ -252,7 +253,14 @@ export default function RadmanUltimate() {
     };
   }, []);
 
-  const selectedMemory = selected === null ? null : memories[selected];
+  const selectedMemory = selectedMemorySrc
+    ? memories.find((m) => m.src === selectedMemorySrc) || {
+        src: selectedMemorySrc,
+        no: "—",
+        title: prettyTitle(selectedMemorySrc, 0),
+        tag: "MEMORY SIGNAL",
+      }
+    : selected === null ? null : memories[selected];
 
   useLayoutEffect(() => {
     const el = root.current;
@@ -630,7 +638,10 @@ export default function RadmanUltimate() {
                 <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
               </button>
             ) : (
-              <button className="u-reel__item" key={src} onClick={() => memoryIndex >= 0 && setSelected(memoryIndex)} aria-label={memories[memoryIndex]?.title || "Memory"}>
+              <button className="u-reel__item" key={src} onClick={() => {
+                  setSelectedMemorySrc(media);
+                  if (memoryIndex >= 0) setSelected(memoryIndex);
+                }} aria-label={memories[memoryIndex]?.title || "Memory"}>
                 <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
               </button>
             );
@@ -725,14 +736,22 @@ export default function RadmanUltimate() {
       <footer className="u-footer"><b>RADMAN<span>.</span></b><span>VISUAL BIOGRAPHY / 2026</span><small>FOREVER, MY SON.</small></footer>
 
       {selectedMemory && (
-        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => setSelected(null)}>
-          <button className="u-lightbox__close" onClick={() => setSelected(null)} aria-label="Close"><X /></button>
-          <button className="u-lightbox__prev" onClick={() => setSelected((selected! - 1 + memories.length) % memories.length)} aria-label="Previous"><ArrowLeft /></button>
+        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => { setSelected(null); setSelectedMemorySrc(null); }}>
+          <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
+          <button className="u-lightbox__prev" onClick={() => {
+              const next = (selected === null ? 0 : selected - 1 + memories.length) % memories.length;
+              setSelected(next);
+              setSelectedMemorySrc(memories[next]?.src || null);
+            }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
             <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
           </div>
-          <button className="u-lightbox__next" onClick={() => setSelected((selected! + 1) % memories.length)} aria-label="Next"><ArrowRight /></button>
+          <button className="u-lightbox__next" onClick={() => {
+              const next = (selected === null ? 0 : selected + 1) % memories.length;
+              setSelected(next);
+              setSelectedMemorySrc(memories[next]?.src || null);
+            }} aria-label="Next"><ArrowRight /></button>
         </div>
       )}
       {selectedVideo && (
