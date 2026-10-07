@@ -312,6 +312,29 @@ export default function AdminPage() {
     }
   };
 
+  const renameMemoryMedia = async (item: { key: string; src: string; type: "image" | "video" }, name: string) => {
+    const clean = name.trim();
+    if (!clean) { setError("نام فایل را وارد کنید."); return; }
+    setError(""); setSaved(false);
+    try {
+      const r = await fetch("/api/admin/memory", { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify({src:item.src,name:clean}) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "ویرایش نام فایل انجام نشد.");
+      const nextSrc = String(data.src);
+      const oldKey = item.key;
+      const nextKey = item.type === "video" ? "video:" + nextSrc : nextSrc;
+      const next = { ...config, memorySignal: (config.memorySignal || []).map(x => x === oldKey ? nextKey : x) };
+      const saveRes = await fetch("/api/admin/hero", { method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(next) });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData?.error || "نام جدید روی سایت اعمال نشد.");
+      const persisted = { ...defaults, ...saveData, memorySignal:Array.from(new Set(saveData?.memorySignal || [])) };
+      setConfig(persisted); setSavedConfig(persisted);
+      setSelectedMemoryKeys(current => current.map(x => x === oldKey ? nextKey : x));
+      setEditingMemory(nextKey);
+      await new Promise<void>(resolve => setTimeout(resolve, 0));
+    } catch(e) { setError(e instanceof Error ? e.message : "ویرایش نام فایل انجام نشد."); }
+  };
+
   const replaceMemoryImage = async (item: { key: string; src: string; type: "image" | "video" }, file: File) => {
     if (item.type !== "image") return;
     if (!file.type.startsWith("image/")) { setError("فقط فایل تصویری قابل آپلود است."); return; }
@@ -658,7 +681,7 @@ export default function AdminPage() {
               return <section className="admin-memoryEditPanel">
                 <div className="admin-memoryEditPanel__head"><div><span>EDIT MEDIA / {item.type.toUpperCase()}</span><h2>ویرایش رسانه</h2></div><div className="admin-memoryEditPanel__headActions"><button type="button" className="admin-memoryDeleteButton admin-memoryDeleteButton--panel" onClick={() => void deleteMemoryMedia(item)}><Trash2 size={14}/> حذف رسانه</button><button type="button" onClick={() => { setEditingMemory(null); goToSection("memory"); }}>بستن</button></div></div>
                 <div className="admin-memoryEditPanel__body"><div className="admin-memoryEditPanel__visual">{item.type === "video" ? <video src={mediaUrl(item.src)} controls muted playsInline /> : <img src={mediaUrl(item.src)} alt="" />}{item.type === "video" && <i>PLAY</i>}</div>
-                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input value={item.src.replace("/memory/", "")} readOnly /></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
+                  <div className="admin-memoryEditPanel__fields"><label className="admin-field"><span>نام فایل</span><input key={item.key} defaultValue={item.src.split("/").pop() || ""} onBlur={(e) => { const value=e.currentTarget.value.trim(); const currentName=item.src.split("/").pop() || ""; if(value && value !== currentName) void renameMemoryMedia(item, value); }} /><small>نام فایل قابل ویرایش است؛ پسوند فایل حفظ می‌شود.</small></label>{item.type === "image" && <label className="admin-uploadMini admin-memoryEditUpload"><Upload size={13}/> آپلود تصویر جدید<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f=e.target.files?.[0]; if(f) void replaceMemoryImage(item,f); e.currentTarget.value=""; }}/></label>}<div className="admin-memoryEditPanel__type"><span>نوع رسانه</span><strong>{item.type === "video" ? "VIDEO / ویدیو" : "IMAGE / تصویر"}</strong></div>
                     <button type="button" className={`admin-memoryToggle ${selected ? "is-active" : ""}`} onClick={toggle}><i>{selected ? "✓" : "+"}</i><div><strong>{selected ? "در Memory Signal قرار دارد" : "افزودن به Memory Signal"}</strong><small>{selected ? "این رسانه در سایت عمومی نمایش داده می‌شود." : "برای نمایش این رسانه در بخش پایین Story کلیک کن."}</small></div></button>
                     {selected && <div className="admin-memoryOrder"><span>جایگاه نمایش</span><strong>{String(position + 1).padStart(2, "0")}</strong><div><button type="button" onClick={() => move(-1)} disabled={position <= 0}>↑ بالاتر</button><button type="button" onClick={() => move(1)} disabled={position < 0 || position >= list.length - 1}>↓ پایین‌تر</button></div></div>}
                   </div>
