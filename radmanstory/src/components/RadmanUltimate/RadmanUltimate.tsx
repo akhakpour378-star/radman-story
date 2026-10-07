@@ -92,6 +92,8 @@ const prettyTitle = (file: string, index: number) => {
 export default function RadmanUltimate() {
   const root = useRef<HTMLElement>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
+  const reelDrag = useRef({ active: false, startX: 0, offset: 0, lastOffset: 0 });
+  const reelManual = useRef(false);
   const [sound, setSound] = useState(false);
   const [memories, setMemories] = useState<Memory[]>(fallback);
   const [heroConfig, setHeroConfig] = useState<HeroConfig>({
@@ -386,6 +388,69 @@ export default function RadmanUltimate() {
       storyMedia.forEach((el) => { el.removeEventListener("mousemove", storyMove); el.removeEventListener("mouseleave", storyReset); });
     };
   }, [memories.length]);
+
+  useEffect(() => {
+    const reel = document.querySelector<HTMLElement>(".u-reel");
+    const track = reel?.querySelector<HTMLElement>(".u-reel__track");
+    if (!reel || !track) return;
+
+    const drag = reelDrag.current;
+    const getOffset = () => {
+      const transform = getComputedStyle(track).transform;
+      if (!transform || transform === "none") return drag.lastOffset;
+      const match = transform.match(/matrix\(([^)]+)\)/);
+      if (!match) return drag.lastOffset;
+      const values = match[1].split(",").map(Number);
+      return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
+    };
+
+    const pause = () => {
+      if (!drag.active && !reelManual.current) track.style.animationPlayState = "paused";
+    };
+    const resume = () => {
+      if (!drag.active && !reelManual.current) track.style.animationPlayState = "running";
+    };
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      drag.active = true;
+      drag.startX = e.clientX;
+      drag.offset = getOffset();
+      drag.lastOffset = drag.offset;
+      reelManual.current = true;
+      track.style.animation = "none";
+      track.style.transform = `translate3d(${drag.offset}px,0,0)`;
+      reel.setPointerCapture?.(e.pointerId);
+      reel.classList.add("is-dragging");
+    };
+    const move = (e: PointerEvent) => {
+      if (!drag.active) return;
+      const next = drag.offset + (e.clientX - drag.startX);
+      drag.lastOffset = next;
+      track.style.transform = `translate3d(${next}px,0,0)`;
+    };
+    const up = (e: PointerEvent) => {
+      if (!drag.active) return;
+      drag.active = false;
+      drag.lastOffset = drag.lastOffset;
+      reel.releasePointerCapture?.(e.pointerId);
+      reel.classList.remove("is-dragging");
+    };
+
+    reel.addEventListener("mouseenter", pause);
+    reel.addEventListener("mouseleave", resume);
+    reel.addEventListener("pointerdown", down);
+    reel.addEventListener("pointermove", move);
+    reel.addEventListener("pointerup", up);
+    reel.addEventListener("pointercancel", up);
+    return () => {
+      reel.removeEventListener("mouseenter", pause);
+      reel.removeEventListener("mouseleave", resume);
+      reel.removeEventListener("pointerdown", down);
+      reel.removeEventListener("pointermove", move);
+      reel.removeEventListener("pointerup", up);
+      reel.removeEventListener("pointercancel", up);
+    };
+  }, [heroConfig.memorySignal?.length]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
