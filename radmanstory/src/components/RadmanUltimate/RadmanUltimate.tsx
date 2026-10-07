@@ -766,8 +766,10 @@ export default function RadmanUltimate() {
       {selectedMemory && (
         <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => { setSelected(null); setSelectedMemorySrc(null); }}>
           <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
-          <button className="u-lightbox__prev" onClick={() => {
-              const next = (selected === null ? 0 : selected - 1 + memories.length) % memories.length;
+          <button type="button" className="u-lightbox__prev" onClick={(e) => {
+              e.stopPropagation();
+              const current = selected === null ? 0 : selected;
+              const next = (current - 1 + memories.length) % memories.length;
               setSelected(next);
               setSelectedMemorySrc(memories[next]?.src || null);
             }} aria-label="Previous"><ArrowLeft /></button>
@@ -775,8 +777,10 @@ export default function RadmanUltimate() {
             <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
             <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
           </div>
-          <button className="u-lightbox__next" onClick={() => {
-              const next = (selected === null ? 0 : selected + 1) % memories.length;
+          <button type="button" className="u-lightbox__next" onClick={(e) => {
+              e.stopPropagation();
+              const current = selected === null ? 0 : selected;
+              const next = (current + 1) % memories.length;
               setSelected(next);
               setSelectedMemorySrc(memories[next]?.src || null);
             }} aria-label="Next"><ArrowRight /></button>
