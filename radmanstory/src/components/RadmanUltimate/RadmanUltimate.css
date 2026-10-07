@@ -3311,3 +3311,10 @@
 .u-lightbox__prev,.u-lightbox__next{z-index:20;width:44px;height:44px;border-radius:50%;border:1px solid #ffffff25;background:#080b10d9;color:#fff;backdrop-filter:blur(14px);box-shadow:0 12px 30px #0008;transition:transform .25s ease,background .25s ease}
 .u-lightbox__prev:hover,.u-lightbox__next:hover{transform:scale(1.08);background:#17202bd9}
 @media(max-width:760px){.u-lightbox__shell{height:min(88vh,760px);grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 92px;padding:10px;gap:10px}.u-lightbox__thumbs{flex-direction:row;overflow-x:auto;overflow-y:hidden}.u-lightbox__thumbs button{flex:0 0 92px;height:72px}.u-lightbox__info small{display:none}.u-lightbox__prev,.u-lightbox__next{width:38px;height:38px}}
+
+/* Seamless Memory Signal loop: two identical groups */
+.u-reel__track{display:flex;width:max-content;gap:0;padding-left:0;animation:reelDrift 35s linear infinite;will-change:transform}
+.u-reel__group{display:flex;align-items:flex-start;gap:22px;width:max-content;flex:0 0 auto;padding-left:7vw}
+@keyframes reelDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes reelDriftFromCurrent{from{transform:translate3d(var(--reel-start,0px),0,0)}to{transform:translate3d(calc(var(--reel-start,0px) - var(--reel-distance,50vw)),0,0)}}
+@media(max-width:850px){.u-reel__group{gap:12px;padding-left:20px}.u-reel__track{animation-duration:25s}}
