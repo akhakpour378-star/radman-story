@@ -38,13 +38,14 @@ export async function POST(req: NextRequest) {
     if (file.size > (isVideo ? 100 : 15) * 1024 * 1024) return NextResponse.json({ error: isVideo ? "حجم ویدیو نباید بیشتر از ۱۰۰ مگابایت باشد." : "حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد." }, { status: 400 });
 
     const original = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-").slice(0, 80);
-    const base = original.replace(/\.[^.]+$/, "") || "radman-image";
+    const base = original.replace(/\.[^.]+$/, "").replace(/^radman[-_]?/i, "") || "media";
     const buffer = Buffer.from(await file.arrayBuffer());
     const hash = crypto.createHash("sha256").update(buffer).digest("hex");
 
     const root = path.resolve(process.cwd(), "..");
-    const typeDir = isVideo ? "videos" : "images";
-    const dir = path.join(root, "memory", section, typeDir);
+    // هر بخش پوشه مستقل خودش را دارد: /memory/hero ، /memory/story ، /memory/memory
+    // تصویر و ویدیوهای یک بخش مستقیماً داخل همان پوشه قرار می‌گیرند.
+    const dir = path.join(root, "memory", section);
     await fs.mkdir(dir, { recursive: true });
 
     let filename = "";
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
     if (!filename) {
       const stamp = Date.now().toString(36);
-      filename = `${base}-${stamp}${ext}`;
+      filename = `radman-${section}-${base}-${stamp}${ext}`;
       await fs.writeFile(path.join(dir, filename), buffer);
     }
 
