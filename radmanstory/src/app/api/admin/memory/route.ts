@@ -244,15 +244,43 @@ export async function PATCH(req: NextRequest) {
     const ext = path.extname(oldName).toLowerCase();
     if (!path.extname(newName)) newName += ext;
     if (path.extname(newName).toLowerCase() !== ext) return NextResponse.json({ error: "پسوند فایل نباید تغییر کند." }, { status: 400 });
-    const root = path.resolve(process.cwd(), "..", "memory");
-    const oldPath = path.resolve(root, ...parts);
+    const projectRoot = path.resolve(process.cwd());
+    const roots = [
+      path.join(projectRoot, "memory"),
+      path.join(projectRoot, "public", "memory"),
+      path.join(projectRoot, "..", "memory"),
+    ].map((root) => path.resolve(root));
+    let oldPath = "";
+    let foundRoot = "";
+    for (const candidateRoot of roots) {
+      const candidate = path.resolve(candidateRoot, ...parts);
+      if (!candidate.startsWith(candidateRoot + path.sep)) continue;
+      if (await fs.stat(candidate).then(s => s.isFile()).catch(() => false)) {
+        oldPath = candidate; foundRoot = candidateRoot; break;
+      }
+    }
+    if (!oldPath) {
+      const filename = parts[parts.length - 1].toLowerCase();
+      const walk = async (dir: string): Promise<string> => {
+        const entries = await fs.readdir(dir, { withFileTypes: true }).catch(() => []);
+        for (const entry of entries) {
+          if (entry.name === ".radman-trash") continue;
+          const full = path.join(dir, entry.name);
+          if (entry.isFile() && entry.name.toLowerCase() === filename) return full;
+          if (entry.isDirectory()) { const hit = await walk(full); if (hit) return hit; }
+        }
+        return "";
+      };
+      for (const root of roots) { const hit = await walk(root); if (hit) { oldPath = hit; foundRoot = root; break; } }
+    }
+    if (!oldPath) return NextResponse.json({ error: "فایل رسانه پیدا نشد." }, { status: 404 });
     const dir = path.dirname(oldPath);
-    if (!oldPath.startsWith(root + path.sep) || !dir.startsWith(root + path.sep)) return NextResponse.json({ error: "مسیر رسانه نامعتبر است." }, { status: 400 });
     const newPath = path.join(dir, newName);
-    if (oldPath === newPath) return NextResponse.json({ ok: true, src: raw });
+    if (oldPath === newPath) return NextResponse.json({ ok: true, src: raw, filename: newName });
     if (await fs.stat(newPath).then(() => true).catch(() => false)) return NextResponse.json({ error: "فایلی با این نام از قبل وجود دارد." }, { status: 409 });
     await fs.rename(oldPath, newPath);
-    const src = "/memory/" + parts.slice(0, -1).concat(newName).join("/");
+    const relative = path.relative(foundRoot, newPath).replace(/\\/g, "/");
+    const src = "/memory/" + relative;
     return NextResponse.json({ ok: true, src, filename: newName }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "ویرایش نام فایل انجام نشد." }, { status: 400 });
