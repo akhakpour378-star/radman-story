@@ -777,29 +777,45 @@ export default function RadmanUltimate() {
           <button type="button" className="u-lightbox__prev" onClick={(e) => {
               e.stopPropagation();
               const current = selected === null ? 0 : selected;
-              const next = (current - 1 + memories.length) % memories.length;
-              setSelected(next);
-              setSelectedMemorySrc(memories[next]?.src || null);
+              const signal = heroConfig.memorySignal || [];
+              const current = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
+              const next = (current - 1 + signal.length) % signal.length;
+              const src = signal[next]?.replace(/^video:/, "") || null;
+              if (src) { setSelected(next); setSelectedMemorySrc(src); }
             }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
               <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
-              <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
             </div>
             <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
-              {memories.map((memory, idx) => (
-                <button type="button" key={memory.src} className={idx === selected ? "is-active" : ""} onClick={() => { setSelected(idx); setSelectedMemorySrc(memory.src); }} aria-label={memory.title}>
-                  <img src={asset(memory.src)} alt="" /><span>{String(idx + 1).padStart(2, "0")}</span>
-                </button>
-              ))}
+              <div className="u-lightbox__thumbsTitle">
+                <span>MEMORY SIGNAL</span>
+                <b>{selectedMemory.title}</b>
+              </div>
+              {heroConfig.memorySignal.map((entry, idx) => {
+                const src = entry.startsWith("video:") ? entry.slice(6) : entry;
+                const memory = memories.find((item) => item.src === src);
+                if (!memory) return null;
+                const active = src === selectedMemory.src;
+                return (
+                  <button type="button" key={src} className={active ? "is-active" : ""} onClick={(e) => {
+                    e.stopPropagation();
+                    setSelected(idx);
+                    setSelectedMemorySrc(src);
+                  }} aria-label={memory.title}>
+                    <img src={asset(src)} alt="" /><span>{String(idx + 1).padStart(2, "0")}</span>
+                  </button>
+                );
+              })}
             </aside>
           </div>
           <button type="button" className="u-lightbox__next" onClick={(e) => {
               e.stopPropagation();
-              const current = selected === null ? 0 : selected;
-              const next = (current + 1) % memories.length;
-              setSelected(next);
-              setSelectedMemorySrc(memories[next]?.src || null);
+              const signal = heroConfig.memorySignal || [];
+              const current = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
+              const next = (current + 1) % signal.length;
+              const src = signal[next]?.replace(/^video:/, "") || null;
+              if (src) { setSelected(next); setSelectedMemorySrc(src); }
             }} aria-label="Next"><ArrowRight /></button>
         </div>
       )}
