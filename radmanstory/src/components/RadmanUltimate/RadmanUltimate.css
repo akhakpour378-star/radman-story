@@ -3085,3 +3085,12 @@
 .u-reel__item--video:hover .u-mediaPlay{transform:translate(-50%,-50%) scale(1.1)!important;border-color:#9ce7ef!important;color:#9ce7ef!important}
 .u-reel__item>span,.u-reel__item>b,.u-reel__frame,.u-reel__meta{display:none!important}
 @media(max-width:520px){.u-reel__item:after{inset:10px}.u-reel__item--video .u-mediaPlay{width:48px!important;height:48px!important}}
+
+
+/* MEMORY SIGNAL — hover pause + manual horizontal drag */
+.u-reel{cursor:grab;overflow:hidden!important;touch-action:pan-y!important}
+.u-reel.is-dragging{cursor:grabbing!important}
+.u-reel__track{animation-play-state:running!important;will-change:transform}
+.u-reel:hover .u-reel__track{animation-play-state:paused!important}
+.u-reel.is-dragging .u-reel__track{animation:none!important}
+.u-reel.is-dragging .u-reel__item{pointer-events:none!important}
