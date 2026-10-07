@@ -3313,9 +3313,9 @@
 @media(max-width:760px){.u-lightbox__shell{height:min(88vh,760px);grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 92px;padding:10px;gap:10px}.u-lightbox__thumbs{flex-direction:row;overflow-x:auto;overflow-y:hidden}.u-lightbox__thumbs button{flex:0 0 92px;height:72px}.u-lightbox__info small{display:none}.u-lightbox__prev,.u-lightbox__next{width:38px;height:38px}}
 
 /* Seamless Memory Signal loop: two identical groups */
-.u-reel__track{display:flex;width:max-content;gap:0;padding-left:0;animation:reelDrift 35s linear infinite;will-change:transform}
+.u-reel__track{display:flex;width:max-content;gap:0;padding-left:0;animation:reelDrift 35s linear infinite;animation-timing-function:linear!important;will-change:transform}
 .u-reel__group{display:flex;align-items:flex-start;gap:22px;width:max-content;flex:0 0 auto;padding-left:7vw}
-@keyframes reelDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes reelDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-1 * var(--reel-distance, 50vw)),0,0)}}
 @keyframes reelDriftFromCurrent{from{transform:translate3d(var(--reel-start,0px),0,0)}to{transform:translate3d(calc(var(--reel-start,0px) - var(--reel-distance,50vw)),0,0)}}
 @media(max-width:850px){.u-reel__group{gap:12px;padding-left:20px}.u-reel__track{animation-duration:25s}}
 
@@ -3342,3 +3342,29 @@
 .u-lightbox__thumbPlay{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#05070bcc;color:#fff;border:1px solid #ffffff45;backdrop-filter:blur(8px)}
 .u-lightbox__image video{background:#020305}
 .u-lightbox__thumbsTitle{text-align:right;direction:rtl}
+
+/* FINAL MEMORY SIGNAL LOOP + COMPACT CINEMATIC MODAL */
+.u-reel__track{animation-duration:35s!important;animation-iteration-count:infinite!important}
+.u-lightbox__shell{
+  width:min(88vw,1180px)!important;
+  height:min(78vh,760px)!important;
+  max-width:1180px!important;
+  max-height:760px!important;
+  grid-template-columns:minmax(0,9fr) minmax(100px,1.05fr)!important;
+  gap:12px!important;
+  padding:12px!important;
+  border-radius:20px!important;
+}
+.u-lightbox__main{height:100%;min-height:0}
+.u-lightbox__image{height:100%;min-height:0;border-radius:14px;display:grid;place-items:center;overflow:hidden}
+.u-lightbox__image img,.u-lightbox__image video{width:100%;height:100%;object-fit:contain!important}
+.u-lightbox__thumbs{min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.u-lightbox__thumbs button{flex:0 0 78px!important;height:78px!important}
+.u-lightbox__thumbsTitle{padding:2px 3px 8px!important}
+.u-lightbox__thumbsTitle span{font-size:6.5px!important}
+.u-lightbox__thumbsTitle b{font-size:9px!important}
+@media(max-width:760px){
+  .u-lightbox__shell{width:94vw!important;height:82vh!important;grid-template-columns:1fr!important;grid-template-rows:minmax(0,1fr) 76px!important}
+  .u-lightbox__thumbs{flex-direction:row;overflow-x:auto;overflow-y:hidden}
+  .u-lightbox__thumbs button{flex:0 0 76px!important;height:62px!important}
+}
