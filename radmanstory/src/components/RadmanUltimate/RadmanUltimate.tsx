@@ -657,25 +657,28 @@ export default function RadmanUltimate() {
 
       >
         <div className="u-reel__track">
-          {(heroConfig.memorySignal || []).map((src, i) => {
-            const isVideo = src.startsWith("video:");
-            const media = isVideo ? src.slice(6) : src;
-            const memoryIndex = memories.findIndex((m) => m.src === media);
-            return isVideo ? (
-              <button type="button" className="u-reel__item u-reel__item--video" key={src}
-                data-media={media} data-video="true" aria-label="Play memory video">
-                <video src={asset(media)} muted playsInline preload="metadata" />
-                <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
-              </button>
-            ) : (
-              <button type="button" className="u-reel__item" key={src}
-                data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"}>
-                <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
-              </button>
-            );
-          })}
-        </div>
-      </section>
+          {[0, 1].map((copy) => (
+            <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
+              {(heroConfig.memorySignal || []).map((src) => {
+                const isVideo = src.startsWith("video:");
+                const media = isVideo ? src.slice(6) : src;
+                const memoryIndex = memories.findIndex((m) => m.src === media);
+                return isVideo ? (
+                  <button type="button" className="u-reel__item u-reel__item--video" key={`${copy}-${src}`}
+                    data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
+                    <video src={asset(media)} muted playsInline preload="metadata" />
+                    <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
+                  </button>
+                ) : (
+                  <button type="button" className="u-reel__item" key={`${copy}-${src}`}
+                    data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
+                    <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>     </section>
 
       <section id="chapters" className="u-chapters">
         {chapters.map(([num, title, copy, m]) => (
