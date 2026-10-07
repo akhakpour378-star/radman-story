@@ -467,10 +467,15 @@ export default function RadmanUltimate() {
       }
       drag.pressedMedia = null;
       drag.pressedVideo = false;
-      // Continue from the exact dragged position instead of restarting from x=0.
-      track.style.setProperty("--reel-start", `${finalOffset}px`);
+      // Resume at the exact visual position. The track contains two identical
+      // groups, so one half of its width is the seamless loop distance.
+      const cycle = Math.max(1, track.scrollWidth / 2);
+      const normalized = -(((Math.abs(finalOffset) % cycle) + cycle) % cycle);
+      const progress = Math.abs(normalized) / cycle;
+      track.style.setProperty("--reel-distance", `${cycle}px`);
+      track.style.animation = "reelDrift 35s linear infinite";
+      track.style.animationDelay = `-${progress * 35}s`;
       track.style.transform = "";
-      track.style.animation = "reelDriftFromCurrent 35s linear infinite";
       track.style.animationPlayState = reel.matches(":hover") ? "paused" : "running";
       reel.releasePointerCapture?.(e.pointerId);
       reel.classList.remove("is-dragging");
