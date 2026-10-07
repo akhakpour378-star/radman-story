@@ -3093,7 +3093,6 @@
 .u-reel__track{animation-play-state:running!important;will-change:transform}
 .u-reel:hover .u-reel__track{animation-play-state:paused!important}
 .u-reel.is-dragging .u-reel__track{animation:none!important}
-.u-reel.is-dragging .u-reel__item{pointer-events:none!important}
 
 
 /* MEMORY SIGNAL — resume the reel from the exact dragged position */
