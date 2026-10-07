@@ -405,10 +405,10 @@ export default function RadmanUltimate() {
     };
 
     const pause = () => {
-      if (!drag.active && !reelManual.current) track.style.animationPlayState = "paused";
+      if (!drag.active) track.style.animationPlayState = "paused";
     };
     const resume = () => {
-      if (!drag.active && !reelManual.current) track.style.animationPlayState = "running";
+      if (!drag.active) track.style.animationPlayState = "running";
     };
     const down = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -417,6 +417,7 @@ export default function RadmanUltimate() {
       drag.offset = getOffset();
       drag.lastOffset = drag.offset;
       reelManual.current = true;
+      track.style.animationPlayState = "paused";
       track.style.animation = "none";
       track.style.transform = `translate3d(${drag.offset}px,0,0)`;
       reel.setPointerCapture?.(e.pointerId);
@@ -431,7 +432,13 @@ export default function RadmanUltimate() {
     const up = (e: PointerEvent) => {
       if (!drag.active) return;
       drag.active = false;
-      drag.lastOffset = drag.lastOffset;
+      reelManual.current = false;
+      const finalOffset = drag.lastOffset;
+      // Continue from the exact dragged position instead of restarting from x=0.
+      track.style.setProperty("--reel-start", `${finalOffset}px`);
+      track.style.transform = "";
+      track.style.animation = "reelDriftFromCurrent 35s linear infinite";
+      track.style.animationPlayState = reel.matches(":hover") ? "paused" : "running";
       reel.releasePointerCapture?.(e.pointerId);
       reel.classList.remove("is-dragging");
     };
@@ -718,20 +725,25 @@ export default function RadmanUltimate() {
       <footer className="u-footer"><b>RADMAN<span>.</span></b><span>VISUAL BIOGRAPHY / 2026</span><small>FOREVER, MY SON.</small></footer>
 
       {selectedMemory && (
-        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title}>
+        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => setSelected(null)}>
           <button className="u-lightbox__close" onClick={() => setSelected(null)} aria-label="Close"><X /></button>
           <button className="u-lightbox__prev" onClick={() => setSelected((selected! - 1 + memories.length) % memories.length)} aria-label="Previous"><ArrowLeft /></button>
-          <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
-          <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
+          <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
+            <div className="u-lightbox__image"><img src={asset(selectedMemory.src)} alt={selectedMemory.title} /></div>
+            <div className="u-lightbox__info"><span>{selectedMemory.no} / {String(memories.length).padStart(2, "0")}</span><b>{selectedMemory.title}</b><small>{selectedMemory.tag}</small></div>
+          </div>
           <button className="u-lightbox__next" onClick={() => setSelected((selected! + 1) % memories.length)} aria-label="Next"><ArrowRight /></button>
         </div>
       )}
       {selectedVideo && (
-        <div className="u-lightbox u-lightbox--video" role="dialog" aria-modal="true" aria-label="Memory video">
+        <div className="u-lightbox u-lightbox--video" role="dialog" aria-modal="true" aria-label="Memory video" onClick={() => setSelectedVideo(null)}>
           <button className="u-lightbox__close" onClick={() => setSelectedVideo(null)} aria-label="Close"><X /></button>
-          <div className="u-lightbox__videoFrame">
-            <video src={asset(selectedVideo)} controls autoPlay playsInline preload="metadata" />
-            <span>ORIGINAL MEMORY / VIDEO</span>
+          <div className="u-lightbox__videoShell" onClick={(e) => e.stopPropagation()}>
+            <div className="u-lightbox__videoFrame">
+              <video src={asset(selectedVideo)} controls autoPlay playsInline preload="metadata" />
+              <span>ORIGINAL MEMORY / VIDEO</span>
+            </div>
+            <div className="u-lightbox__videoMeta"><span>RADMAN / MOTION ARCHIVE</span><b>Memory in motion</b></div>
           </div>
         </div>
       )}
