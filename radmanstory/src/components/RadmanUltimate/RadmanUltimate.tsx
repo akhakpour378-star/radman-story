@@ -415,6 +415,14 @@ export default function RadmanUltimate() {
       return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
     };
 
+    const syncCycle = () => {
+      const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
+      if (!firstGroup) return;
+      track.style.setProperty("--reel-distance", `${firstGroup.getBoundingClientRect().width}px`);
+    };
+    syncCycle();
+    window.addEventListener("resize", syncCycle);
+
     const pause = () => {
       if (!drag.active) track.style.animationPlayState = "paused";
     };
@@ -461,8 +469,9 @@ export default function RadmanUltimate() {
       drag.pressedVideo = false;
       // Resume at the exact visual position. The track contains two identical
       // groups, so one half of its width is the seamless loop distance.
-      const cycle = Math.max(1, track.scrollWidth / 2);
-      const normalized = -(((Math.abs(finalOffset) % cycle) + cycle) % cycle);
+      const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
+      const cycle = Math.max(1, firstGroup?.getBoundingClientRect().width || track.scrollWidth / 2);
+      const normalized = -(((-finalOffset % cycle) + cycle) % cycle);
       const progress = Math.abs(normalized) / cycle;
       track.style.setProperty("--reel-distance", `${cycle}px`);
       track.style.animation = "reelDrift 35s linear infinite";
@@ -486,6 +495,7 @@ export default function RadmanUltimate() {
       reel.removeEventListener("pointermove", move);
       reel.removeEventListener("pointerup", up);
       reel.removeEventListener("pointercancel", up);
+      window.removeEventListener("resize", syncCycle);
     };
   }, [heroConfig.memorySignal?.length]);
 
