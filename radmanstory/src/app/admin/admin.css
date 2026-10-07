@@ -429,3 +429,9 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-trashManager__actions{width:100%}
   .admin-trashManager__actions button{flex:1}
 }
+
+.admin-memoryNameRow{display:flex;gap:8px;align-items:stretch;width:100%}
+.admin-memoryNameRow input{flex:1;min-width:0}
+.admin-memoryNameSave{display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;padding:0 13px;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer;transition:.2s}
+.admin-memoryNameSave:hover:not(:disabled){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
+.admin-memoryNameSave:disabled{opacity:.35;cursor:not-allowed}
