@@ -610,7 +610,7 @@ export default function AdminPage() {
               <div className="admin-storyEditPanel">
                 <div className="admin-storyEditPanel__head">
                   <div><span>EDIT STORY / {String(editingStory + 1).padStart(2, "0")}</span><h2>ویرایش اسلاید</h2></div>
-                  <button type="button" onClick={() => setEditingStory(null)}>بستن</button>
+                  <button type="button" onClick={() => { setEditingStory(null); goToSection("story"); }}>بستن</button>
                 </div>
                 <div className="admin-storyEditPanel__body">
                   <div className="admin-storyCard__image admin-storyEditVisual"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><div className="admin-storyEditVisual__veil" /><div className="admin-storyEditVisual__meta"><span>RADMAN / STORY</span><i /></div><div className="admin-storyEditVisual__label">MEMORY FRAME</div></div>
