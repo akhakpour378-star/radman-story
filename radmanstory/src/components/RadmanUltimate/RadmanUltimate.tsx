@@ -776,10 +776,9 @@ export default function RadmanUltimate() {
           <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
           <button type="button" className="u-lightbox__prev" onClick={(e) => {
               e.stopPropagation();
-              const current = selected === null ? 0 : selected;
               const signal = heroConfig.memorySignal || [];
-              const current = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
-              const next = (current - 1 + signal.length) % signal.length;
+              const currentIndex = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
+              const next = (currentIndex - 1 + signal.length) % signal.length;
               const src = signal[next]?.replace(/^video:/, "") || null;
               if (src) { setSelected(next); setSelectedMemorySrc(src); }
             }} aria-label="Previous"><ArrowLeft /></button>
