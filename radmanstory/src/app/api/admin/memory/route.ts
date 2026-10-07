@@ -281,6 +281,34 @@ export async function PATCH(req: NextRequest) {
     await fs.rename(oldPath, newPath);
     const relative = path.relative(foundRoot, newPath).replace(/\\/g, "/");
     const src = "/memory/" + relative;
+
+    // Rename is persisted together with every Hero/Memory Signal reference.
+    // This makes the operation durable even if the admin page is refreshed
+    // immediately after saving the filename.
+    try {
+      const heroFile = path.join(projectRoot, "src", "data", "hero.json");
+      const heroRaw = await fs.readFile(heroFile, "utf8");
+      const hero = JSON.parse(heroRaw);
+      const oldSrc = raw;
+      if (typeof hero.image === "string" && hero.image === oldSrc) hero.image = src;
+      if (Array.isArray(hero.memorySignal)) {
+        hero.memorySignal = hero.memorySignal.map((entry: unknown) => {
+          if (typeof entry !== "string") return entry;
+          const video = entry.startsWith("video:");
+          const value = video ? entry.slice(6) : entry;
+          return value === oldSrc ? (video ? "video:" + src : src) : entry;
+        });
+      }
+      if (Array.isArray(hero.story)) {
+        hero.story = hero.story.map((slide: any) =>
+          slide && typeof slide === "object" && slide.image === oldSrc ? { ...slide, image: src } : slide
+        );
+      }
+      await fs.writeFile(heroFile, JSON.stringify(hero, null, 2) + "\n", "utf8");
+    } catch {
+      // The physical rename succeeded; the admin PUT will retry persistence.
+    }
+
     return NextResponse.json({ ok: true, src, filename: newName }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "ویرایش نام فایل انجام نشد." }, { status: 400 });
