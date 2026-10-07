@@ -92,7 +92,14 @@ const prettyTitle = (file: string, index: number) => {
 export default function RadmanUltimate() {
   const root = useRef<HTMLElement>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const reelDrag = useRef({ active: false, startX: 0, offset: 0, lastOffset: 0 });
+  const reelDrag = useRef({
+    active: false,
+    startX: 0,
+    offset: 0,
+    lastOffset: 0,
+    pressedMedia: null as string | null,
+    pressedVideo: false,
+  });
   const reelManual = useRef(false);
   const [sound, setSound] = useState(false);
   const [memories, setMemories] = useState<Memory[]>(fallback);
@@ -420,6 +427,9 @@ export default function RadmanUltimate() {
     };
     const down = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
+      const pressed = (e.target as HTMLElement).closest<HTMLButtonElement>(".u-reel__item");
+      drag.pressedMedia = pressed?.dataset.media || null;
+      drag.pressedVideo = pressed?.dataset.video === "true";
       drag.active = true;
       drag.startX = e.clientX;
       drag.offset = getOffset();
@@ -439,9 +449,24 @@ export default function RadmanUltimate() {
     };
     const up = (e: PointerEvent) => {
       if (!drag.active) return;
+      const wasClick = Math.abs(e.clientX - drag.startX) < 8 && !!drag.pressedMedia;
+      const pressedMedia = drag.pressedMedia;
+      const pressedVideo = drag.pressedVideo;
       drag.active = false;
       reelManual.current = false;
       const finalOffset = drag.lastOffset;
+
+      if (wasClick && pressedMedia) {
+        if (pressedVideo) {
+          setSelectedVideo(pressedMedia);
+        } else {
+          setSelectedMemorySrc(pressedMedia);
+          const idx = memories.findIndex((m) => m.src === pressedMedia);
+          setSelected(idx >= 0 ? idx : null);
+        }
+      }
+      drag.pressedMedia = null;
+      drag.pressedVideo = false;
       // Continue from the exact dragged position instead of restarting from x=0.
       track.style.setProperty("--reel-start", `${finalOffset}px`);
       track.style.transform = "";
@@ -629,21 +654,7 @@ export default function RadmanUltimate() {
       <section
         className="u-reel"
         aria-label="Selected memories"
-        onPointerUp={(e) => {
-          const target = (e.target as HTMLElement).closest<HTMLButtonElement>(".u-reel__item");
-          if (!target || Math.abs(e.clientX - reelDrag.current.startX) >= 8) return;
-          const media = target.dataset.media;
-          const video = target.dataset.video === "true";
-          if (!media) return;
-          e.preventDefault();
-          e.stopPropagation();
-          if (video) setSelectedVideo(media);
-          else {
-            setSelectedMemorySrc(media);
-            const idx = memories.findIndex((m) => m.src === media);
-            setSelected(idx >= 0 ? idx : null);
-          }
-        }}
+
       >
         <div className="u-reel__track">
           {(heroConfig.memorySignal || []).map((src, i) => {
