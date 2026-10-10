@@ -416,11 +416,26 @@ export default function RadmanUltimate() {
       return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
     };
 
+    const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
+    if (!firstGroup) return;
+
+    // Measure the complete first copy, including its real flex gaps, only after
+    // layout/media dimensions are available. The second copy must start exactly
+    // where the first copy ends; this distance is the only loop travel distance.
+    let measureFrame = 0;
     const syncCycle = () => {
-      const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
-      if (!firstGroup) return;
-      track.style.setProperty("--reel-distance", `${firstGroup.getBoundingClientRect().width}px`);
+      window.cancelAnimationFrame(measureFrame);
+      measureFrame = window.requestAnimationFrame(() => {
+        const width = firstGroup.getBoundingClientRect().width;
+        if (width > 0) track.style.setProperty("--reel-distance", `${width}px`);
+      });
     };
+    const resizeObserver = new ResizeObserver(syncCycle);
+    resizeObserver.observe(firstGroup);
+    firstGroup.querySelectorAll("img,video").forEach((media) => {
+      media.addEventListener("load", syncCycle);
+      media.addEventListener("loadedmetadata", syncCycle);
+    });
     syncCycle();
     window.addEventListener("resize", syncCycle);
 
@@ -497,6 +512,12 @@ export default function RadmanUltimate() {
       reel.removeEventListener("pointerup", up);
       reel.removeEventListener("pointercancel", up);
       window.removeEventListener("resize", syncCycle);
+      resizeObserver.disconnect();
+      window.cancelAnimationFrame(measureFrame);
+      firstGroup.querySelectorAll("img,video").forEach((media) => {
+        media.removeEventListener("load", syncCycle);
+        media.removeEventListener("loadedmetadata", syncCycle);
+      });
     };
   }, [heroConfig.memorySignal?.length]);
 
