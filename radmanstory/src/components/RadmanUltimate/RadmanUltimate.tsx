@@ -705,8 +705,11 @@ export default function RadmanUltimate() {
                 const entries = heroConfig.memorySignal || [];
                 // Each strip is a full cyclic sequence: last → first → second → ... → last.
                 // The second copy follows immediately with the same card gap.
+                // Repeat exactly one cyclic set: last → first → second → ... → penultimate.
+                // Do not append the last item again at the end, otherwise the seam becomes
+                // "... penultimate → last → last → first" and looks like a broken loop.
                 const orderedEntries = entries.length > 1
-                  ? [entries[entries.length - 1], ...entries]
+                  ? [entries[entries.length - 1], ...entries.slice(0, -1)]
                   : entries;
                 return orderedEntries.map((src, itemIndex) => {
                 const isVideo = src.startsWith("video:");
