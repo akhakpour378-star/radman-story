@@ -707,9 +707,11 @@ export default function RadmanUltimate() {
             <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
               {(() => {
                 const entries = heroConfig.memorySignal || [];
-                // Start each repeated strip with the last item, so the visual
-                // order at the left edge is last → first → second → ...
-                const orderedEntries = entries.length > 1 ? [entries[entries.length - 1], ...entries] : entries;
+                // Each strip is a full cyclic sequence: last → first → second → ... → last.
+                // The second copy follows immediately with the same card gap.
+                const orderedEntries = entries.length > 1
+                  ? [entries[entries.length - 1], ...entries]
+                  : entries;
                 return orderedEntries.map((src, itemIndex) => {
                 const isVideo = src.startsWith("video:");
                 const media = isVideo ? src.slice(6) : src;
