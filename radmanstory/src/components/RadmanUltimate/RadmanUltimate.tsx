@@ -715,7 +715,7 @@ export default function RadmanUltimate() {
                 const media = isVideo ? src.slice(6) : src;
                 const memoryIndex = memories.findIndex((m) => m.src === media);
                 return isVideo ? (
-                  <button type="button" className="u-reel__item u-reel__item--video" key={`${copy}-${src}`}
+                  <button type="button" className="u-reel__item u-reel__item--video" key={`${copy}-${itemIndex}-${src}`}
                     data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
                     <video src={asset(media)} muted playsInline preload="metadata" />
                     <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
