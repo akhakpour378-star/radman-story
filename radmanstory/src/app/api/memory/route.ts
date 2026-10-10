@@ -71,9 +71,37 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid file" }, { status: 400 });
   }
   const relative = clean.slice("memory/".length);
+  // Old site configs may still reference files at /memory/name.ext after
+  // the media library moved them into section folders. Try exact paths first,
+  // then locate that legacy filename under the known media roots.
+  let resolved: { found: string; root: string } | null = null;
   for (const root of mediaRoots) {
     const found = await findFile(root, relative);
-    if (!found) continue;
+    if (found) { resolved = { found, root }; break; }
+  }
+  if (!resolved && !relative.includes("/")) {
+    const wanted = path.basename(relative).toLowerCase();
+    for (const root of mediaRoots) {
+      const walk = async (dir: string): Promise<string | null> => {
+        let entries;
+        try { entries = await readdir(dir, { withFileTypes: true }); } catch { return null; }
+        for (const entry of entries) {
+          if (entry.name.startsWith(".") || entry.name === "node_modules") continue;
+          const full = path.join(dir, entry.name);
+          if (entry.isFile() && entry.name.toLowerCase() === wanted) return full;
+          if (entry.isDirectory()) {
+            const hit = await walk(full);
+            if (hit) return hit;
+          }
+        }
+        return null;
+      };
+      const hit = await walk(root);
+      if (hit) { resolved = { found: hit, root }; break; }
+    }
+  }
+  if (resolved) {
+    const found = resolved.found;
     try {
       const data = await readFile(found);
       const ext = path.extname(found).toLowerCase();
@@ -86,5 +114,5 @@ export async function GET(request: NextRequest) {
       });
     } catch {}
   }
-  return NextResponse.json({ error: "Media file not found", file: clean }, { status: 404 });
+  return NextResponse.json({ error: "Media file not found", file: clean, searchedRoots: mediaRoots }, { status: 404 });
 }
