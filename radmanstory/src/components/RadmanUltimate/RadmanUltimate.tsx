@@ -721,7 +721,7 @@ export default function RadmanUltimate() {
                     <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
                   </button>
                 ) : (
-                  <button type="button" className="u-reel__item" key={`${copy}-${src}`}
+                  <button type="button" className="u-reel__item" key={`${copy}-${itemIndex}-${src}`}
                     data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
                     <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
                   </button>
