@@ -3683,8 +3683,9 @@
 }
 
 
-/* MEMORY SIGNAL LOOP — one measured cycle, identical uninterrupted rows.
-   The track contains exactly two equal groups; there is no extra seam padding. */
+
+/* Memory Signal: preserve the original staggered card design.
+   The only loop seam spacing is the regular gap between cards. */
 .u-reel{
   overflow:hidden!important;
 }
@@ -3697,10 +3698,8 @@
   max-width:none!important;
   padding:0 0 0 7vw!important;
   margin:0!important;
-  transform:translate3d(0,0,0);
   animation:reelDrift 35s linear infinite!important;
-  animation-delay:0s!important;
-  animation-fill-mode:none!important;
+  animation-timing-function:linear!important;
   will-change:transform;
 }
 .u-reel__group{
@@ -3712,12 +3711,11 @@
   gap:22px!important;
   width:max-content!important;
   min-width:max-content!important;
-  padding:0!important;
+  padding:0 22px 0 0!important;
   margin:0!important;
 }
+.u-reel__group:last-child{padding-right:22px!important}
 .u-reel__item{
-  display:block!important;
-  position:relative!important;
   flex:0 0 190px!important;
   width:190px!important;
   min-width:190px!important;
@@ -3725,31 +3723,27 @@
   min-height:245px!important;
   margin:0!important;
   padding:0!important;
-  transform:none!important;
-  rotate:none!important;
-  border-radius:3px!important;
 }
-.u-reel__item:nth-child(2n),
+.u-reel__item:nth-child(2n){
+  margin-top:55px!important;
+  transform:rotate(1.5deg)!important;
+}
 .u-reel__item:nth-child(3n){
-  margin:0!important;
-  transform:none!important;
+  margin-top:-25px!important;
+  transform:rotate(-1deg)!important;
 }
-.u-reel__item img,
-.u-reel__item video{
+.u-reel__item:hover{
+  transform:translateY(-12px) rotate(0) scale(1.035)!important;
+}
+.u-reel__item img,.u-reel__item video{
   display:block!important;
   width:100%!important;
   height:100%!important;
   object-fit:cover!important;
 }
-.u-reel__item:hover{
-  transform:translateY(-6px) scale(1.015)!important;
-}
 @media(max-width:850px){
-  .u-reel__track{
-    padding-left:20px!important;
-    animation-duration:25s!important;
-  }
-  .u-reel__group{gap:12px!important}
+  .u-reel__track{padding-left:20px!important;animation-duration:25s!important}
+  .u-reel__group{gap:12px!important;padding-right:12px!important}
   .u-reel__item{
     flex-basis:145px!important;
     width:145px!important;
