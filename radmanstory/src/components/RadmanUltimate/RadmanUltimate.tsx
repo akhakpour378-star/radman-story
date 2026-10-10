@@ -410,10 +410,18 @@ export default function RadmanUltimate() {
     const getOffset = () => {
       const transform = getComputedStyle(track).transform;
       if (!transform || transform === "none") return drag.lastOffset;
-      const match = transform.match(/matrix\(([^)]+)\)/);
-      if (!match) return drag.lastOffset;
-      const values = match[1].split(",").map(Number);
-      return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
+      // translate3d may serialize as matrix3d, not matrix. Read both formats.
+      const match2d = transform.match(/^matrix\(([^)]+)\)$/);
+      if (match2d) {
+        const values = match2d[1].split(",").map(Number);
+        return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
+      }
+      const match3d = transform.match(/^matrix3d\(([^)]+)\)$/);
+      if (match3d) {
+        const values = match3d[1].split(",").map(Number);
+        return Number.isFinite(values[12]) ? values[12] : drag.lastOffset;
+      }
+      return drag.lastOffset;
     };
 
     const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
