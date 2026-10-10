@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "فولدر مقصد یا فایل‌ها معتبر نیستند." }, { status: 400 });
     }
     const projectRoot = path.resolve(process.cwd());
-    const roots = [path.join(projectRoot, "memory"), path.join(projectRoot, "public", "memory"), path.join(projectRoot, "..", "memory")].map(path.resolve);
+    const roots = [path.join(projectRoot, "memory"), path.join(projectRoot, "public", "memory"), path.join(projectRoot, "..", "memory")].map((root) => path.resolve(root));
     const moved: Array<{from:string;to:string}> = [];
     for (const rawValue of items) {
       if (typeof rawValue !== "string") continue;
