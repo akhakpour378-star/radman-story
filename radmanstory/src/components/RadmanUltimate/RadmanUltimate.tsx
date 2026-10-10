@@ -812,7 +812,7 @@ export default function RadmanUltimate() {
                       ? <video src={asset(src)} muted playsInline preload="metadata" />
                       : <img src={asset(src)} alt="" />}
                     {isVideo && <i className="u-lightbox__thumbPlay"><Play size={12} fill="currentColor" /></i>}
-                    <span>{String(idx + 1).padStart(2, "0")}</span>
+                    <span aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
                   </button>
                 );
               })}
