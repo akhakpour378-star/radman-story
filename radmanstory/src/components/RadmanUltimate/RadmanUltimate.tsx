@@ -422,9 +422,15 @@ export default function RadmanUltimate() {
     const speed = 34; // px/sec: steady continuous motion
 
     const measure = () => {
-      cycle = groups[1].offsetLeft - groups[0].offsetLeft;
-      if (!cycle) cycle = groups[0].scrollWidth;
-      if (cycle > 0 && reel.scrollLeft >= cycle) reel.scrollLeft %= cycle;
+      // Measure the real distance between duplicate cycle origins, including
+      // the track's exact inter-item gap and the group's trailing padding.
+      const first = groups[0].getBoundingClientRect();
+      const second = groups[1].getBoundingClientRect();
+      const measured = second.left - first.left;
+      cycle = measured > 0 ? measured : groups[0].getBoundingClientRect().width;
+      if (cycle > 0 && reel.scrollLeft >= cycle) {
+        reel.scrollLeft = reel.scrollLeft % cycle;
+      }
     };
     const tick = (time: number) => {
       if (!lastTime) lastTime = time;
@@ -459,9 +465,11 @@ export default function RadmanUltimate() {
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 5) moved = true;
       if (moved && cycle > 0) {
-        reel.scrollLeft = startScroll - dx;
-        if (reel.scrollLeft < 0) reel.scrollLeft += cycle;
-        else if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
+        // Normalize the intended position before assigning scrollLeft.
+        // Assigning a negative value first is clamped to zero by browsers,
+        // which caused the drag to jump at the first/last seam.
+        const desired = startScroll - dx;
+        reel.scrollLeft = ((desired % cycle) + cycle) % cycle;
       }
     };
     const finish = (e: PointerEvent) => {
