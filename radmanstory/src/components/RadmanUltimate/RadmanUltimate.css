@@ -3879,3 +3879,18 @@
   .u-reel__group{gap:12px!important;padding-right:12px!important}
   .u-reel__item{flex-basis:145px!important;width:145px!important;min-width:145px!important}
 }
+
+
+/* Runtime recovery: never let an old drag-state override disable autoplay. */
+.u-reel:not(.is-dragging) .u-reel__track{
+  animation-name:reelDrift!important;
+  animation-duration:35s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+.u-reel.is-dragging .u-reel__track{
+  animation-play-state:paused!important;
+}
+@media(max-width:850px){
+  .u-reel:not(.is-dragging) .u-reel__track{animation-duration:25s!important}
+}
