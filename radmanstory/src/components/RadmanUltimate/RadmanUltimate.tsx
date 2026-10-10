@@ -426,8 +426,11 @@ export default function RadmanUltimate() {
       // Measure the actual distance between the starts of the two identical
       // groups. This includes each group's internal item gaps and end padding,
       // so the final item and the next group's first item keep the same gap.
-      const firstStart = groups[0].offsetLeft;
-      const secondStart = groups[1].offsetLeft;
+      // offsetLeft is relative to offsetParent, which can differ with
+      // positioning styles. Compare both group origins in the same viewport.
+      // The track transform moves both equally, so their delta is stable.
+      const firstStart = groups[0].getBoundingClientRect().left;
+      const secondStart = groups[1].getBoundingClientRect().left;
       const measuredCycle = secondStart - firstStart;
       if (measuredCycle > 0) {
         cycle = measuredCycle;
