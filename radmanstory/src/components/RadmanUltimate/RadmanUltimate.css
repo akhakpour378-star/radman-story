@@ -3752,3 +3752,10 @@
     min-height:190px!important;
   }
 }
+
+
+/* Use the measured width of one complete copy, not the old hard-coded -420px. */
+@keyframes reelDrift{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(calc(-1 * var(--reel-distance, 0px)),0,0)}
+}
