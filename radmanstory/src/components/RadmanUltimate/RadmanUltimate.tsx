@@ -431,9 +431,9 @@ export default function RadmanUltimate() {
         // relying on a potentially rounded group bounding-box width.
         const groups = track.querySelectorAll<HTMLElement>(".u-reel__group");
         if (groups.length < 2) return;
-        const first = groups[0].getBoundingClientRect();
-        const second = groups[1].getBoundingClientRect();
-        const distance = second.left - first.left;
+        // A group's border-box includes the explicit trailing gap. Since both
+        // copies are laid out consecutively, this width is the exact repeat distance.
+        const distance = groups[0].getBoundingClientRect().width;
         if (distance > 0) track.style.setProperty("--reel-distance", `${distance}px`);
       });
     };
@@ -493,7 +493,8 @@ export default function RadmanUltimate() {
       // Resume at the exact visual position. The track contains two identical
       // groups, so one half of its width is the seamless loop distance.
       const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
-      const cycle = Math.max(1, firstGroup?.getBoundingClientRect().width || track.scrollWidth / 2);
+      const measuredCycle = Number.parseFloat(getComputedStyle(track).getPropertyValue("--reel-distance"));
+      const cycle = Math.max(1, measuredCycle || firstGroup?.getBoundingClientRect().width || track.scrollWidth / 2);
       const normalized = -(((-finalOffset % cycle) + cycle) % cycle);
       const progress = Math.abs(normalized) / cycle;
       track.style.setProperty("--reel-distance", `${cycle}px`);
