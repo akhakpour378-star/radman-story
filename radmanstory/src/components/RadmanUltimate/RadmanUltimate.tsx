@@ -504,7 +504,9 @@ export default function RadmanUltimate() {
       const cycle = Math.max(1, measuredCycle || (groups.length > 1
         ? groups[1].getBoundingClientRect().left - groups[0].getBoundingClientRect().left
         : track.scrollWidth / 2));
-      const normalized = ((finalOffset % cycle) + cycle) % cycle;
+      // CSS moves from 0 toward -cycle, so a negative drag offset maps
+      // to positive animation progress by using its absolute travel distance.
+      const normalized = ((-finalOffset % cycle) + cycle) % cycle;
       const progress = normalized / cycle;
       track.style.setProperty("--reel-distance", `${cycle}px`);
       track.style.animation = "none";
