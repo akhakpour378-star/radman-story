@@ -406,153 +406,120 @@ export default function RadmanUltimate() {
     const track = reel?.querySelector<HTMLElement>(".u-reel__track");
     if (!reel || !track) return;
 
+    const groups = Array.from(track.querySelectorAll<HTMLElement>(".u-reel__group"));
+    if (groups.length < 2) return;
     const drag = reelDrag.current;
-    const getOffset = () => {
-      const transform = getComputedStyle(track).transform;
-      if (!transform || transform === "none") return drag.lastOffset;
-      // translate3d may serialize as matrix3d, not matrix. Read both formats.
-      const match2d = transform.match(/^matrix\(([^)]+)\)$/);
-      if (match2d) {
-        const values = match2d[1].split(",").map(Number);
-        return Number.isFinite(values[4]) ? values[4] : drag.lastOffset;
+    let cycle = 0;
+    let raf = 0;
+    let lastTime = 0;
+    let hovered = false;
+    let dragging = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+    let pressedMedia: string | null = null;
+    let pressedVideo = false;
+    const speed = 34; // px/sec: steady continuous motion
+
+    const measure = () => {
+      cycle = groups[1].offsetLeft - groups[0].offsetLeft;
+      if (!cycle) cycle = groups[0].scrollWidth;
+      if (cycle > 0 && reel.scrollLeft >= cycle) reel.scrollLeft %= cycle;
+    };
+    const tick = (time: number) => {
+      if (!lastTime) lastTime = time;
+      const dt = Math.min(40, time - lastTime);
+      lastTime = time;
+      if (!hovered && !dragging && cycle > 0) {
+        reel.scrollLeft += speed * dt / 1000;
+        if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
       }
-      const match3d = transform.match(/^matrix3d\(([^)]+)\)$/);
-      if (match3d) {
-        const values = match3d[1].split(",").map(Number);
-        return Number.isFinite(values[12]) ? values[12] : drag.lastOffset;
-      }
-      return drag.lastOffset;
-    };
-
-    const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
-    if (!firstGroup) return;
-
-    // Measure the complete first copy, including its real flex gaps, only after
-    // layout/media dimensions are available. The second copy must start exactly
-    // where the first copy ends; this distance is the only loop travel distance.
-    let measureFrame = 0;
-    const syncCycle = () => {
-      window.cancelAnimationFrame(measureFrame);
-      measureFrame = window.requestAnimationFrame(() => {
-        // Measure distance from the start of copy 1 to the start of copy 2.
-        // This includes all cards and the regular inter-card gap, without
-        // relying on a potentially rounded group bounding-box width.
-        const groups = track.querySelectorAll<HTMLElement>(".u-reel__group");
-        if (groups.length < 2) return;
-        // A group's border-box includes the explicit trailing gap. Since both
-        // copies are laid out consecutively, this width is the exact repeat distance.
-        // The loop period is exactly the offset between the two identical
-        // group starts. Moving by this distance puts the next group's final
-        // → first → second sequence in the exact same position, with no seam gap.
-        const firstStart = groups[0].getBoundingClientRect().left;
-        const secondStart = groups[1].getBoundingClientRect().left;
-        const distance = secondStart - firstStart;
-        if (distance > 0) track.style.setProperty("--reel-distance", `${distance}px`);
-      });
-    };
-    const resizeObserver = new ResizeObserver(syncCycle);
-    resizeObserver.observe(firstGroup);
-    firstGroup.querySelectorAll("img,video").forEach((media) => {
-      media.addEventListener("load", syncCycle);
-      media.addEventListener("loadedmetadata", syncCycle);
-    });
-    syncCycle();
-    window.addEventListener("resize", syncCycle);
-
-    const pause = () => {
-      if (!drag.active) track.style.animationPlayState = "paused";
-    };
-    const resume = () => {
-      if (!drag.active) track.style.animationPlayState = "running";
+      raf = requestAnimationFrame(tick);
     };
     const down = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      const pressed = (e.target as HTMLElement).closest<HTMLButtonElement>(".u-reel__item");
-      drag.pressedMedia = pressed?.dataset.media || null;
-      drag.pressedVideo = pressed?.dataset.video === "true";
+      const target = e.target as HTMLElement;
+      const pressed = target.closest<HTMLButtonElement>(".u-reel__item");
+      pressedMedia = pressed?.dataset.media || null;
+      pressedVideo = pressed?.dataset.video === "true";
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startScroll = reel.scrollLeft;
       drag.active = true;
       drag.startX = e.clientX;
-      drag.offset = getOffset();
-      drag.lastOffset = drag.offset;
-      reelManual.current = true;
-      track.style.animationPlayState = "paused";
-      track.style.animation = "none";
-      track.style.transform = `translate3d(${drag.offset}px,0,0)`;
-      reel.setPointerCapture?.(e.pointerId);
+      drag.offset = reel.scrollLeft;
+      drag.lastOffset = reel.scrollLeft;
       reel.classList.add("is-dragging");
+      reel.setPointerCapture?.(e.pointerId);
     };
     const move = (e: PointerEvent) => {
-      if (!drag.active) return;
-      const next = drag.offset + (e.clientX - drag.startX);
-      drag.lastOffset = next;
-      track.style.transform = `translate3d(${next}px,0,0)`;
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 5) moved = true;
+      if (moved && cycle > 0) {
+        reel.scrollLeft = startScroll - dx;
+        if (reel.scrollLeft < 0) reel.scrollLeft += cycle;
+        else if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
+      }
     };
-    const up = (e: PointerEvent) => {
-      if (!drag.active) return;
-      const wasClick = Math.abs(e.clientX - drag.startX) < 8 && !!drag.pressedMedia;
-      const pressedMedia = drag.pressedMedia;
-      const pressedVideo = drag.pressedVideo;
+    const finish = (e: PointerEvent) => {
+      if (!dragging) return;
+      const isClick = !moved && Math.abs(e.clientX - startX) < 8 && !!pressedMedia;
+      dragging = false;
       drag.active = false;
-      reelManual.current = false;
-      const finalOffset = drag.lastOffset;
-
-      if (wasClick && pressedMedia) {
+      reel.classList.remove("is-dragging");
+      if (isClick && pressedMedia) {
         setSelectedMemorySrc(pressedMedia);
         const idx = memories.findIndex((m) => m.src === pressedMedia);
         setSelected(idx >= 0 ? idx : null);
       }
-      drag.pressedMedia = null;
-      drag.pressedVideo = false;
-      // Keep the CSS-driven auto-loop running independently of click handling.
-      // During a drag we temporarily replace the transform; on release, restart
-      // the same measured cycle at an equivalent negative delay so it never waits
-      // for a click to begin moving and never resets to a blank position.
-      const measuredCycle = Number.parseFloat(getComputedStyle(track).getPropertyValue("--reel-distance"));
-      const groups = track.querySelectorAll<HTMLElement>(".u-reel__group");
-      const cycle = Math.max(1, measuredCycle || (groups.length > 1
-        ? groups[1].getBoundingClientRect().left - groups[0].getBoundingClientRect().left
-        : track.scrollWidth / 2));
-      // CSS moves from 0 toward -cycle, so a negative drag offset maps
-      // to positive animation progress by using its absolute travel distance.
-      const normalized = ((-finalOffset % cycle) + cycle) % cycle;
-      const progress = normalized / cycle;
-      track.style.setProperty("--reel-distance", `${cycle}px`);
-      // Restart the same CSS keyframe at the equivalent timeline position.
-      // Use inline !important because the stylesheet intentionally has a final
-      // !important animation rule; otherwise the resume styles silently lose.
-      track.style.setProperty("animation", "radmanSignalLoop 35s linear infinite", "important");
-      track.style.setProperty("animation-delay", `-${progress * 35}s`, "important");
-      track.style.setProperty("transform", "translate3d(0,0,0)", "important");
-      void track.offsetWidth;
-      track.style.removeProperty("transform");
-      track.style.setProperty("animation-play-state", reel.matches(":hover") ? "paused" : "running", "important");
+      pressedMedia = null;
+      pressedVideo = false;
       reel.releasePointerCapture?.(e.pointerId);
-      reel.classList.remove("is-dragging");
+    };
+    const enter = () => { hovered = true; };
+    const leave = () => { hovered = false; };
+    const onScroll = () => {
+      if (!dragging && cycle > 0) {
+        if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
+        else if (reel.scrollLeft < 0) reel.scrollLeft += cycle;
+      }
     };
 
-    reel.addEventListener("mouseenter", pause);
-    reel.addEventListener("mouseleave", resume);
+    reel.style.overflowX = "auto";
+    reel.style.overflowY = "hidden";
+    reel.style.scrollbarWidth = "none";
+    reel.style.touchAction = "pan-y";
+    track.style.animation = "none";
+    track.style.transform = "none";
+    track.style.marginLeft = "0";
+    measure();
+    const observer = new ResizeObserver(measure);
+    groups.forEach((group) => observer.observe(group));
+    window.addEventListener("resize", measure);
     reel.addEventListener("pointerdown", down);
     reel.addEventListener("pointermove", move);
-    reel.addEventListener("pointerup", up);
-    reel.addEventListener("pointercancel", up);
+    reel.addEventListener("pointerup", finish);
+    reel.addEventListener("pointercancel", finish);
+    reel.addEventListener("pointerenter", enter);
+    reel.addEventListener("pointerleave", leave);
+    reel.addEventListener("scroll", onScroll, { passive: true });
+    raf = requestAnimationFrame(tick);
+
     return () => {
-      reel.removeEventListener("mouseenter", pause);
-      reel.removeEventListener("mouseleave", resume);
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
       reel.removeEventListener("pointerdown", down);
       reel.removeEventListener("pointermove", move);
-      reel.removeEventListener("pointerup", up);
-      reel.removeEventListener("pointercancel", up);
-      window.removeEventListener("resize", syncCycle);
-      resizeObserver.disconnect();
-      window.cancelAnimationFrame(measureFrame);
-      firstGroup.querySelectorAll("img,video").forEach((media) => {
-        media.removeEventListener("load", syncCycle);
-        media.removeEventListener("loadedmetadata", syncCycle);
-      });
+      reel.removeEventListener("pointerup", finish);
+      reel.removeEventListener("pointercancel", finish);
+      reel.removeEventListener("pointerenter", enter);
+      reel.removeEventListener("pointerleave", leave);
+      reel.removeEventListener("scroll", onScroll);
     };
-  }, [heroConfig.memorySignal?.length]);
-
+  }, [heroConfig.memorySignal?.length, memories.length]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
