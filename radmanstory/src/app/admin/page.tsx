@@ -32,7 +32,7 @@ const defaults: HeroConfig = {
   ],
 };
 
-const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story" | "memorySignal">, { label: string; hint: string }> = {
+const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story" | "memorySignal" | "memoryTitles">, { label: string; hint: string }> = {
   date: { label: "تاریخ تولد", hint: "DEC / 01 / 2022" },
   time: { label: "ساعت تولد", hint: "14:15" },
   weight: { label: "وزن هنگام تولد", hint: "3.100 kg" },
@@ -247,8 +247,7 @@ export default function AdminPage() {
       const r = await fetch("/api/admin/memory", { method: "POST", body: form });
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
-      const src = String(data.image);
-      if (section === "hero") setHeroImages(current => current.includes(src) ? current : [src, ...current]);
+      const src = String(data.image);      if (section === "hero") setHeroImages(current => current.includes(src) ? current : [src, ...current]);
       else setImages(current => current.includes(src) ? current : [src, ...current]);
       if (apply) apply(src);
     } catch (e) {
@@ -497,8 +496,7 @@ export default function AdminPage() {
         <div className="admin-sidebar__label">CONTROL CENTER</div>
         <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => goToSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => goToSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "trash" ? "admin-nav--active" : ""}`} onClick={() => goToSection("trash")}><ArchiveRestore size={16} /><span>سطل آشغال</span><i>{trashItems.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
@@ -747,8 +745,7 @@ export default function AdminPage() {
                 <div className="admin-mediaActions">
                   <button className="admin-mediaButton" onClick={() => openLibrary({type:"hero"})} disabled={loading}>
                     <span><ImageIcon size={15} /> انتخاب از آرشیو</span>
-                    <ChevronDown size={15} className={imageOpen ? "admin-rotate" : ""} />
-                  </button>
+                    <ChevronDown size={15} className={imageOpen ? "admin-rotate" : ""} />                  </button>
                   <label className="admin-uploadButton admin-uploadButton--hero">
                     <Upload size={15} /> {uploading ? "در حال آپلود..." : "افزودن تصویر"}
                     <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || loading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "hero", (src) => update("image", src)); e.currentTarget.value = ""; }} />
