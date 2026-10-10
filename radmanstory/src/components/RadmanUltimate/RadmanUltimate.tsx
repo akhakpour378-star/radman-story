@@ -517,13 +517,15 @@ export default function RadmanUltimate() {
       const normalized = ((-finalOffset % cycle) + cycle) % cycle;
       const progress = normalized / cycle;
       track.style.setProperty("--reel-distance", `${cycle}px`);
-      track.style.animation = "none";
-      // Force style flush before re-applying the animation after manual dragging.
+      // Restart the same CSS keyframe at the equivalent timeline position.
+      // Use inline !important because the stylesheet intentionally has a final
+      // !important animation rule; otherwise the resume styles silently lose.
+      track.style.setProperty("animation", "radmanSignalLoop 35s linear infinite", "important");
+      track.style.setProperty("animation-delay", `-${progress * 35}s`, "important");
+      track.style.setProperty("transform", "translate3d(0,0,0)", "important");
       void track.offsetWidth;
-      track.style.animation = "reelDrift 35s linear infinite";
-      track.style.animationDelay = `-${progress * 35}s`;
-      track.style.transform = "";
-      track.style.animationPlayState = reel.matches(":hover") ? "paused" : "running";
+      track.style.removeProperty("transform");
+      track.style.setProperty("animation-play-state", reel.matches(":hover") ? "paused" : "running", "important");
       reel.releasePointerCapture?.(e.pointerId);
       reel.classList.remove("is-dragging");
     };
