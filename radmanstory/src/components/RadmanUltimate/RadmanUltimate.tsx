@@ -423,11 +423,16 @@ export default function RadmanUltimate() {
 
     const normalize = (n: number) => cycle > 0 ? ((n % cycle) + cycle) % cycle : 0;
     const measure = () => {
-      const firstWidth = groups[0].getBoundingClientRect().width;
-      const trackStyle = getComputedStyle(track);
-      const gap = parseFloat(trackStyle.columnGap || trackStyle.gap || "0") || 0;
-      cycle = firstWidth + gap;
-      if (cycle > 0) offset = normalize(offset);
+      // Measure the actual distance between the starts of the two identical
+      // groups. This includes each group's internal item gaps and end padding,
+      // so the final item and the next group's first item keep the same gap.
+      const firstStart = groups[0].offsetLeft;
+      const secondStart = groups[1].offsetLeft;
+      const measuredCycle = secondStart - firstStart;
+      if (measuredCycle > 0) {
+        cycle = measuredCycle;
+        offset = normalize(offset);
+      }
       paint();
     };
     const paint = () => {
