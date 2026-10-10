@@ -402,77 +402,113 @@ export default function RadmanUltimate() {
   }, [memories.length]);
 
   useEffect(() => {
-    const reel = document.querySelector<HTMLElement>(".memory-loop");
+    const reel = root.current?.querySelector<HTMLElement>(".memory-loop");
     const track = reel?.querySelector<HTMLElement>(".memory-loop__track");
     if (!reel || !track) return;
-    const groups = Array.from(track.querySelectorAll<HTMLElement>(":scope > .memory-loop__group"));
-    if (groups.length !== 2 || !groups[0].children.length) return;
 
-    let cycle = 0, frame = 0, last = 0, paused = false, dragging = false, moved = false;
-    let downX = 0, downScroll = 0, pointer: number | null = null, clicked: string | null = null;
-    const speed = 42;
+    const groups = Array.from(track.querySelectorAll<HTMLElement>(":scope > .memory-loop__group"));
+    if (groups.length < 2 || !groups[0].children.length) return;
+
+    let frame = 0;
+    let last = 0;
+    let cycle = 0;
+    let dragging = false;
+    let moved = false;
+    let pointerId: number | null = null;
+    let startX = 0;
+    let startScroll = 0;
+    let clickedMedia: string | null = null;
+    const speed = 36;
+
     const measure = () => {
-      cycle = groups[1].getBoundingClientRect().left - groups[0].getBoundingClientRect().left;
-      if (cycle > 0) reel.scrollLeft = ((reel.scrollLeft % cycle) + cycle) % cycle;
+      // offsetLeft is layout geometry; unlike boundingClientRect it is not
+      // affected by the container's current scroll position.
+      const first = groups[0];
+      const second = groups[1];
+      cycle = second.offsetLeft - first.offsetLeft;
+      if (cycle <= 0) cycle = first.scrollWidth;
+      if (cycle > 0 && reel.scrollLeft >= cycle) reel.scrollLeft %= cycle;
     };
+
     const animate = (now: number) => {
-      if (!last) last = now;
-      const dt = Math.min(40, Math.max(0, now - last)); last = now;
-      if (!paused && !dragging && cycle > 0 && document.visibilityState === "visible") {
+      const dt = last ? Math.min(40, now - last) : 0;
+      last = now;
+      if (!dragging && cycle > 0 && document.visibilityState === "visible") {
         let next = reel.scrollLeft + speed * dt / 1000;
-        if (next >= cycle) next -= cycle;
+        if (next >= cycle) next %= cycle;
         reel.scrollLeft = next;
       }
-      frame = requestAnimationFrame(animate);
+      frame = window.requestAnimationFrame(animate);
     };
-    const enter = () => { paused = true; };
-    const leave = () => { if (!dragging) paused = false; };
-    const down = (e: PointerEvent) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      const el = e.target instanceof Element ? e.target.closest<HTMLElement>(".memory-loop__item") : null;
-      dragging = true; paused = true; moved = false; pointer = e.pointerId;
-      clicked = el?.dataset.media ?? null; downX = e.clientX; downScroll = reel.scrollLeft;
+
+    const down = (event: PointerEvent) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragging = true;
+      moved = false;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startScroll = reel.scrollLeft;
+      const item = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(".memory-loop__item")
+        : null;
+      clickedMedia = item?.dataset.media ?? null;
       reel.classList.add("is-dragging");
-      try { reel.setPointerCapture(e.pointerId); } catch {}
+      try { reel.setPointerCapture(event.pointerId); } catch {}
     };
-    const move = (e: PointerEvent) => {
-      if (!dragging || e.pointerId !== pointer) return;
-      const dx = e.clientX - downX;
-      if (Math.abs(dx) > 5) moved = true;
-      if (moved && cycle > 0) {
-        const value = downScroll - dx;
-        reel.scrollLeft = ((value % cycle) + cycle) % cycle;
-        e.preventDefault();
-      }
+
+    const move = (event: PointerEvent) => {
+      if (!dragging || event.pointerId !== pointerId) return;
+      const delta = event.clientX - startX;
+      if (Math.abs(delta) > 4) moved = true;
+      if (!moved || cycle <= 0) return;
+      let next = startScroll - delta;
+      next = ((next % cycle) + cycle) % cycle;
+      reel.scrollLeft = next;
+      if (event.cancelable) event.preventDefault();
     };
-    const up = (e: PointerEvent) => {
-      if (!dragging || e.pointerId !== pointer) return;
-      const media = moved ? null : clicked;
-      dragging = false; pointer = null; reel.classList.remove("is-dragging");
-      paused = reel.matches(":hover");
+
+    const finish = (event: PointerEvent) => {
+      if (!dragging || event.pointerId !== pointerId) return;
+      const media = moved ? null : clickedMedia;
+      dragging = false;
+      pointerId = null;
+      reel.classList.remove("is-dragging");
       if (media) {
         setSelectedMemorySrc(media);
-        const index = memories.findIndex((m) => m.src === media);
+        const index = memories.findIndex((memory) => memory.src === media);
         setSelected(index >= 0 ? index : null);
       }
-      clicked = null;
-      try { if (reel.hasPointerCapture(e.pointerId)) reel.releasePointerCapture(e.pointerId); } catch {}
+      clickedMedia = null;
+      try { if (reel.hasPointerCapture(event.pointerId)) reel.releasePointerCapture(event.pointerId); } catch {}
     };
-    reel.style.overflowX = "auto"; reel.style.overflowY = "hidden";
-    reel.style.scrollbarWidth = "none"; reel.style.touchAction = "pan-y";
-    track.style.animation = "none"; track.style.transform = "none";
+
+    reel.style.overflowX = "auto";
+    reel.style.overflowY = "hidden";
+    reel.style.scrollbarWidth = "none";
+    reel.style.touchAction = "pan-y";
+    reel.style.cursor = "grab";
+    track.style.animation = "none";
+    track.style.transform = "none";
+
     measure();
-    const ro = new ResizeObserver(measure); ro.observe(reel); groups.forEach(g => ro.observe(g));
+    const observer = new ResizeObserver(measure);
+    observer.observe(reel);
+    groups.forEach((group) => observer.observe(group));
     window.addEventListener("resize", measure);
-    reel.addEventListener("pointerenter", enter); reel.addEventListener("pointerleave", leave);
-    reel.addEventListener("pointerdown", down); reel.addEventListener("pointermove", move, {passive:false});
-    reel.addEventListener("pointerup", up); reel.addEventListener("pointercancel", up);
-    frame = requestAnimationFrame(animate);
+    reel.addEventListener("pointerdown", down);
+    reel.addEventListener("pointermove", move, { passive: false });
+    reel.addEventListener("pointerup", finish);
+    reel.addEventListener("pointercancel", finish);
+    frame = window.requestAnimationFrame(animate);
+
     return () => {
-      cancelAnimationFrame(frame); ro.disconnect(); window.removeEventListener("resize", measure);
-      reel.removeEventListener("pointerenter", enter); reel.removeEventListener("pointerleave", leave);
-      reel.removeEventListener("pointerdown", down); reel.removeEventListener("pointermove", move);
-      reel.removeEventListener("pointerup", up); reel.removeEventListener("pointercancel", up);
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      reel.removeEventListener("pointerdown", down);
+      reel.removeEventListener("pointermove", move);
+      reel.removeEventListener("pointerup", finish);
+      reel.removeEventListener("pointercancel", finish);
     };
   }, [heroConfig.memorySignal?.length, memories.length]);
   useEffect(() => {
