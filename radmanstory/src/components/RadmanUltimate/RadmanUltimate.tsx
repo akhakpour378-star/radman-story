@@ -699,38 +699,37 @@ export default function RadmanUltimate() {
 
       >
         <div className="u-reel__track">
-          {[0, 1].map((copy) => (
-            <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
-              {(() => {
-                const entries = heroConfig.memorySignal || [];
-                // Each strip is a full cyclic sequence: last → first → second → ... → last.
-                // The second copy follows immediately with the same card gap.
-                // Repeat exactly one cyclic set: last → first → second → ... → penultimate.
-                // Do not append the last item again at the end, otherwise the seam becomes
-                // "... penultimate → last → last → first" and looks like a broken loop.
-                const orderedEntries = entries.length > 1
-                  ? [entries[entries.length - 1], ...entries.slice(0, -1)]
-                  : entries;
-                return orderedEntries.map((src, itemIndex) => {
-                const isVideo = src.startsWith("video:");
-                const media = isVideo ? src.slice(6) : src;
-                const memoryIndex = memories.findIndex((m) => m.src === media);
-                return isVideo ? (
-                  <button type="button" className="u-reel__item u-reel__item--video" key={`${copy}-${itemIndex}-${src}`}
-                    data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
-                    <video src={asset(media)} muted playsInline preload="metadata" />
-                    <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
-                  </button>
-                ) : (
-                  <button type="button" className="u-reel__item" key={`${copy}-${itemIndex}-${src}`}
-                    data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
-                    <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
-                  </button>
-                );
-              });
-              })()}
-            </div>
-          ))}
+          {(() => {
+            const entries = heroConfig.memorySignal || [];
+            // For [1,2,3,4], each cycle is [4,1,2,3].
+            // Duplicating that exact cycle yields ...3,4,1,2,3,4,1...
+            // Never include a second "4" at the end of a cycle.
+            const cycleEntries = entries.length > 1
+              ? [entries[entries.length - 1], ...entries.slice(0, -1)]
+              : entries;
+            return [0, 1].map((copy) => (
+              <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
+                {cycleEntries.map((src, itemIndex) => {
+                  const isVideo = src.startsWith("video:");
+                  const media = isVideo ? src.slice(6) : src;
+                  const memoryIndex = memories.findIndex((m) => m.src === media);
+                  const key = `signal-${copy}-${itemIndex}-${isVideo ? "video" : "image"}-${media}`;
+                  return isVideo ? (
+                    <button type="button" className="u-reel__item u-reel__item--video" key={key}
+                      data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
+                      <video src={asset(media)} muted playsInline preload="metadata" />
+                      <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
+                    </button>
+                  ) : (
+                    <button type="button" className="u-reel__item" key={key}
+                      data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
+                      <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
+                    </button>
+                  );
+                })}
+              </div>
+            ));
+          })()}
         </div>     </section>
 
       <section id="chapters" className="u-chapters">
