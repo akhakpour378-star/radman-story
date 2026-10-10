@@ -794,8 +794,7 @@ export default function RadmanUltimate() {
             </div>
             <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
               <div className="u-lightbox__thumbsTitle">
-                <span>MEMORY SIGNAL</span>
-                <b>{selectedMemory.title}</b>
+                <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
               </div>
               {(heroConfig.memorySignal || []).map((entry, idx) => {
                 const isVideo = entry.startsWith("video:");
