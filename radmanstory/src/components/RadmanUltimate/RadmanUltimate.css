@@ -3559,3 +3559,110 @@
   .u-lightbox__mediaTitle{min-height:28px!important;padding:0 4px!important}
   .u-lightbox__mediaTitle b{font-size:13px!important}
 }
+
+
+/* User-requested final behavior: the last tile touches the first tile at the loop seam. */
+.u-reel__track{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:0!important;
+  width:max-content!important;
+  padding:0!important;
+  animation-name:reelDrift!important;
+  animation-duration:35s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+.u-reel__group{
+  display:flex!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  gap:22px!important;
+  padding:0!important;
+  margin:0!important;
+}
+@media(max-width:850px){
+  .u-reel__group{gap:12px!important;padding:0!important}
+  .u-reel__track{animation-duration:25s!important}
+}
+/* Remove the blue RADMAN / ARCHIVE label that was generated on the modal frame. */
+.u-lightbox__shell:after,.u-lightbox__videoShell:after{
+  content:none!important;
+  display:none!important;
+}
+/* A fine cyan rule directly under the Persian media title. */
+.u-lightbox__mediaTitle{
+  position:relative!important;
+  min-height:42px!important;
+  padding:0 8px 9px!important;
+  margin:0!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+}
+.u-lightbox__mediaTitle:after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  right:8px!important;
+  bottom:0!important;
+  width:clamp(48px,7vw,94px)!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,#9ce7ef 25%,#9ce7ef 75%,transparent)!important;
+  box-shadow:0 0 10px #9ce7ef44!important;
+}
+.u-lightbox__mediaTitle b{
+  font-family:'IRANSans','IranSans','IranYekan',sans-serif!important;
+}
+/* Thumbnails are a three-column gallery, not a one-dimensional scroll rail. */
+.u-lightbox__shell{
+  grid-template-columns:minmax(0,7fr) minmax(250px,3fr)!important;
+  gap:16px!important;
+}
+.u-lightbox__thumbs{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:clamp(72px,10vh,108px)!important;
+  align-content:start!important;
+  align-items:stretch!important;
+  gap:9px!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:2px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  scrollbar-width:thin!important;
+}
+.u-lightbox__thumbs button{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  height:100%!important;
+  min-height:0!important;
+  flex:none!important;
+  margin:0!important;
+  border-radius:9px!important;
+}
+.u-lightbox__thumbs button span{display:none!important}
+.u-lightbox__thumbs button img,
+.u-lightbox__thumbs button video{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+}
+@media(max-width:760px){
+  .u-lightbox__shell{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1.15fr) minmax(0,1fr)!important;
+    gap:10px!important;
+  }
+  .u-lightbox__thumbs{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-rows:clamp(58px,9vh,78px)!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    border-top:1px solid rgba(255,255,255,.09)!important;
+    border-left:0!important;
+    padding-top:8px!important;
+  }
+}
