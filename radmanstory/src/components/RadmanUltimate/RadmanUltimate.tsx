@@ -495,14 +495,21 @@ export default function RadmanUltimate() {
       }
       drag.pressedMedia = null;
       drag.pressedVideo = false;
-      // Resume at the exact visual position. The track contains two identical
-      // groups, so one half of its width is the seamless loop distance.
-      const firstGroup = track.querySelector<HTMLElement>(".u-reel__group");
+      // Keep the CSS-driven auto-loop running independently of click handling.
+      // During a drag we temporarily replace the transform; on release, restart
+      // the same measured cycle at an equivalent negative delay so it never waits
+      // for a click to begin moving and never resets to a blank position.
       const measuredCycle = Number.parseFloat(getComputedStyle(track).getPropertyValue("--reel-distance"));
-      const cycle = Math.max(1, measuredCycle || firstGroup?.getBoundingClientRect().width || track.scrollWidth / 2);
-      const normalized = -(((-finalOffset % cycle) + cycle) % cycle);
-      const progress = Math.abs(normalized) / cycle;
+      const groups = track.querySelectorAll<HTMLElement>(".u-reel__group");
+      const cycle = Math.max(1, measuredCycle || (groups.length > 1
+        ? groups[1].getBoundingClientRect().left - groups[0].getBoundingClientRect().left
+        : track.scrollWidth / 2));
+      const normalized = ((finalOffset % cycle) + cycle) % cycle;
+      const progress = normalized / cycle;
       track.style.setProperty("--reel-distance", `${cycle}px`);
+      track.style.animation = "none";
+      // Force style flush before re-applying the animation after manual dragging.
+      void track.offsetWidth;
       track.style.animation = "reelDrift 35s linear infinite";
       track.style.animationDelay = `-${progress * 35}s`;
       track.style.transform = "";
