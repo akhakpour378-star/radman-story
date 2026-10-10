@@ -402,144 +402,77 @@ export default function RadmanUltimate() {
   }, [memories.length]);
 
   useEffect(() => {
-    const reel = document.querySelector<HTMLElement>("section.u-reel");
-    const track = reel?.querySelector<HTMLElement>(":scope > .u-reel__track");
+    const reel = document.querySelector<HTMLElement>(".memory-loop");
+    const track = reel?.querySelector<HTMLElement>(".memory-loop__track");
     if (!reel || !track) return;
-    const groups = Array.from(track.children).filter((node): node is HTMLElement =>
-      node instanceof HTMLElement && node.classList.contains("u-reel__group")
-    );
+    const groups = Array.from(track.querySelectorAll<HTMLElement>(":scope > .memory-loop__group"));
     if (groups.length !== 2 || !groups[0].children.length) return;
 
-    let cycle = 0;
-    let raf = 0;
-    let previousTime = 0;
-    let hovered = false;
-    let dragging = false;
-    let moved = false;
-    let startX = 0;
-    let startScroll = 0;
-    let pressedMedia: string | null = null;
-    let activePointer: number | null = null;
+    let cycle = 0, frame = 0, last = 0, paused = false, dragging = false, moved = false;
+    let downX = 0, downScroll = 0, pointer: number | null = null, clicked: string | null = null;
     const speed = 42;
-
-    const normalize = (value: number) => cycle > 0 ? ((value % cycle) + cycle) % cycle : 0;
     const measure = () => {
-      // Both groups are rendered as exact duplicates and the track is max-content.
-      // Half the actual track width is therefore the cycle length; don't derive
-      // it from offsetLeft, which can be zero/wrong when CSS changes offsetParent.
-      const width = track.scrollWidth / 2;
-      if (Number.isFinite(width) && width > reel.clientWidth) {
-        cycle = width;
-        reel.scrollLeft = normalize(reel.scrollLeft);
-      }
+      cycle = groups[1].getBoundingClientRect().left - groups[0].getBoundingClientRect().left;
+      if (cycle > 0) reel.scrollLeft = ((reel.scrollLeft % cycle) + cycle) % cycle;
     };
-    const tick = (time: number) => {
-      if (!previousTime) previousTime = time;
-      const delta = Math.min(50, Math.max(0, time - previousTime));
-      previousTime = time;
-      if (!hovered && !dragging && cycle > 0 && document.visibilityState === "visible") {
-        reel.scrollLeft = normalize(reel.scrollLeft + speed * delta / 1000);
+    const animate = (now: number) => {
+      if (!last) last = now;
+      const dt = Math.min(40, Math.max(0, now - last)); last = now;
+      if (!paused && !dragging && cycle > 0 && document.visibilityState === "visible") {
+        let next = reel.scrollLeft + speed * dt / 1000;
+        if (next >= cycle) next -= cycle;
+        reel.scrollLeft = next;
       }
-      raf = requestAnimationFrame(tick);
+      frame = requestAnimationFrame(animate);
     };
-    const down = (event: PointerEvent) => {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      const target = event.target instanceof Element ? event.target : null;
-      const item = target?.closest<HTMLButtonElement>(".u-reel__item") ?? null;
-      dragging = true;
-      moved = false;
-      pressedMedia = item?.dataset.media ?? null;
-      activePointer = event.pointerId;
-      startX = event.clientX;
-      startScroll = reel.scrollLeft;
-      hovered = true;
+    const enter = () => { paused = true; };
+    const leave = () => { if (!dragging) paused = false; };
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      const el = e.target instanceof Element ? e.target.closest<HTMLElement>(".memory-loop__item") : null;
+      dragging = true; paused = true; moved = false; pointer = e.pointerId;
+      clicked = el?.dataset.media ?? null; downX = e.clientX; downScroll = reel.scrollLeft;
       reel.classList.add("is-dragging");
-      try { reel.setPointerCapture(event.pointerId); } catch {}
+      try { reel.setPointerCapture(e.pointerId); } catch {}
     };
-    const move = (event: PointerEvent) => {
-      if (!dragging || event.pointerId !== activePointer) return;
-      const deltaX = event.clientX - startX;
-      if (Math.abs(deltaX) > 5) moved = true;
+    const move = (e: PointerEvent) => {
+      if (!dragging || e.pointerId !== pointer) return;
+      const dx = e.clientX - downX;
+      if (Math.abs(dx) > 5) moved = true;
       if (moved && cycle > 0) {
-        reel.scrollLeft = normalize(startScroll - deltaX);
-        event.preventDefault();
+        const value = downScroll - dx;
+        reel.scrollLeft = ((value % cycle) + cycle) % cycle;
+        e.preventDefault();
       }
     };
-    const finish = (event: PointerEvent) => {
-      if (!dragging || (activePointer !== null && event.pointerId !== activePointer)) return;
-      const clicked = !moved ? pressedMedia : null;
-      dragging = false;
-      activePointer = null;
-      reel.classList.remove("is-dragging");
-      hovered = reel.matches(":hover");
-      if (clicked) {
-        setSelectedMemorySrc(clicked);
-        const index = memories.findIndex((memory) => memory.src === clicked);
+    const up = (e: PointerEvent) => {
+      if (!dragging || e.pointerId !== pointer) return;
+      const media = moved ? null : clicked;
+      dragging = false; pointer = null; reel.classList.remove("is-dragging");
+      paused = reel.matches(":hover");
+      if (media) {
+        setSelectedMemorySrc(media);
+        const index = memories.findIndex((m) => m.src === media);
         setSelected(index >= 0 ? index : null);
       }
-      pressedMedia = null;
-      try {
-        if (reel.hasPointerCapture(event.pointerId)) reel.releasePointerCapture(event.pointerId);
-      } catch {}
+      clicked = null;
+      try { if (reel.hasPointerCapture(e.pointerId)) reel.releasePointerCapture(e.pointerId); } catch {}
     };
-    const onEnter = () => { hovered = true; };
-    const onLeave = () => { if (!dragging) hovered = false; };
-
-    // Use native scrolling as the only movement mechanism. Remove legacy CSS
-    // transform/keyframe motion that competes with scrollLeft and breaks dragging.
-    reel.style.setProperty("overflow-x", "auto", "important");
-    reel.style.setProperty("overflow-y", "hidden", "important");
-    reel.style.setProperty("scrollbar-width", "none", "important");
-    reel.style.setProperty("touch-action", "pan-y", "important");
-    reel.style.setProperty("overscroll-behavior-x", "none", "important");
-    reel.style.setProperty("display", "block", "important");
-    reel.style.setProperty("position", "relative", "important");
-    reel.style.setProperty("width", "100%", "important");
-    reel.style.setProperty("max-width", "100%", "important");
-    reel.style.setProperty("box-sizing", "border-box", "important");
-    track.style.setProperty("display", "flex", "important");
-    track.style.setProperty("position", "relative", "important");
-    track.style.setProperty("width", "max-content", "important");
-    track.style.setProperty("min-width", "max-content", "important");
-    track.style.setProperty("transform", "none", "important");
-    track.style.setProperty("animation", "none", "important");
-    track.style.setProperty("gap", "0", "important");
-    track.style.setProperty("padding", "0", "important");
-    track.style.setProperty("margin", "0", "important");
-    groups.forEach((group) => {
-      group.style.setProperty("display", "flex", "important");
-      group.style.setProperty("position", "relative", "important");
-      group.style.setProperty("flex", "0 0 auto", "important");
-      group.style.setProperty("width", "max-content", "important");
-      group.style.setProperty("gap", "22px", "important");
-      group.style.setProperty("padding", "0 22px 0 0", "important");
-      group.style.setProperty("margin", "0", "important");
-    });
+    reel.style.overflowX = "auto"; reel.style.overflowY = "hidden";
+    reel.style.scrollbarWidth = "none"; reel.style.touchAction = "pan-y";
+    track.style.animation = "none"; track.style.transform = "none";
     measure();
-    const resizeObserver = new ResizeObserver(measure);
-    resizeObserver.observe(reel);
-    groups.forEach((group) => resizeObserver.observe(group));
+    const ro = new ResizeObserver(measure); ro.observe(reel); groups.forEach(g => ro.observe(g));
     window.addEventListener("resize", measure);
-    reel.addEventListener("pointerdown", down);
-    reel.addEventListener("pointermove", move, { passive: false });
-    reel.addEventListener("pointerup", finish);
-    reel.addEventListener("pointercancel", finish);
-    reel.addEventListener("lostpointercapture", finish);
-    reel.addEventListener("pointerenter", onEnter);
-    reel.addEventListener("pointerleave", onLeave);
-    raf = requestAnimationFrame(tick);
-
+    reel.addEventListener("pointerenter", enter); reel.addEventListener("pointerleave", leave);
+    reel.addEventListener("pointerdown", down); reel.addEventListener("pointermove", move, {passive:false});
+    reel.addEventListener("pointerup", up); reel.addEventListener("pointercancel", up);
+    frame = requestAnimationFrame(animate);
     return () => {
-      cancelAnimationFrame(raf);
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", measure);
-      reel.removeEventListener("pointerdown", down);
-      reel.removeEventListener("pointermove", move);
-      reel.removeEventListener("pointerup", finish);
-      reel.removeEventListener("pointercancel", finish);
-      reel.removeEventListener("lostpointercapture", finish);
-      reel.removeEventListener("pointerenter", onEnter);
-      reel.removeEventListener("pointerleave", onLeave);
+      cancelAnimationFrame(frame); ro.disconnect(); window.removeEventListener("resize", measure);
+      reel.removeEventListener("pointerenter", enter); reel.removeEventListener("pointerleave", leave);
+      reel.removeEventListener("pointerdown", down); reel.removeEventListener("pointermove", move);
+      reel.removeEventListener("pointerup", up); reel.removeEventListener("pointercancel", up);
     };
   }, [heroConfig.memorySignal?.length, memories.length]);
   useEffect(() => {
@@ -702,11 +635,11 @@ export default function RadmanUltimate() {
         </div>
       </section>
       <section
-        className="u-reel"
+        className="memory-loop"
         aria-label="Selected memories"
 
       >
-        <div className="u-reel__track">
+        <div className="memory-loop__track">
           {(() => {
             const entries = heroConfig.memorySignal || [];
             // For [1,2,3,4], each cycle is [4,1,2,3].
@@ -716,20 +649,20 @@ export default function RadmanUltimate() {
               ? [entries[entries.length - 1], ...entries.slice(0, -1)]
               : entries;
             return [0, 1].map((copy) => (
-              <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
+              <div className="memory-loop__group" key={copy} aria-hidden={copy === 1}>
                 {cycleEntries.map((src, itemIndex) => {
                   const isVideo = src.startsWith("video:");
                   const media = isVideo ? src.slice(6) : src;
                   const memoryIndex = memories.findIndex((m) => m.src === media);
                   const key = `signal-${copy}-${itemIndex}-${isVideo ? "video" : "image"}-${media}`;
                   return isVideo ? (
-                    <button type="button" className="u-reel__item u-reel__item--video" key={key}
+                    <button type="button" className="memory-loop__item memory-loop__item--video" key={key}
                       data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
                       <video src={asset(media)} muted playsInline preload="metadata" />
                       <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
                     </button>
                   ) : (
-                    <button type="button" className="u-reel__item" key={key}
+                    <button type="button" className="memory-loop__item" key={key}
                       data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
                       <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
                     </button>
