@@ -52,15 +52,15 @@ export async function GET(request: NextRequest) {
       (await listFiles(root, root)).map((name) => name.replace(/\\/g, "/"))
     ))).flat();
     const unique = [...new Set(names)];
-    const images = unique.filter((name) => /\\.(jpe?g|png|webp|avif|gif)$/i.test(name)).map((name) => `/memory/${name}`);
-    const videos = unique.filter((name) => /\\.(mp4|webm|mov|m4v)$/i.test(name)).map((name) => `/memory/${name}`);
+    const images = unique.filter((name) => [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"].includes(path.extname(name).toLowerCase())).map((name) => `/memory/${name}`);
+    const videos = unique.filter((name) => [".mp4", ".webm", ".mov", ".m4v"].includes(path.extname(name).toLowerCase())).map((name) => `/memory/${name}`);
     const bySection = (section: string, items: string[]) => items.filter((src) => src.startsWith(`/memory/${section}/`));
     return NextResponse.json({
       images, videos,
       heroImages: bySection("hero", images), heroVideos: bySection("hero", videos),
       storyImages: bySection("story", images), storyVideos: bySection("story", videos),
-      memoryImages: images.filter((src) => !/^\\/memory\\/(hero|story)\\//.test(src)),
-      memoryVideos: videos.filter((src) => !/^\\/memory\\/(hero|story)\\//.test(src)),
+      memoryImages: images.filter((src) => !src.startsWith("/memory/hero/") && !src.startsWith("/memory/story/")),
+      memoryVideos: videos.filter((src) => !src.startsWith("/memory/hero/") && !src.startsWith("/memory/story/")),
     }, { headers: { "Cache-Control": "no-store" } });
   }
 
