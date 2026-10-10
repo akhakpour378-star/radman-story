@@ -405,104 +405,90 @@ export default function RadmanUltimate() {
     const reel = root.current?.querySelector<HTMLElement>(".memory-loop");
     const track = reel?.querySelector<HTMLElement>(".memory-loop__track");
     if (!reel || !track) return;
-
     const groups = Array.from(track.querySelectorAll<HTMLElement>(":scope > .memory-loop__group"));
-    if (groups.length < 2 || !groups[0].children.length) return;
+    if (groups.length < 2) return;
 
-    let frame = 0;
+    let raf = 0;
     let last = 0;
     let cycle = 0;
+    let offset = 0;
     let dragging = false;
     let moved = false;
-    let pointerId: number | null = null;
     let startX = 0;
-    let startScroll = 0;
+    let startOffset = 0;
+    let pointerId: number | null = null;
     let clickedMedia: string | null = null;
-    const speed = 36;
+    const speed = 34;
 
     const measure = () => {
-      // offsetLeft is layout geometry; unlike boundingClientRect it is not
-      // affected by the container's current scroll position.
-      const first = groups[0];
-      const second = groups[1];
-      cycle = second.offsetLeft - first.offsetLeft;
-      if (cycle <= 0) cycle = first.scrollWidth;
-      if (cycle > 0 && reel.scrollLeft >= cycle) reel.scrollLeft %= cycle;
+      cycle = groups[0].getBoundingClientRect().width;
+      if (cycle > 0) {
+        offset = ((offset % cycle) + cycle) % cycle;
+        track.style.transform = `translate3d(${-offset}px,0,0)`;
+      }
     };
-
     const animate = (now: number) => {
-      const dt = last ? Math.min(40, now - last) : 0;
+      if (!last) last = now;
+      const dt = Math.min(40, now - last);
       last = now;
       if (!dragging && cycle > 0 && document.visibilityState === "visible") {
-        let next = reel.scrollLeft + speed * dt / 1000;
-        if (next >= cycle) next %= cycle;
-        reel.scrollLeft = next;
+        offset = (offset + speed * dt / 1000) % cycle;
+        track.style.transform = `translate3d(${-offset}px,0,0)`;
       }
-      frame = window.requestAnimationFrame(animate);
+      raf = requestAnimationFrame(animate);
     };
-
-    const down = (event: PointerEvent) => {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      dragging = true;
-      moved = false;
-      pointerId = event.pointerId;
-      startX = event.clientX;
-      startScroll = reel.scrollLeft;
-      const item = event.target instanceof Element
-        ? event.target.closest<HTMLElement>(".memory-loop__item")
-        : null;
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      dragging = true; moved = false; pointerId = e.pointerId;
+      startX = e.clientX; startOffset = offset;
+      const item = e.target instanceof Element ? e.target.closest<HTMLElement>(".memory-loop__item") : null;
       clickedMedia = item?.dataset.media ?? null;
       reel.classList.add("is-dragging");
-      try { reel.setPointerCapture(event.pointerId); } catch {}
+      try { reel.setPointerCapture(e.pointerId); } catch {}
     };
-
-    const move = (event: PointerEvent) => {
-      if (!dragging || event.pointerId !== pointerId) return;
-      const delta = event.clientX - startX;
+    const move = (e: PointerEvent) => {
+      if (!dragging || e.pointerId !== pointerId) return;
+      const delta = e.clientX - startX;
       if (Math.abs(delta) > 4) moved = true;
       if (!moved || cycle <= 0) return;
-      let next = startScroll - delta;
-      next = ((next % cycle) + cycle) % cycle;
-      reel.scrollLeft = next;
-      if (event.cancelable) event.preventDefault();
+      offset = ((startOffset - delta) % cycle + cycle) % cycle;
+      track.style.transform = `translate3d(${-offset}px,0,0)`;
+      if (e.cancelable) e.preventDefault();
     };
-
-    const finish = (event: PointerEvent) => {
-      if (!dragging || event.pointerId !== pointerId) return;
-      const media = moved ? null : clickedMedia;
-      dragging = false;
-      pointerId = null;
+    const finish = (e: PointerEvent) => {
+      if (!dragging || e.pointerId !== pointerId) return;
+      dragging = false; pointerId = null;
       reel.classList.remove("is-dragging");
-      if (media) {
-        setSelectedMemorySrc(media);
-        const index = memories.findIndex((memory) => memory.src === media);
+      if (!moved && clickedMedia) {
+        setSelectedMemorySrc(clickedMedia);
+        const index = memories.findIndex((memory) => memory.src === clickedMedia);
         setSelected(index >= 0 ? index : null);
       }
       clickedMedia = null;
-      try { if (reel.hasPointerCapture(event.pointerId)) reel.releasePointerCapture(event.pointerId); } catch {}
+      try { if (reel.hasPointerCapture(e.pointerId)) reel.releasePointerCapture(e.pointerId); } catch {}
     };
 
-    reel.style.overflowX = "auto";
-    reel.style.overflowY = "hidden";
-    reel.style.scrollbarWidth = "none";
+    reel.style.overflow = "hidden";
     reel.style.touchAction = "pan-y";
     reel.style.cursor = "grab";
+    track.style.display = "flex";
+    track.style.width = "max-content";
+    track.style.gap = "0";
     track.style.animation = "none";
-    track.style.transform = "none";
-
+    track.style.willChange = "transform";
+    groups.forEach(group => { group.style.flex = "0 0 auto"; });
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(reel);
-    groups.forEach((group) => observer.observe(group));
+    groups.forEach(group => observer.observe(group));
     window.addEventListener("resize", measure);
     reel.addEventListener("pointerdown", down);
     reel.addEventListener("pointermove", move, { passive: false });
     reel.addEventListener("pointerup", finish);
     reel.addEventListener("pointercancel", finish);
-    frame = window.requestAnimationFrame(animate);
-
+    raf = requestAnimationFrame(animate);
     return () => {
-      window.cancelAnimationFrame(frame);
+      cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener("resize", measure);
       reel.removeEventListener("pointerdown", down);
