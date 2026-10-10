@@ -424,10 +424,11 @@ export default function RadmanUltimate() {
 
     const normalize = (value: number) => cycle > 0 ? ((value % cycle) + cycle) % cycle : 0;
     const measure = () => {
-      // offsetLeft is relative to the shared track, unlike viewport coordinates
-      // which can be affected by transforms and hover effects on individual cards.
-      const width = groups[1].offsetLeft - groups[0].offsetLeft;
-      if (Number.isFinite(width) && width > 0) {
+      // Both groups are rendered as exact duplicates and the track is max-content.
+      // Half the actual track width is therefore the cycle length; don't derive
+      // it from offsetLeft, which can be zero/wrong when CSS changes offsetParent.
+      const width = track.scrollWidth / 2;
+      if (Number.isFinite(width) && width > reel.clientWidth) {
         cycle = width;
         reel.scrollLeft = normalize(reel.scrollLeft);
       }
@@ -491,11 +492,20 @@ export default function RadmanUltimate() {
     reel.style.setProperty("scrollbar-width", "none", "important");
     reel.style.setProperty("touch-action", "pan-y", "important");
     reel.style.setProperty("overscroll-behavior-x", "none", "important");
+    reel.style.setProperty("display", "block", "important");
+    reel.style.setProperty("position", "relative", "important");
+    reel.style.setProperty("width", "100%", "important");
+    reel.style.setProperty("max-width", "100%", "important");
+    reel.style.setProperty("box-sizing", "border-box", "important");
     track.style.setProperty("display", "flex", "important");
+    track.style.setProperty("position", "relative", "important");
     track.style.setProperty("width", "max-content", "important");
+    track.style.setProperty("min-width", "max-content", "important");
     track.style.setProperty("transform", "none", "important");
     track.style.setProperty("animation", "none", "important");
     track.style.setProperty("gap", "0", "important");
+    track.style.setProperty("padding", "0", "important");
+    track.style.setProperty("margin", "0", "important");
     groups.forEach((group) => {
       group.style.setProperty("display", "flex", "important");
       group.style.setProperty("position", "relative", "important");
