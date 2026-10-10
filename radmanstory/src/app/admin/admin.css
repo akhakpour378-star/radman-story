@@ -435,3 +435,20 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-memoryNameSave{display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;padding:0 13px;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer;transition:.2s}
 .admin-memoryNameSave:hover:not(:disabled){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
 .admin-memoryNameSave:disabled{opacity:.35;cursor:not-allowed}
+
+
+/* Folder-first media manager */
+.admin-library__folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:24px}
+.admin-library__folderCard{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:150px;padding:22px;border:1px solid rgba(130,157,190,.2);border-radius:16px;background:linear-gradient(145deg,rgba(24,39,58,.72),rgba(12,20,31,.82));color:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s,background .2s}
+.admin-library__folderCard:hover{transform:translateY(-3px);border-color:rgba(105,170,255,.7);background:linear-gradient(145deg,rgba(35,57,83,.85),rgba(12,20,31,.92))}
+.admin-library__folderCard span{font-size:30px;line-height:1.1}
+.admin-library__folderCard strong{font-size:15px}
+.admin-library__folderCard small{color:var(--admin-muted,#9aa8b9);font-size:12px}
+.admin-library__select{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:12px}
+.admin-library__select input{accent-color:#69aaff}
+.admin-library__move{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px;padding:16px;border:1px solid rgba(130,157,190,.2);border-radius:14px}
+.admin-library__move label{margin-right:auto;font-size:13px}
+.admin-library__move select{min-width:160px;padding:10px 12px;border:1px solid rgba(130,157,190,.25);border-radius:9px;background:#101a28;color:inherit}
+.admin-library__move button{padding:10px 16px;border:1px solid rgba(105,170,255,.45);border-radius:9px;background:rgba(105,170,255,.12);color:inherit;cursor:pointer}
+.admin-library__move button:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:640px){.admin-library__folders{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-library__folderCard{min-height:120px;padding:15px}.admin-library__move{align-items:stretch}.admin-library__move select,.admin-library__move button{width:100%}}
