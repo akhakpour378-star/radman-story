@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       const relative = path.relative(roots.find(r => dest.startsWith(r + path.sep)) || roots[2], dest).replace(/\\/g, "/");
       moved.push({ from: "/" + normalized, to: "/memory/" + relative });
     }
+    if (!moved.length) return NextResponse.json({ error: "هیچ فایل معتبری پیدا نشد؛ انتقال انجام نشد." }, { status: 404 });
     const configPath = path.join(projectRoot, "src", "data", "hero.json");
     try {
       const config = JSON.parse(await fs.readFile(configPath, "utf8"));
@@ -58,7 +59,9 @@ export async function POST(req: NextRequest) {
       });
       if (Array.isArray(config.story)) config.story = config.story.map((x: any) => x && map.has(x.image) ? { ...x, image: map.get(x.image) } : x);
       await fs.writeFile(configPath, JSON.stringify(config, null, 2) + "\n", "utf8");
-    } catch {}
+    } catch (error) {
+      return NextResponse.json({ error: "فایل‌ها جابه‌جا شدند اما ذخیره ارجاع‌های سایت ناموفق بود؛ بررسی hero.json لازم است." }, { status: 500 });
+    }
     return NextResponse.json({ ok: true, moved }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "انتقال فایل ناموفق بود." }, { status: 400 });
