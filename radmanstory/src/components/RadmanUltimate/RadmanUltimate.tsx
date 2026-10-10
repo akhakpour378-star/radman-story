@@ -412,7 +412,7 @@ export default function RadmanUltimate() {
     let cycle = 0;
     let raf = 0;
     let lastTime = 0;
-    let hovered = false;
+    let hovered = reel.matches(":hover");
     let dragging = false;
     let startX = 0;
     let startScroll = 0;
@@ -443,6 +443,7 @@ export default function RadmanUltimate() {
       pressedMedia = pressed?.dataset.media || null;
       pressedVideo = pressed?.dataset.video === "true";
       dragging = true;
+      hovered = true;
       moved = false;
       startX = e.clientX;
       startScroll = reel.scrollLeft;
@@ -451,7 +452,7 @@ export default function RadmanUltimate() {
       drag.offset = reel.scrollLeft;
       drag.lastOffset = reel.scrollLeft;
       reel.classList.add("is-dragging");
-      reel.setPointerCapture?.(e.pointerId);
+      try { reel.setPointerCapture(e.pointerId); } catch {}
     };
     const move = (e: PointerEvent) => {
       if (!dragging) return;
@@ -468,6 +469,7 @@ export default function RadmanUltimate() {
       const isClick = !moved && Math.abs(e.clientX - startX) < 8 && !!pressedMedia;
       dragging = false;
       drag.active = false;
+      hovered = reel.matches(":hover");
       reel.classList.remove("is-dragging");
       if (isClick && pressedMedia) {
         setSelectedMemorySrc(pressedMedia);
@@ -476,10 +478,10 @@ export default function RadmanUltimate() {
       }
       pressedMedia = null;
       pressedVideo = false;
-      reel.releasePointerCapture?.(e.pointerId);
+      try { if (reel.hasPointerCapture(e.pointerId)) reel.releasePointerCapture(e.pointerId); } catch {}
     };
     const enter = () => { hovered = true; };
-    const leave = () => { hovered = false; };
+    const leave = () => { if (!dragging) hovered = false; };
     const onScroll = () => {
       if (!dragging && cycle > 0) {
         if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
@@ -502,6 +504,7 @@ export default function RadmanUltimate() {
     reel.addEventListener("pointermove", move);
     reel.addEventListener("pointerup", finish);
     reel.addEventListener("pointercancel", finish);
+    reel.addEventListener("lostpointercapture", finish as EventListener);
     reel.addEventListener("pointerenter", enter);
     reel.addEventListener("pointerleave", leave);
     reel.addEventListener("scroll", onScroll, { passive: true });
@@ -515,6 +518,7 @@ export default function RadmanUltimate() {
       reel.removeEventListener("pointermove", move);
       reel.removeEventListener("pointerup", finish);
       reel.removeEventListener("pointercancel", finish);
+      reel.removeEventListener("lostpointercapture", finish as EventListener);
       reel.removeEventListener("pointerenter", enter);
       reel.removeEventListener("pointerleave", leave);
       reel.removeEventListener("scroll", onScroll);
