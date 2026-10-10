@@ -35,6 +35,7 @@ type HeroConfig = {
   persianFont: "iranyekan" | "iransans";
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
   memorySignal?: string[];
+  memoryTitles?: Record<string, string>;
 };
 
 type Memory = {
@@ -786,6 +787,9 @@ export default function RadmanUltimate() {
             }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
+              <div className="u-lightbox__mediaTitle" dir="rtl">
+                <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
+              </div>
               <div className="u-lightbox__image">
                 {selectedIsVideo
                   ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
@@ -793,9 +797,6 @@ export default function RadmanUltimate() {
               </div>
             </div>
             <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
-              <div className="u-lightbox__thumbsTitle">
-                <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
-              </div>
               {(heroConfig.memorySignal || []).map((entry, idx) => {
                 const isVideo = entry.startsWith("video:");
                 const src = isVideo ? entry.slice(6) : entry;
