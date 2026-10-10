@@ -409,63 +409,43 @@ export default function RadmanUltimate() {
     if (groups.length !== 2) return;
 
     let cycle = 0;
-    let offset = 0;
-    let lastTime = 0;
     let raf = 0;
+    let lastTime = 0;
     let hovered = false;
     let dragging = false;
     let moved = false;
     let startX = 0;
-    let startOffset = 0;
+    let startScroll = 0;
     let pressedMedia: string | null = null;
     let pointerId: number | null = null;
     const speed = 38;
 
-    const normalize = (n: number) => cycle > 0 ? ((n % cycle) + cycle) % cycle : 0;
     const measure = () => {
-      // Measure the actual distance between the starts of the two identical
-      // groups. This includes each group's internal item gaps and end padding,
-      // so the final item and the next group's first item keep the same gap.
-      // offsetLeft is relative to offsetParent, which can differ with
-      // positioning styles. Compare both group origins in the same viewport.
-      // The track transform moves both equally, so their delta is stable.
-      const firstStart = groups[0].getBoundingClientRect().left;
-      const secondStart = groups[1].getBoundingClientRect().left;
-      const measuredCycle = secondStart - firstStart;
-      if (measuredCycle > 0) {
-        cycle = measuredCycle;
-        offset = normalize(offset);
+      const first = groups[0].getBoundingClientRect();
+      const second = groups[1].getBoundingClientRect();
+      const width = second.left - first.left;
+      if (width > 0) {
+        cycle = width;
+        if (reel.scrollLeft >= cycle) reel.scrollLeft %= cycle;
       }
-      paint();
-    };
-    const paint = () => {
-      // One transform owner only. Do not mix scrollLeft with CSS keyframes.
-      track.style.setProperty("animation", "none", "important");
-      track.style.setProperty("transform", `translate3d(${-normalize(offset)}px,0,0)`, "important");
-      track.style.setProperty("will-change", "transform");
     };
     const tick = (time: number) => {
       if (!lastTime) lastTime = time;
       const dt = Math.min(40, time - lastTime);
       lastTime = time;
       if (!hovered && !dragging && cycle > 0) {
-        offset = normalize(offset + speed * dt / 1000);
-        paint();
+        reel.scrollLeft += speed * dt / 1000;
+        if (reel.scrollLeft >= cycle) reel.scrollLeft -= cycle;
       }
       raf = window.requestAnimationFrame(tick);
     };
     const down = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      const target = e.target as HTMLElement;
-      const item = target.closest<HTMLButtonElement>(".u-reel__item");
+      const item = (e.target as HTMLElement).closest<HTMLButtonElement>(".u-reel__item");
       if (!item) return;
       pressedMedia = item.dataset.media || null;
-      dragging = true;
-      hovered = true;
-      moved = false;
-      pointerId = e.pointerId;
-      startX = e.clientX;
-      startOffset = offset;
+      dragging = true; hovered = true; moved = false;
+      pointerId = e.pointerId; startX = e.clientX; startScroll = reel.scrollLeft;
       reel.classList.add("is-dragging");
       try { reel.setPointerCapture(e.pointerId); } catch {}
     };
@@ -474,16 +454,15 @@ export default function RadmanUltimate() {
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 5) moved = true;
       if (moved && cycle > 0) {
-        offset = normalize(startOffset + dx);
-        paint();
+        const desired = startScroll - dx;
+        reel.scrollLeft = ((desired % cycle) + cycle) % cycle;
         if (e.cancelable) e.preventDefault();
       }
     };
     const finish = (e: PointerEvent) => {
       if (!dragging || (pointerId !== null && e.pointerId !== pointerId)) return;
       const clickMedia = !moved ? pressedMedia : null;
-      dragging = false;
-      pointerId = null;
+      dragging = false; pointerId = null;
       reel.classList.remove("is-dragging");
       hovered = reel.matches(":hover");
       if (clickMedia) {
@@ -496,23 +475,27 @@ export default function RadmanUltimate() {
     };
     const enter = () => { hovered = true; };
     const leave = () => { if (!dragging) hovered = false; };
-    const onVisibility = () => { lastTime = 0; };
-    reel.style.setProperty("overflow", "hidden", "important");
+    reel.style.setProperty("overflow-x", "auto", "important");
+    reel.style.setProperty("overflow-y", "hidden", "important");
+    reel.style.setProperty("scrollbar-width", "none", "important");
     reel.style.setProperty("touch-action", "pan-y", "important");
-    reel.style.setProperty("cursor", "grab");
+    track.style.setProperty("transform", "none", "important");
+    track.style.setProperty("animation", "none", "important");
     track.style.setProperty("display", "flex", "important");
     track.style.setProperty("width", "max-content", "important");
     track.style.setProperty("gap", "0", "important");
     groups.forEach(group => {
+      group.style.setProperty("display", "flex", "important");
       group.style.setProperty("flex", "0 0 auto", "important");
       group.style.setProperty("width", "max-content", "important");
+      group.style.setProperty("gap", "22px", "important");
+      group.style.setProperty("padding", "0 22px 0 0", "important");
     });
     measure();
     const observer = new ResizeObserver(measure);
-    observer.observe(reel);
-    groups.forEach(group => observer.observe(group));
+    observer.observe(reel); groups.forEach(group => observer.observe(group));
     window.addEventListener("resize", measure);
-    document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("visibilitychange", () => { lastTime = 0; });
     reel.addEventListener("pointerdown", down);
     reel.addEventListener("pointermove", move, { passive: false });
     reel.addEventListener("pointerup", finish);
@@ -522,10 +505,8 @@ export default function RadmanUltimate() {
     reel.addEventListener("pointerleave", leave);
     raf = window.requestAnimationFrame(tick);
     return () => {
-      window.cancelAnimationFrame(raf);
-      observer.disconnect();
+      window.cancelAnimationFrame(raf); observer.disconnect();
       window.removeEventListener("resize", measure);
-      document.removeEventListener("visibilitychange", onVisibility);
       reel.removeEventListener("pointerdown", down);
       reel.removeEventListener("pointermove", move);
       reel.removeEventListener("pointerup", finish);
@@ -533,8 +514,6 @@ export default function RadmanUltimate() {
       reel.removeEventListener("lostpointercapture", finish as EventListener);
       reel.removeEventListener("pointerenter", enter);
       reel.removeEventListener("pointerleave", leave);
-      track.style.removeProperty("transform");
-      track.style.removeProperty("will-change");
     };
   }, [heroConfig.memorySignal?.length, memories.length]);
   useEffect(() => {
