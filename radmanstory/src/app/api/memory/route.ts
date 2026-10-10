@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
 
   const raw = request.nextUrl.searchParams.get("file");
   if (!raw) return NextResponse.json({ error: "Missing file" }, { status: 400 });
-  const clean = raw.replace(/^[/\\\\]+/, "").replace(/\\\\/g, "/");
+  const clean = raw.split("\\").join("/").replace(/^\/+/, "");
   if (!clean.startsWith("memory/") || clean.split("/").some((part) => part === ".." || part === ".")) {
     return NextResponse.json({ error: "Invalid file" }, { status: 400 });
   }
