@@ -433,7 +433,16 @@ export default function RadmanUltimate() {
         if (groups.length < 2) return;
         // A group's border-box includes the explicit trailing gap. Since both
         // copies are laid out consecutively, this width is the exact repeat distance.
-        const distance = groups[0].getBoundingClientRect().width;
+        const group = groups[0];
+        const firstCard = group.querySelector<HTMLElement>(".u-reel__item");
+        const secondCard = firstCard?.nextElementSibling as HTMLElement | null;
+        const groupWidth = group.getBoundingClientRect().width;
+        // The group begins with a prepended copy of the final card. Exclude
+        // that one card plus its following gap to get the true cycle period.
+        const leadingStep = firstCard && secondCard
+          ? secondCard.getBoundingClientRect().left - firstCard.getBoundingClientRect().left
+          : 0;
+        const distance = groupWidth - leadingStep;
         if (distance > 0) track.style.setProperty("--reel-distance", `${distance}px`);
       });
     };
@@ -696,7 +705,12 @@ export default function RadmanUltimate() {
         <div className="u-reel__track">
           {[0, 1].map((copy) => (
             <div className="u-reel__group" key={copy} aria-hidden={copy === 1}>
-              {(heroConfig.memorySignal || []).map((src) => {
+              {(() => {
+                const entries = heroConfig.memorySignal || [];
+                // Start each repeated strip with the last item, so the visual
+                // order at the left edge is last → first → second → ...
+                const orderedEntries = entries.length > 1 ? [entries[entries.length - 1], ...entries] : entries;
+                return orderedEntries.map((src, itemIndex) => {
                 const isVideo = src.startsWith("video:");
                 const media = isVideo ? src.slice(6) : src;
                 const memoryIndex = memories.findIndex((m) => m.src === media);
@@ -712,7 +726,8 @@ export default function RadmanUltimate() {
                     <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
                   </button>
                 );
-              })}
+              });
+              })()}
             </div>
           ))}
         </div>     </section>
