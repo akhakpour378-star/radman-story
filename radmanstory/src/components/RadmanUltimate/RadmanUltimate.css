@@ -3931,3 +3931,46 @@
  .u-reel__group{gap:12px!important;padding-right:12px!important}
  .u-reel__item{flex-basis:145px!important;width:145px!important;min-width:145px!important;height:190px!important}
 }
+
+
+/*
+ * Memory Signal final animation authority.
+ * Previous appended !important animation declarations prevented the pointer
+ * handlers from disabling/restarting the animation, while the handlers set an
+ * inline transform for dragging. Keep geometry authoritative but let inline
+ * animation state from the drag handler work.
+ */
+.u-reel{overflow:hidden!important}
+.u-reel__track{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  gap:0!important;
+  width:max-content!important;
+  max-width:none!important;
+  margin-left:7vw!important;
+  padding:0!important;
+  animation:radmanSignalLoop 35s linear infinite;
+  will-change:transform;
+}
+.u-reel__group{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-flow:row nowrap!important;
+  gap:22px!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  padding:0 22px 0 0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+@keyframes radmanSignalLoop{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+.u-reel:hover .u-reel__track{animation-play-state:paused}
+.u-reel.is-dragging .u-reel__track{animation-play-state:paused}
+@media(max-width:850px){
+  .u-reel__track{margin-left:20px!important;animation-duration:25s}
+  .u-reel__group{gap:12px!important;padding-right:12px!important}
+  .u-reel__item{flex-basis:145px!important;width:145px!important;min-width:145px!important;height:190px!important}
+}
