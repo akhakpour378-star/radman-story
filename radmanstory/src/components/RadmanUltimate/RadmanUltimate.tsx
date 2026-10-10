@@ -426,8 +426,15 @@ export default function RadmanUltimate() {
     const syncCycle = () => {
       window.cancelAnimationFrame(measureFrame);
       measureFrame = window.requestAnimationFrame(() => {
-        const width = firstGroup.getBoundingClientRect().width;
-        if (width > 0) track.style.setProperty("--reel-distance", `${width}px`);
+        // Measure distance from the start of copy 1 to the start of copy 2.
+        // This includes all cards and the regular inter-card gap, without
+        // relying on a potentially rounded group bounding-box width.
+        const groups = track.querySelectorAll<HTMLElement>(".u-reel__group");
+        if (groups.length < 2) return;
+        const first = groups[0].getBoundingClientRect();
+        const second = groups[1].getBoundingClientRect();
+        const distance = second.left - first.left;
+        if (distance > 0) track.style.setProperty("--reel-distance", `${distance}px`);
       });
     };
     const resizeObserver = new ResizeObserver(syncCycle);
