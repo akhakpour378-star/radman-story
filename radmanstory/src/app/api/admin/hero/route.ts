@@ -20,6 +20,7 @@ type HeroConfig = {
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
   chapters: Chapter[];
+  years: string[];
 };
 
 type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; label: string };
@@ -41,6 +42,7 @@ const defaults: HeroConfig = {
     { eyebrow: "GROWING", title: "Watching you / become yourself.", lead: "هر روز چیزی تازه در تو شکل می‌گرفت؛ یک نگاه، یک عادت، یک لبخند و جهانی که کم‌کم مخصوص خودت می‌شد.", body: "این قاب‌ها فقط عکس نیستند؛ نشانه‌هایی هستند از اینکه چطور زمان، آرام و بی‌صدا، تو را بزرگ‌تر کرد.", image: "/memory/radman-02.JPG", label: "GROWING" },
     { eyebrow: "TOGETHER", title: "Some memories / never leave.", lead: "بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body: "این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image: "/memory/radman-and-me.png", label: "TOGETHER" },
   ],
+  years: ["/memory/radman-main.JPG", "/memory/radman-second.JPG", "/memory/radman-01.JPG", "/memory/radman-02.JPG", "/memory/radman-03.JPG", "/memory/radman-sit.jpeg", "/memory/radman-and-me.png"],
   chapters: [
     { id:"birth", period:"CHAPTER 01 / THE ARRIVAL", title:"روزی که جهانم تغییر کرد", description:"از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", image:"/memory/radman-main.JPG" },
     { id:"first-months", period:"CHAPTER 02 / FIRST MONTHS", title:"روزهای اول کنار تو", description:"نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", image:"/memory/radman-second.JPG" },
@@ -89,6 +91,7 @@ export async function PUT(req: NextRequest) {
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
+      years: Array.from(new Set((Array.isArray(body.years) ? body.years : (current.years || defaults.years)).filter((item: unknown) => typeof item === "string" && item.startsWith("/memory/")))).slice(0, 50),
       memorySignal: Array.from(new Set(
         (Array.isArray(body.memorySignal) ? body.memorySignal : (current.memorySignal || []))
           .filter((item: unknown) => typeof item === "string" && (item.startsWith("/memory/") || item.startsWith("video:/memory/")))
