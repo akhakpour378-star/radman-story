@@ -453,7 +453,7 @@ export default function RadmanUltimate() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
-      if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); }
+      if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); setSelectedGalleryType(null); }
       if (e.key === "ArrowRight") setSelected((v) => (v === null ? 0 : (v + 1) % memories.length));
       if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
     };
@@ -845,7 +845,7 @@ export default function RadmanUltimate() {
       )}
 
       {selectedMemory && (
-        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => { setSelected(null); setSelectedMemorySrc(null); }}>
+        <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => { setSelected(null); setSelectedMemorySrc(null); setSelectedGalleryType(null); }}>
           <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
           <button type="button" className="u-lightbox__prev" onClick={(e) => {
               e.stopPropagation();
