@@ -21,6 +21,7 @@ type HeroConfig = {
   memoryTitles?: Record<string, string>;
   chapters: Chapter[];
   years: string[];
+  yearsTitles: Record<string, string>;
 };
 
 type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; label: string };
@@ -43,6 +44,7 @@ const defaults: HeroConfig = {
     { eyebrow: "TOGETHER", title: "Some memories / never leave.", lead: "بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body: "این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image: "/memory/radman-and-me.png", label: "TOGETHER" },
   ],
   years: ["/memory/radman-main.JPG", "/memory/radman-second.JPG", "/memory/radman-01.JPG", "/memory/radman-02.JPG", "/memory/radman-03.JPG", "/memory/radman-sit.jpeg", "/memory/radman-and-me.png"],
+  yearsTitles: {},
   chapters: [
     { id:"birth", period:"CHAPTER 01 / THE ARRIVAL", title:"روزی که جهانم تغییر کرد", description:"از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", image:"/memory/radman-main.JPG" },
     { id:"first-months", period:"CHAPTER 02 / FIRST MONTHS", title:"روزهای اول کنار تو", description:"نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", image:"/memory/radman-second.JPG" },
@@ -92,6 +94,7 @@ export async function PUT(req: NextRequest) {
       cta: String(body.cta || current.cta).trim().slice(0, 60),
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
       years: Array.from(new Set((Array.isArray(body.years) ? body.years : (current.years || defaults.years)).filter((item: unknown) => typeof item === "string" && item.startsWith("/memory/")))).slice(0, 50),
+      yearsTitles: Object.fromEntries(Object.entries(body.yearsTitles && typeof body.yearsTitles === "object" ? body.yearsTitles : (current.yearsTitles || {})).filter(([key, value]) => typeof key === "string" && key.startsWith("/memory/") && typeof value === "string").map(([key, value]) => [key, String(value).trim().slice(0, 120)])),
       memorySignal: Array.from(new Set(
         (Array.isArray(body.memorySignal) ? body.memorySignal : (current.memorySignal || []))
           .filter((item: unknown) => typeof item === "string" && (item.startsWith("/memory/") || item.startsWith("video:/memory/")))
