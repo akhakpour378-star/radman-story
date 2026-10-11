@@ -19,9 +19,11 @@ type HeroConfig = {
   story: StorySlide[];
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  chapters: Chapter[];
 };
 
 type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; label: string };
+type Chapter = { id:string; period:string; title:string; description:string; image:string };
 
 const defaults: HeroConfig = {
   image: "/memory/radman-and-me.png",
@@ -38,6 +40,15 @@ const defaults: HeroConfig = {
     { eyebrow: "THE LITTLE YEARS", title: "A childhood / made of moments.", lead: "روزهای کودکی از کنارمان آرام عبور می‌کنند؛ اما بعضی لحظه‌ها آن‌قدر عمیق می‌شوند که سال‌ها بعد هم زنده می‌مانند.", body: "لبخندها، بازی‌ها، نگاه‌ها و همان اتفاق‌های ساده، امروز بخشی از بزرگ‌ترین خاطرات من هستند.", image: "/memory/radman-01.JPG", label: "LITTLE DAYS" },
     { eyebrow: "GROWING", title: "Watching you / become yourself.", lead: "هر روز چیزی تازه در تو شکل می‌گرفت؛ یک نگاه، یک عادت، یک لبخند و جهانی که کم‌کم مخصوص خودت می‌شد.", body: "این قاب‌ها فقط عکس نیستند؛ نشانه‌هایی هستند از اینکه چطور زمان، آرام و بی‌صدا، تو را بزرگ‌تر کرد.", image: "/memory/radman-02.JPG", label: "GROWING" },
     { eyebrow: "TOGETHER", title: "Some memories / never leave.", lead: "بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body: "این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image: "/memory/radman-and-me.png", label: "TOGETHER" },
+  ],
+  chapters: [
+    { id:"birth", period:"CHAPTER 01 / THE ARRIVAL", title:"روزی که جهانم تغییر کرد", description:"از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", image:"/memory/radman-main.JPG" },
+    { id:"first-months", period:"CHAPTER 02 / FIRST MONTHS", title:"روزهای اول کنار تو", description:"نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", image:"/memory/radman-second.JPG" },
+    { id:"first-steps", period:"CHAPTER 03 / FIRST STEPS", title:"اولین قدم‌ها", description:"از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.", image:"/memory/radman-01.JPG" },
+    { id:"words-and-play", period:"CHAPTER 04 / WORDS & PLAY", title:"کلمات، بازی‌ها و کشف‌ها", description:"واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.", image:"/memory/radman-02.JPG" },
+    { id:"kindergarten", period:"CHAPTER 05 / A NEW WORLD", title:"شروع ماجرای مهدکودک", description:"تجربه محیطی تازه، آشنایی‌ها، بازی‌های گروهی و قدم‌های نخست در دنیای بیرون از خانه.", image:"/memory/radman-03.JPG" },
+    { id:"little-discoveries", period:"CHAPTER 06 / DISCOVERY", title:"ماجراجویی‌های کوچک", description:"جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", image:"/memory/radman-sit.jpeg" },
+    { id:"together", period:"CHAPTER 07 / TOGETHER", title:"قصه‌ای که ادامه دارد", description:"لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", image:"/memory/radman-and-me.png" },
   ],
 };
 
@@ -93,6 +104,13 @@ export async function PUT(req: NextRequest) {
         image: String(slide.image || "").trim(),
         label: String(slide.label || "").trim().slice(0, 80),
       })) : current.story || [],
+      chapters: Array.isArray(body.chapters) ? body.chapters.slice(0, 20).map((chapter: any, index: number) => ({
+        id: String(chapter.id || "chapter-" + (index + 1)).trim().slice(0, 80),
+        period: String(chapter.period || "").trim().slice(0, 80),
+        title: String(chapter.title || "").trim().slice(0, 120),
+        description: String(chapter.description || "").trim().slice(0, 600),
+        image: String(chapter.image || "").trim().startsWith("/memory/") ? String(chapter.image).trim() : "/memory/radman-main.JPG",
+      })) : current.chapters || defaults.chapters,
     };
 
     if (!clean.image.startsWith("/memory/")) {
