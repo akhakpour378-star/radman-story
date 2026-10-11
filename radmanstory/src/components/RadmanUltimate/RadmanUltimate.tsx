@@ -43,7 +43,7 @@ type HeroConfig = {
   chapters?: Chapter[];
 };
 
-type Chapter = { id:string; period:string; title:string; description:string; image:string };
+type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
 
 type Memory = {
   src: string;
@@ -107,6 +107,8 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
+  const [chapterGallery, setChapterGallery] = useState<{ title:string; period:string; items:string[] } | null>(null);
+  const [chapterGalleryIndex, setChapterGalleryIndex] = useState(0);
   const [imageZoom, setImageZoom] = useState(1);
   const [imagePan, setImagePan] = useState({ x: 0, y: 0 });
   const [isPanningImage, setIsPanningImage] = useState(false);
@@ -444,12 +446,27 @@ export default function RadmanUltimate() {
       if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
     };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = (selected !== null || selectedMemorySrc !== null) ? "hidden" : "";
+    document.body.style.overflow = (selected !== null || selectedMemorySrc !== null || chapterGallery !== null) ? "hidden" : "";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [selected, selectedMemorySrc, memories.length]);
+  }, [selected, selectedMemorySrc, chapterGallery, memories.length]);
+
+  useEffect(() => {
+    if (!chapterGallery) return;
+    const onGalleryKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setChapterGallery(null);
+      if (event.key === "ArrowRight" && chapterGallery.items.length > 1) {
+        setChapterGalleryIndex(index => (index + 1) % chapterGallery.items.length);
+      }
+      if (event.key === "ArrowLeft" && chapterGallery.items.length > 1) {
+        setChapterGalleryIndex(index => (index - 1 + chapterGallery.items.length) % chapterGallery.items.length);
+      }
+    };
+    window.addEventListener("keydown", onGalleryKey);
+    return () => window.removeEventListener("keydown", onGalleryKey);
+  }, [chapterGallery]);
 
   const toggleSound = () => {
     if (!audio.current) {
@@ -479,17 +496,17 @@ export default function RadmanUltimate() {
           title: chapter.title,
           tag: chapter.period,
         };
-        return [String(index + 1).padStart(2, "0"), chapter.title, chapter.description, memory] as const;
+        return [String(index + 1).padStart(2, "0"), chapter.title, chapter.description, memory, chapter.gallery || []] as const;
       });
     }
     return [
-      ["01", "روزی که جهانم تغییر کرد", "از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", memories[0] || fallback[0]],
-      ["02", "روزهای اول کنار تو", "نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", memories[1] || fallback[1]],
-      ["03", "اولین قدم‌ها", "از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.", memories[2] || fallback[2]],
-      ["04", "کلمات، بازی‌ها و کشف‌ها", "واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.", memories[3] || fallback[3]],
-      ["05", "شروع ماجرای مهدکودک", "تجربه محیطی تازه، آشنایی‌ها و قدم‌های نخست در دنیای بیرون از خانه.", memories[4] || fallback[4]],
-      ["06", "ماجراجویی‌های کوچک", "جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", memories[5] || fallback[5]],
-      ["07", "قصه‌ای که ادامه دارد", "لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", memories[6] || fallback[6]],
+      ["01", "روزی که جهانم تغییر کرد", "از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", memories[0] || fallback[0], []],
+      ["02", "روزهای اول کنار تو", "نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", memories[1] || fallback[1], []],
+      ["03", "اولین قدم‌ها", "از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.", memories[2] || fallback[2], []],
+      ["04", "کلمات، بازی‌ها و کشف‌ها", "واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.", memories[3] || fallback[3], []],
+      ["05", "شروع ماجرای مهدکودک", "تجربه محیطی تازه، آشنایی‌ها و قدم‌های نخست در دنیای بیرون از خانه.", memories[4] || fallback[4], []],
+      ["06", "ماجراجویی‌های کوچک", "جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", memories[5] || fallback[5], []],
+      ["07", "قصه‌ای که ادامه دارد", "لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", memories[6] || fallback[6], []],
     ] as const;
   }, [heroConfig.chapters, memories]);
 
@@ -621,7 +638,7 @@ export default function RadmanUltimate() {
           <div className="u-chapters__introCount"><strong>{String(chapters.length).padStart(2, "0")}</strong><span>CHAPTERS<br />IN THIS STORY</span></div>
         </header>
         <div className="u-chapters__list">
-        {chapters.map(([num, title, copy, m]) => (
+        {chapters.map(([num, title, copy, m, gallery]) => (
           <article className="u-chapter" key={num}>
             <div className="u-chapter__top"><span>{m.tag}</span><small>CHAPTER / {num}</small></div>
             <div className="u-chapter__layout">
@@ -636,6 +653,14 @@ export default function RadmanUltimate() {
                 <h2>{title}</h2>
                 <p>{copy}</p>
                 <div className="u-rule" />
+                <button
+                  type="button"
+                  className="u-chapter__galleryLink"
+                  onClick={() => { setChapterGallery({ title, period: m.tag, items: gallery }); setChapterGalleryIndex(0); }}
+                >
+                  <span><b>ورود به دنیای این فصل</b><small>{gallery.length ? String(gallery.length).padStart(2, "0") + " تصویر و ویدیو" : "گالری خاطرات این فصل"}</small></span>
+                  <i><ArrowUpRight size={17} /></i>
+                </button>
               </div>
             </div>
           </article>
@@ -706,6 +731,43 @@ export default function RadmanUltimate() {
       </section>
 
       <footer className="u-footer"><b>RADMAN<span>.</span></b><span>VISUAL BIOGRAPHY / 2026</span><small>FOREVER, MY SON.</small></footer>
+
+      {chapterGallery && (
+        <div className="u-chapterGallery" role="dialog" aria-modal="true" aria-label={"گالری " + chapterGallery.title} onClick={() => setChapterGallery(null)}>
+          <div className="u-chapterGallery__backdrop" />
+          <button type="button" className="u-chapterGallery__close" onClick={() => setChapterGallery(null)} aria-label="بستن گالری"><X size={22}/></button>
+          <header className="u-chapterGallery__header" onClick={event => event.stopPropagation()}>
+            <span>RADMAN / CHAPTER ARCHIVE</span>
+            <h2>{chapterGallery.title}</h2>
+            <p>{chapterGallery.period} · {String(chapterGallery.items.length).padStart(2, "0")} MEDIA</p>
+          </header>
+          {chapterGallery.items.length ? (() => {
+            const key = chapterGallery.items[chapterGalleryIndex] || chapterGallery.items[0];
+            const isVideo = key.startsWith("video:");
+            const src = isVideo ? key.slice(6) : key;
+            return <div className="u-chapterGallery__experience" onClick={event => event.stopPropagation()}>
+              <div className="u-chapterGallery__stage">
+                {isVideo ? <video key={key} src={asset(src)} controls autoPlay playsInline preload="metadata" /> : <img key={key} src={asset(src)} alt={chapterGallery.title} />}
+                <span className="u-chapterGallery__counter">{String(chapterGalleryIndex + 1).padStart(2, "0")} / {String(chapterGallery.items.length).padStart(2, "0")}</span>
+              </div>
+              {chapterGallery.items.length > 1 && <div className="u-chapterGallery__controls">
+                <button type="button" aria-label="رسانه قبلی" onClick={() => setChapterGalleryIndex(index => (index - 1 + chapterGallery.items.length) % chapterGallery.items.length)}><ArrowRight size={18}/></button>
+                <div className="u-chapterGallery__thumbs">
+                  {chapterGallery.items.map((entry,index) => {
+                    const video = entry.startsWith("video:");
+                    const media = video ? entry.slice(6) : entry;
+                    return <button type="button" key={entry} className={index === chapterGalleryIndex ? "is-active" : ""} onClick={() => setChapterGalleryIndex(index)} aria-label={"رسانه " + (index + 1)}>
+                      {video ? <video src={asset(media)} muted playsInline preload="metadata"/> : <img src={asset(media)} alt=""/>}
+                      {video && <i><Play size={12} fill="currentColor"/></i>}
+                    </button>;
+                  })}
+                </div>
+                <button type="button" aria-label="رسانه بعدی" onClick={() => setChapterGalleryIndex(index => (index + 1) % chapterGallery.items.length)}><ArrowLeft size={18}/></button>
+              </div>}
+            </div>;
+          })() : <div className="u-chapterGallery__empty" onClick={event => event.stopPropagation()}><span>CHAPTER / MEMORY ARCHIVE</span><h3>این فصل هنوز خاطره‌ای ندارد</h3><p>به‌زودی تصاویر و ویدیوهای این فصل اینجا جمع می‌شوند.</p></div>}
+        </div>
+      )}
 
       {selectedMemory && (
         <div className="u-lightbox" role="dialog" aria-modal="true" aria-label={selectedMemory.title} onClick={() => { setSelected(null); setSelectedMemorySrc(null); }}>
