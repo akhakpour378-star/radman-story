@@ -4494,3 +4494,41 @@
     flex:0 0 64px!important;width:64px!important;height:52px!important;min-width:64px!important;
   }
 }
+
+
+/* Lightbox image zoom controls */
+.u .u-lightbox__image{
+  position:relative!important;overflow:hidden!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.u .u-lightbox__image > img{
+  max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;transform-origin:center center;
+  transition:transform .22s ease;will-change:transform;
+}
+.u .u-lightbox__image.is-zoomed{cursor:zoom-in}
+.u .u-lightbox__zoomControls{
+  position:absolute;z-index:5;top:12px;right:12px;
+  display:flex;align-items:center;gap:5px;padding:6px;
+  border:1px solid rgba(255,255,255,.14);border-radius:13px;
+  background:rgba(8,13,20,.76);backdrop-filter:blur(14px);
+  box-shadow:0 8px 28px rgba(0,0,0,.24);color:#edf7ff;
+}
+.u .u-lightbox__zoomControls button{
+  width:32px;height:32px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.10);border-radius:9px;
+  background:rgba(255,255,255,.06);color:inherit;cursor:pointer;
+  transition:background .18s ease,border-color .18s ease,opacity .18s ease;
+}
+.u .u-lightbox__zoomControls button:hover:not(:disabled){
+  background:rgba(75,174,255,.2);border-color:rgba(95,190,255,.55);
+}
+.u .u-lightbox__zoomControls button:disabled{opacity:.32;cursor:default}
+.u .u-lightbox__zoomControls span{
+  min-width:42px;text-align:center;font-size:10px;font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;color:rgba(237,247,255,.88);
+}
+@media(max-width:760px){
+  .u .u-lightbox__zoomControls{top:8px;right:8px;gap:4px;padding:5px;border-radius:11px}
+  .u .u-lightbox__zoomControls button{width:29px;height:29px;border-radius:8px}
+}
