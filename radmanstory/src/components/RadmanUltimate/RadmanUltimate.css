@@ -4536,11 +4536,14 @@
 
 /* Final zoom override: supersedes earlier legacy transform:none!important rule. */
 .u .u-lightbox__image > img{
-  transform:scale(var(--lightbox-zoom,1))!important;
+  transform:translate(var(--lightbox-pan-x,0px),var(--lightbox-pan-y,0px)) scale(var(--lightbox-zoom,1))!important;
   transform-origin:center center!important;
   transition:transform .12s ease-out!important;
   will-change:transform;
+  user-select:none!important;
+  -webkit-user-drag:none!important;
 }
-.u .u-lightbox__image.is-zoomed{cursor:zoom-in!important}
+.u .u-lightbox__image.is-zoomed{cursor:grab!important}
+.u .u-lightbox__image.is-zoomed.is-panning{cursor:grabbing!important}
 .u .u-lightbox__image{overscroll-behavior:contain!important;touch-action:pan-x pan-y}
 .u .u-lightbox__zoomControls{z-index:10!important}
