@@ -499,7 +499,7 @@ export default function AdminPage() {
         <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "trash" ? "admin-nav--active" : ""}`} onClick={() => goToSection("trash")}><ArchiveRestore size={16} /><span>سطل آشغال</span><i>{trashItems.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
-        <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><small>SOON</small></div>
+        <button type="button" className={`admin-nav ${activeSection === "chapters" ? "admin-nav--active" : ""}`} onClick={() => goToSection("chapters")}><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><i>{config.chapters?.length || 0}</i></button>
         <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
           <div><ShieldCheck size={15} /> پنل خصوصی</div>
@@ -529,9 +529,8 @@ export default function AdminPage() {
               <div className="admin-dashboard__card admin-dashboard__card--stat">
                 <span>PUBLIC STATUS</span><strong>LIVE</strong><p>سایت عمومی فعال و متصل به سیستم مدیریت است.</p>
               </div>
-              <div className="admin-dashboard__card admin-dashboard__card--stat">
-                <span>ACTIVE MODULE</span><strong>HERO</strong><p>تنها ماژول قابل ویرایش فعلی در پنل.</p>
-              </div>
+              <button className="admin-dashboard__card" onClick={() => goToSection("chapters")}><div className="admin-dashboard__icon"><Sparkles size={19} /></div><span>02 / MODULE</span><h2>Chapters</h2><p>مدیریت فصل‌های زندگی رادمان؛ ترتیب، عنوان، روایت و تصویر هر فصل.</p><b>EDIT CHAPTERS <ArrowLeft size={14} /></b></button>
+              <div className="admin-dashboard__card admin-dashboard__card--stat"><span>ACTIVE MODULES</span><strong>{(config.chapters || []).length + 3}</strong><p>بخش‌های محتوایی متصل به پنل مدیریت.</p></div>
             </div>
             <div className="admin-dashboard__footer">
               <span>QUICK ACCESS</span>
@@ -650,6 +649,37 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+          </>
+        ) : activeSection === "chapters" ? (
+          <>
+            <header className="admin-header">
+              <div><span className="admin-kicker">04 / CHAPTERS CONTENT STUDIO</span><h1>مدیریت <em>فصل‌های زندگی</em></h1><p>ترتیب فصل‌ها، عنوان فارسی، برچسب، روایت و تصویر هر فصل را مدیریت کن. تغییرات پس از ذخیره روی سایت منتشر می‌شوند.</p></div>
+              <div className="admin-header__actions"><a href="/#chapters" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده فصل‌ها <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+            </header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-chaptersStudio">
+              <div className="admin-chaptersStudio__intro"><div><span>EDITORIAL TIMELINE / RADMAN</span><h2>فصل‌ها به روایت تو</h2><p>هر فصل یک نقطه عطف است. عنوان و متن را متناسب با خاطرات واقعی تنظیم کن؛ لازم نیست همه فصل‌ها حتماً بازه سنی داشته باشند.</p></div><div className="admin-chaptersStudio__count"><strong>{String((config.chapters || []).length).padStart(2,"0")}</strong><span>CHAPTERS</span></div></div>
+              <div className="admin-chaptersStudio__grid">
+                <div className="admin-chaptersStudio__list">
+                  {(config.chapters || []).map((chapter,index) => <button type="button" key={chapter.id} className={"admin-chapterRow" + (editingChapter === index ? " is-active" : "")} onClick={() => { setEditingChapter(index); try { const p=new URLSearchParams(window.location.search); p.set("section","chapters"); p.set("chapter",String(index)); window.history.replaceState(null,"","/admin?"+p.toString()); } catch {} }}>
+                    <span className="admin-chapterRow__num">{String(index+1).padStart(2,"0")}</span><span className="admin-chapterRow__thumb"><img src={mediaUrl(chapter.image)} alt=""/></span><span className="admin-chapterRow__copy"><small>{chapter.period || "CHAPTER"}</small><strong>{chapter.title || "بدون عنوان"}</strong><em>{chapter.description || "بدون توضیح"}</em></span><span className="admin-chapterRow__chevron">←</span>
+                  </button>)}
+                  <button type="button" className="admin-chaptersStudio__add" onClick={addChapter}>＋ افزودن فصل جدید</button>
+                </div>
+                {config.chapters?.[editingChapter] ? <div className="admin-chapterEditor">
+                  <div className="admin-chapterEditor__head"><div><span>CHAPTER / {String(editingChapter+1).padStart(2,"0")}</span><h2>ویرایش محتوای فصل</h2><p>عنوان و روایت در سایت نمایش داده می‌شوند؛ برچسب برای هویت بصری و دسته‌بندی فصل است.</p></div><div className="admin-chapterEditor__order"><button type="button" onClick={() => moveChapter(editingChapter,-1)} disabled={editingChapter<=0}>↑ بالاتر</button><button type="button" onClick={() => moveChapter(editingChapter,1)} disabled={editingChapter >= (config.chapters || []).length-1}>↓ پایین‌تر</button></div></div>
+                  <div className="admin-chapterEditor__preview"><img src={mediaUrl(config.chapters[editingChapter].image)} alt="پیش‌نمایش فصل"/><div><span>{config.chapters[editingChapter].period}</span><h3>{config.chapters[editingChapter].title}</h3><p>{config.chapters[editingChapter].description}</p></div></div>
+                  <div className="admin-chapterEditor__fields">
+                    <label className="admin-field"><span>برچسب فصل / دوره</span><input maxLength={80} value={config.chapters[editingChapter].period} onChange={e => updateChapter(editingChapter,"period",e.target.value)} placeholder="مثلاً CHAPTER 01 / THE ARRIVAL"/></label>
+                    <label className="admin-field"><span>عنوان اصلی فصل</span><input maxLength={120} value={config.chapters[editingChapter].title} onChange={e => updateChapter(editingChapter,"title",e.target.value)} placeholder="عنوان فارسی و احساسی"/></label>
+                    <label className="admin-field"><span>روایت فصل</span><textarea rows={4} maxLength={600} value={config.chapters[editingChapter].description} onChange={e => updateChapter(editingChapter,"description",e.target.value)} placeholder="شرح کوتاه این دوره از زندگی رادمان"/></label>
+                    <label className="admin-field"><span>مسیر تصویر</span><div className="admin-imagePathRow"><input value={config.chapters[editingChapter].image} onChange={e => updateChapter(editingChapter,"image",e.target.value)} placeholder="/memory/chapters/..." /><label className="admin-uploadMini"><Upload size={13}/> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { const f=e.target.files?.[0]; if(f) void uploadImage(f,"chapters",src => updateChapter(editingChapter,"image",src)); e.currentTarget.value=""; }}/></label></div><small>تصویر در پوشه اختصاصی Chapters ذخیره می‌شود. بهتر است برای هر فصل عکس مرتبط با همان خاطره انتخاب شود.</small></label>
+                  </div>
+                  <div className="admin-chapterEditor__foot"><span>شناسه داخلی: {config.chapters[editingChapter].id}</span><button type="button" className="admin-memoryDeleteButton" onClick={() => removeChapter(editingChapter)} disabled={(config.chapters || []).length<=1}><Trash2 size={14}/> حذف این فصل</button></div>
+                </div> : <div className="admin-chapterEditor admin-chapterEditor--empty">برای شروع، یک فصل از فهرست انتخاب کن یا فصل تازه‌ای بساز.</div>}
+              </div>
+              <div className="admin-chaptersStudio__note"><ShieldCheck size={16}/><p><strong>کنترل انتشار با شماست.</strong> ویرایش‌ها تا زمان زدن «ذخیره تغییرات» پیش‌نویس می‌مانند. برای نتیجه نهایی، پیش‌نمایش سایت را هم بررسی کن.</p></div>
+            </section>
           </>
         ) : activeSection === "memory" ? (
           <>
