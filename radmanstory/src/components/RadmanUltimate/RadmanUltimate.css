@@ -4467,3 +4467,30 @@
     min-width:72px!important;border-radius:8px!important;
   }
 }
+
+
+/* Final gallery proportions: narrower modal, taller media stage, compact filmstrip. */
+.u .u-lightbox__shell{
+  width:min(1180px,88vw)!important;
+  height:min(880px,90vh)!important;
+  grid-template-rows:minmax(0,1fr) 88px!important;
+  gap:12px!important;
+  padding:clamp(12px,1.4vw,20px)!important;
+}
+.u .u-lightbox__main{gap:10px!important}
+.u .u-lightbox__image{flex:1 1 0!important;min-height:0!important}
+.u .u-lightbox__thumbs{gap:9px!important;padding:5px 3px 7px!important}
+.u .u-lightbox__thumbs button{
+  flex:0 0 76px!important;width:76px!important;height:62px!important;
+  min-width:76px!important;border-radius:9px!important;
+}
+@media(max-width:760px){
+  .u .u-lightbox__shell{
+    width:calc(100vw - 28px)!important;height:calc(100svh - 76px)!important;
+    grid-template-rows:minmax(0,1fr) 72px!important;
+    gap:7px!important;padding:9px!important;
+  }
+  .u .u-lightbox__thumbs button{
+    flex:0 0 64px!important;width:64px!important;height:52px!important;min-width:64px!important;
+  }
+}
