@@ -40,6 +40,7 @@ type HeroConfig = {
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  movingMemory?: string[];
   chapters?: Chapter[];
   years?: string[];
   yearsTitles?: Record<string, string>;
@@ -730,21 +731,13 @@ export default function RadmanUltimate() {
       </section>
       )}
 
-      <section className="u-film">
-        <div className="u-film__copy u-reveal">
-          <span className="u-kicker">03 / MOVING MEMORY</span>
-          <h2>Photos hold time.<br /><em>Film holds breath.</em></h2>
-          <p>در این بخش عکس به حرکت تبدیل می‌شود؛ یک فریم آرام، سپس ویدئویی که لحظه را دوباره زنده می‌کند.</p>
-        </div>
-        <div className="u-film__media u-reveal">
-          <img src={asset("/memory/radman-sit.jpeg")} alt="Radman seated from behind" />
-          <span>QUIET FRAME / RADMAN</span>
-        </div>
-        <div className="u-video u-reveal">
-          <video src={asset("/memory/memory-video.mp4")} controls playsInline preload="metadata" />
-          <small>ORIGINAL MEDIA / PLAY</small>
-        </div>
-      </section>
+      {(heroConfig.movingMemory || []).length > 0 && (
+        <section id="moving-memory" className="u-film u-film--cinema">
+          <div className="u-film__heading u-reveal"><div className="u-film__copy"><span className="u-kicker">03 / MOVING MEMORY</span><h2>Photos hold time.<br /><em>Film holds breath.</em></h2><p>لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.</p></div><div className="u-film__index"><span>RADMAN / PERSONAL FILM ARCHIVE</span><b>{String((heroConfig.movingMemory || []).length).padStart(2, "0")}</b><small>SELECTED FILMS</small></div></div>
+          <div className="u-film__reel">{(heroConfig.movingMemory || []).map((entry, index) => { const src = entry.startsWith("video:") ? entry.slice(6) : entry; return <article className={"u-filmCard u-filmCard--" + (index % 3)} key={entry}><div className="u-filmCard__frame"><video src={asset(src)} controls playsInline preload="metadata" aria-label={`Radman memory film ${index + 1}`} /><span className="u-filmCard__number">FILM / {String(index + 1).padStart(2, "0")}</span><span className="u-filmCard__play"><Play size={18} fill="currentColor" /></span></div><div className="u-filmCard__meta"><span>RADMAN / MOVING MEMORY</span><b>{String(index + 1).padStart(2, "0")}</b></div></article>; })}</div>
+          <div className="u-film__foot"><span>REAL MOMENTS. NEVER STILL.</span><i /></div>
+        </section>
+      )}
 
       <section className="u-finale">
         <div className="u-finale__glow" />
