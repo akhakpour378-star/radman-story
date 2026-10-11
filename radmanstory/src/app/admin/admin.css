@@ -1271,3 +1271,45 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-content .admin-chapterGallery__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
   .admin-content .admin-chapterEditor__foot{padding:13px 16px}
 }
+
+
+/* THE YEARS — dedicated editorial timeline studio */
+.admin-content .admin-yearsStudio{display:flex;flex-direction:column;gap:22px;padding:clamp(18px,2.4vw,30px);border:1px solid rgba(157,190,198,.16);background:linear-gradient(145deg,rgba(17,29,35,.94),rgba(8,15,20,.97));box-shadow:0 24px 70px rgba(0,0,0,.18)}
+.admin-content .admin-yearsStudio__intro{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:1px solid rgba(157,190,198,.13)}
+.admin-content .admin-yearsStudio__intro>div:first-child>span{font-size:10px;letter-spacing:.19em;color:#8bd5dc}
+.admin-content .admin-yearsStudio__intro h2{margin:9px 0 8px;font-size:clamp(21px,2.3vw,30px);font-weight:600;color:#f0f4f4}
+.admin-content .admin-yearsStudio__intro p{max-width:720px;margin:0;color:#9baeb4;font-size:12px;line-height:2}
+.admin-content .admin-yearsStudio__count{min-width:96px;padding:13px 16px;border:1px solid rgba(139,213,220,.22);background:rgba(139,213,220,.06);display:flex;flex-direction:column;align-items:center;gap:3px}
+.admin-content .admin-yearsStudio__count strong{font-size:28px;font-weight:500;color:#d9f4f3;line-height:1.1}
+.admin-content .admin-yearsStudio__count span{font-size:9px;letter-spacing:.16em;color:#89a9b0}
+.admin-content .admin-yearsStudio__toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.admin-content .admin-yearsStudio__toolbar>div{display:flex;flex-direction:column;gap:5px}
+.admin-content .admin-yearsStudio__toolbar b{font-size:13px;color:#e6eded}
+.admin-content .admin-yearsStudio__toolbar span{font-size:11px;color:#8da3aa}
+.admin-content .admin-yearsStudio__toolbar input{display:none}
+.admin-content .admin-yearsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.admin-content .admin-yearsCard{min-width:0;overflow:hidden;border:1px solid rgba(158,192,198,.14);background:#0a1217;transition:border-color .2s,transform .2s}
+.admin-content .admin-yearsCard:hover{border-color:rgba(139,213,220,.5);transform:translateY(-2px)}
+.admin-content .admin-yearsCard__media{position:relative;aspect-ratio:4/3;background:#101b21;overflow:hidden}
+.admin-content .admin-yearsCard__media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s}
+.admin-content .admin-yearsCard:hover .admin-yearsCard__media img{transform:scale(1.045)}
+.admin-content .admin-yearsCard__media>span{position:absolute;top:9px;right:9px;padding:5px 7px;background:rgba(5,12,16,.82);font-size:10px;letter-spacing:.08em;color:#e3f7f7}
+.admin-content .admin-yearsCard__media>i{position:absolute;bottom:9px;left:9px;font-size:8px;letter-spacing:.15em;font-style:normal;color:#e4f2f3;text-shadow:0 1px 8px #000}
+.admin-content .admin-yearsCard__info{display:flex;flex-direction:column;gap:5px;padding:11px 12px 5px;min-width:0}
+.admin-content .admin-yearsCard__info strong,.admin-content .admin-yearsCard__info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-content .admin-yearsCard__info strong{font-size:11px;color:#dce6e8;font-weight:500}
+.admin-content .admin-yearsCard__info small{font-size:9px;color:#718a91;direction:ltr;text-align:left}
+.admin-content .admin-yearsCard__actions{display:flex;gap:7px;padding:10px 12px 12px}
+.admin-content .admin-yearsCard__actions button{height:31px;min-width:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(154,187,194,.17);background:rgba(255,255,255,.025);color:#bcd0d4;cursor:pointer;transition:background .2s,border-color .2s}
+.admin-content .admin-yearsCard__actions button:hover:not(:disabled){background:rgba(139,213,220,.1);border-color:rgba(139,213,220,.45)}
+.admin-content .admin-yearsCard__actions button:disabled{opacity:.25;cursor:not-allowed}
+.admin-content .admin-yearsCard__actions button.is-delete{margin-right:auto;color:#e7a2a2}
+.admin-content .admin-yearsEmpty{min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;border:1px dashed rgba(139,213,220,.22);background:rgba(255,255,255,.015);color:#86a0a7;padding:30px}
+.admin-content .admin-yearsEmpty strong{font-size:15px;color:#dbe8e9}
+.admin-content .admin-yearsEmpty span{max-width:420px;font-size:11px;line-height:1.9}
+.admin-content .admin-yearsStudio__note{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-right:2px solid #78c8d0;background:rgba(120,200,208,.055);color:#9db2b8}
+.admin-content .admin-yearsStudio__note svg{flex:0 0 auto;margin-top:3px;color:#8bd5dc}
+.admin-content .admin-yearsStudio__note p{margin:0;font-size:11px;line-height:1.9}
+.admin-content .admin-yearsStudio__note strong{color:#d9e8e9}
+@media(max-width:1100px){.admin-content .admin-yearsGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.admin-content .admin-yearsStudio{padding:15px;gap:17px}.admin-content .admin-yearsStudio__intro{gap:12px}.admin-content .admin-yearsStudio__count{min-width:68px;padding:10px}.admin-content .admin-yearsStudio__count strong{font-size:23px}.admin-content .admin-yearsGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-content .admin-yearsCard__actions{gap:5px;padding:8px}.admin-content .admin-yearsStudio__toolbar{align-items:flex-start;flex-direction:column}}
