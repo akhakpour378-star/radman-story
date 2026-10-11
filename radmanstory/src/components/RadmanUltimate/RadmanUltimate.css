@@ -4645,3 +4645,11 @@
   .u .u-chapter__imageOpen{right:16px!important;bottom:16px!important}
 }
 @media(prefers-reduced-motion:reduce){.u .u-chapter__image,.u .u-chapter__image img,.u .u-chapter__image::before{transition:none!important}}
+
+
+/* Persian editorial chapter typography */
+.u .u-chapter__copy h2{font-family:inherit!important;line-height:1.55!important;letter-spacing:0!important;text-align:right!important;overflow-wrap:anywhere!important}
+.u .u-chapter__copy>p:not(.u-kicker){text-align:right!important;line-height:2.2!important}
+.u .u-chapter__top{direction:ltr!important}
+.u .u-chapter__top span{direction:rtl!important;text-align:right!important}
+.u .u-chapters__introCopy h2{font-family:inherit!important;line-height:1.55!important}
