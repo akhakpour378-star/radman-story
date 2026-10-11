@@ -5466,3 +5466,39 @@
   }
 }
 
+/* Hard reset for the chapter gallery's primary media: never stretch, crop, or inherit hover zoom */
+.u .u-chapterGallery .u-chapterGallery__stage > img,
+.u .u-chapterGallery .u-chapterGallery__stage > video{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  flex:0 1 auto!important;
+  align-self:center!important;
+  justify-self:center!important;
+  width:auto!important;
+  height:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:calc(min(66vh,760px) - 48px)!important;
+  aspect-ratio:auto!important;
+  object-fit:contain!important;
+  object-position:50% 50%!important;
+  transform:none!important;
+  filter:none!important;
+  clip-path:none!important;
+  border-radius:8px!important;
+  background:transparent!important;
+}
+@media(max-width:700px){
+  .u .u-chapterGallery .u-chapterGallery__stage > img,
+  .u .u-chapterGallery .u-chapterGallery__stage > video{
+    max-width:100%!important;
+    max-height:calc(56vh - 28px)!important;
+    width:auto!important;
+    height:auto!important;
+    object-fit:contain!important;
+    transform:none!important;
+  }
+}
+
