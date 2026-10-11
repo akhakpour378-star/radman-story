@@ -19,6 +19,7 @@ type HeroConfig = {
   story: StorySlide[];
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  movingMemory?: string[];
   chapters: Chapter[];
   years: string[];
   yearsTitles: Record<string, string>;
@@ -99,6 +100,7 @@ export async function PUT(req: NextRequest) {
         (Array.isArray(body.memorySignal) ? body.memorySignal : (current.memorySignal || []))
           .filter((item: unknown) => typeof item === "string" && (item.startsWith("/memory/") || item.startsWith("video:/memory/")))
       )).slice(0, 100),
+      movingMemory: Array.from(new Set((Array.isArray(body.movingMemory) ? body.movingMemory : (current.movingMemory || [])).filter((item: unknown) => typeof item === "string" && item.startsWith("video:/memory/")))).slice(0, 60),
       memoryTitles: Object.fromEntries(Object.entries(body.memoryTitles && typeof body.memoryTitles === "object" ? body.memoryTitles : (current.memoryTitles || {}))
         .filter(([key, value]) => typeof key === "string" && (key.startsWith("/memory/") || key.startsWith("video:/memory/")) && typeof value === "string")
         .map(([key, value]) => [key, String(value).trim().slice(0, 100)])),
