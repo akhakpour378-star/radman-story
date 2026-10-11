@@ -843,3 +843,431 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-content .admin-library__meta strong{font-size:8px}
   .admin-content .admin-library__move{margin:0 14px 14px;padding:12px}
 }
+
+
+/* CHAPTERS STUDIO — editorial timeline and refined content workspace */
+.admin-content .admin-chaptersStudio{
+  max-width:1540px;
+  margin:20px auto 0;
+  color:#eaf1f8;
+}
+.admin-content .admin-chaptersStudio__intro{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:160px;
+  padding:30px 32px;
+  border:1px solid rgba(133,175,207,.22);
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 9% 0%,rgba(113,190,211,.15),transparent 42%),
+    radial-gradient(ellipse at 100% 100%,rgba(86,125,191,.12),transparent 45%),
+    linear-gradient(125deg,#142235 0%,#0c1420 66%,#101a29 100%);
+  box-shadow:0 22px 55px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035);
+}
+.admin-content .admin-chaptersStudio__intro:after{
+  content:"RADMAN  /  LIFE ARCHIVE";
+  position:absolute;
+  z-index:-1;
+  left:28px;
+  bottom:12px;
+  color:rgba(170,205,228,.055);
+  font:700 clamp(22px,4vw,52px)/1 "DM Sans",sans-serif;
+  letter-spacing:.08em;
+  white-space:nowrap;
+  pointer-events:none;
+}
+.admin-content .admin-chaptersStudio__intro>div:first-child>span{
+  color:#91d6e1;
+  font:700 8px/1.8 "DM Sans",sans-serif;
+  letter-spacing:.22em;
+}
+.admin-content .admin-chaptersStudio__intro h2{
+  margin:8px 0 9px;
+  color:#f4f8fc;
+  font:600 25px/1.65 "Vazirmatn",sans-serif;
+  letter-spacing:-.02em;
+}
+.admin-content .admin-chaptersStudio__intro p{
+  max-width:720px;
+  color:#a3b3c5;
+  font:400 11px/2.1 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chaptersStudio__count{
+  position:relative;
+  min-width:124px;
+  padding:13px 10px 13px 0;
+  border-right:1px solid rgba(158,202,222,.2);
+}
+.admin-content .admin-chaptersStudio__count strong{
+  color:#b5eaf0;
+  font:400 48px/.95 "DM Sans",sans-serif;
+  letter-spacing:-.08em;
+  text-shadow:0 0 28px rgba(117,205,221,.12);
+}
+.admin-content .admin-chaptersStudio__count span{
+  color:#839bb0;
+  font:700 7px "DM Sans",sans-serif;
+  letter-spacing:.2em;
+}
+.admin-content .admin-chaptersStudio__grid{
+  grid-template-columns:minmax(275px,.76fr) minmax(0,1.45fr);
+  gap:18px;
+  margin-top:18px;
+}
+.admin-content .admin-chaptersStudio__list{
+  position:relative;
+  gap:8px;
+  padding:12px;
+  border:1px solid rgba(134,166,199,.18);
+  border-radius:15px;
+  background:
+    radial-gradient(ellipse at 0 0,rgba(88,143,188,.07),transparent 50%),
+    linear-gradient(160deg,#101a28,#0b121d);
+  box-shadow:0 15px 38px rgba(0,0,0,.12);
+}
+.admin-content .admin-chapterRow{
+  position:relative;
+  grid-template-columns:31px 66px minmax(0,1fr) 15px;
+  gap:11px;
+  min-height:91px;
+  padding:11px;
+  border:1px solid rgba(139,168,197,.08);
+  border-radius:11px;
+  background:rgba(255,255,255,.018);
+  transition:transform .22s,border-color .22s,background .22s,box-shadow .22s;
+}
+.admin-content .admin-chapterRow:hover{
+  transform:translateX(-2px);
+  border-color:rgba(137,201,219,.3);
+  background:rgba(115,177,205,.055);
+  box-shadow:0 7px 20px rgba(0,0,0,.12);
+}
+.admin-content .admin-chapterRow.is-active{
+  border-color:rgba(139,216,228,.5);
+  background:linear-gradient(105deg,rgba(97,164,204,.13),rgba(91,151,191,.04));
+  box-shadow:inset -3px 0 #8ed8e3,0 8px 22px rgba(0,0,0,.12);
+}
+.admin-content .admin-chapterRow__num{
+  display:grid;
+  place-items:center;
+  align-self:stretch;
+  color:#8da8c0;
+  font:500 12px "DM Sans",sans-serif;
+  border-left:1px solid rgba(139,168,197,.12);
+}
+.admin-content .admin-chapterRow.is-active .admin-chapterRow__num{color:#b6eaf0}
+.admin-content .admin-chapterRow__thumb{
+  width:66px;
+  height:66px;
+  border:1px solid rgba(167,205,226,.2);
+  border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+.admin-content .admin-chapterRow__thumb img{transition:transform .45s,filter .3s;filter:saturate(.84)}
+.admin-content .admin-chapterRow:hover .admin-chapterRow__thumb img,
+.admin-content .admin-chapterRow.is-active .admin-chapterRow__thumb img{transform:scale(1.06);filter:saturate(1)}
+.admin-content .admin-chapterRow__copy{gap:3px}
+.admin-content .admin-chapterRow__copy small{
+  color:#88cbd8;
+  font:700 7px/1.7 "DM Sans",sans-serif;
+  letter-spacing:.14em;
+}
+.admin-content .admin-chapterRow__copy strong{
+  color:#edf4fa;
+  font:600 12px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterRow__copy em{
+  color:#91a1b3;
+  font:400 9px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterRow__chevron{
+  color:#8dcbd8;
+  transition:transform .2s;
+}
+.admin-content .admin-chapterRow:hover .admin-chapterRow__chevron{transform:translateX(-3px)}
+.admin-content .admin-chaptersStudio__add{
+  min-height:47px;
+  margin-top:4px;
+  border:1px dashed rgba(130,197,218,.36);
+  border-radius:10px;
+  background:linear-gradient(110deg,rgba(91,159,192,.08),rgba(91,159,192,.025));
+  color:#b5e3eb;
+  font:600 11px "Vazirmatn",sans-serif;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.admin-content .admin-chaptersStudio__add:hover{
+  transform:translateY(-1px);
+  border-color:rgba(142,216,229,.7);
+  background:rgba(91,159,192,.13);
+}
+.admin-content .admin-chapterEditor{
+  overflow:hidden;
+  border:1px solid rgba(135,171,204,.22);
+  border-radius:15px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(87,145,190,.07),transparent 38%),
+    linear-gradient(145deg,#121e2d,#0b121c);
+  box-shadow:0 18px 48px rgba(0,0,0,.17),inset 0 1px rgba(255,255,255,.025);
+}
+.admin-content .admin-chapterEditor__head{
+  padding:23px 25px;
+  border-bottom:1px solid rgba(150,181,211,.12);
+  background:linear-gradient(110deg,rgba(255,255,255,.025),transparent);
+}
+.admin-content .admin-chapterEditor__head>div>span{
+  color:#8dd0dc;
+  font:700 8px/1.8 "DM Sans",sans-serif;
+  letter-spacing:.18em;
+}
+.admin-content .admin-chapterEditor__head h2{
+  margin:7px 0;
+  color:#f1f6fb;
+  font:600 19px/1.7 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__head p{
+  color:#94a6b9;
+  font:400 10px/2 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__order button{
+  min-height:34px;
+  padding:7px 11px;
+  border:1px solid rgba(140,175,206,.2);
+  border-radius:8px;
+  background:rgba(255,255,255,.035);
+  color:#c5d4e3;
+  font:500 9px "Vazirmatn",sans-serif;
+  transition:background .2s,border-color .2s;
+}
+.admin-content .admin-chapterEditor__order button:hover:not(:disabled){
+  border-color:rgba(137,210,224,.6);
+  background:rgba(107,180,204,.1);
+}
+.admin-content .admin-chapterEditor__preview{
+  grid-template-columns:minmax(145px,.68fr) minmax(0,1fr);
+  gap:20px;
+  padding:21px 25px;
+  border-bottom:1px solid rgba(150,181,211,.12);
+  background:linear-gradient(110deg,rgba(255,255,255,.025),transparent 72%);
+}
+.admin-content .admin-chapterEditor__preview img{
+  height:160px;
+  border:1px solid rgba(147,198,220,.24);
+  border-radius:10px;
+  box-shadow:0 9px 24px rgba(0,0,0,.22);
+}
+.admin-content .admin-chapterEditor__preview span{
+  color:#8fd7e2;
+  font:700 8px/1.8 "DM Sans",sans-serif;
+  letter-spacing:.12em;
+}
+.admin-content .admin-chapterEditor__preview h3{
+  margin:7px 0 9px;
+  color:#f0f5fa;
+  font:600 19px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__preview p{
+  color:#9eafc0;
+  font:400 10px/2.1 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__fields{
+  gap:17px;
+  padding:24px 25px;
+}
+.admin-content .admin-chapterEditor__fields .admin-field>span{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd8e5;
+  font:500 10px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__fields input,
+.admin-content .admin-chapterEditor__fields textarea{
+  border:1px solid rgba(137,170,201,.22);
+  border-radius:9px;
+  background:rgba(5,11,19,.58);
+  color:#edf4fb;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.admin-content .admin-chapterEditor__fields input{
+  min-height:42px;
+  padding:0 12px;
+  font:400 11px "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__fields textarea{
+  min-height:112px;
+  padding:12px;
+  font:400 11px/2.1 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__fields input::placeholder,
+.admin-content .admin-chapterEditor__fields textarea::placeholder{color:#62758a}
+.admin-content .admin-chapterEditor__fields input:focus,
+.admin-content .admin-chapterEditor__fields textarea:focus{
+  border-color:rgba(137,213,225,.75);
+  background:#0a1420;
+  box-shadow:0 0 0 3px rgba(137,213,225,.07);
+  outline:none;
+}
+.admin-content .admin-chapterEditor__fields .admin-field small{
+  color:#8195a9;
+  font:400 9px/2 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__fields .admin-imagePathRow{
+  display:flex;
+  gap:9px;
+  align-items:stretch;
+}
+.admin-content .admin-chapterEditor__fields .admin-imagePathRow>input{min-width:0;flex:1}
+.admin-content .admin-chapterEditor__fields .admin-imagePathRow .admin-uploadMini{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:42px;
+  padding:0 13px;
+  border:1px solid rgba(131,202,218,.28);
+  border-radius:9px;
+  background:rgba(102,177,198,.1);
+  color:#b9e8ef;
+  font:600 9px "Vazirmatn",sans-serif;
+  white-space:nowrap;
+  cursor:pointer;
+  transition:background .2s,border-color .2s;
+}
+.admin-content .admin-chapterEditor__fields .admin-imagePathRow .admin-uploadMini:hover{
+  border-color:rgba(131,218,230,.65);
+  background:rgba(102,177,198,.17);
+}
+.admin-content .admin-chapterGallery{
+  margin:0 20px 20px;
+  padding:20px;
+  border:1px solid rgba(137,177,207,.19);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(16,28,42,.92),rgba(8,15,24,.95));
+}
+.admin-content .admin-chapterGallery__head{
+  padding-bottom:15px;
+  border-bottom:1px solid rgba(142,174,204,.12);
+}
+.admin-content .admin-chapterGallery__head h3{
+  color:#edf5fb;
+  font:600 16px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterGallery__head p{
+  color:#91a5b8;
+  font:400 10px/2 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterGallery__head>strong{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:70px;
+  padding:8px 11px;
+  border:1px solid rgba(131,207,221,.2);
+  border-radius:8px;
+  background:rgba(110,188,205,.08);
+  color:#b3eaf0;
+  font:500 10px "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterGallery__uploads{gap:10px;margin:16px 0}
+.admin-content .admin-chapterGallery__uploads .admin-memoryUploadButton{
+  min-height:39px;
+  padding:0 13px;
+  border-radius:9px;
+  font:600 10px "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterGallery__grid{
+  grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
+  gap:12px;
+}
+.admin-content .admin-chapterGallery__item{
+  border:1px solid rgba(135,169,201,.18);
+  border-radius:10px;
+  background:#0b1420;
+  transition:transform .22s,border-color .22s,box-shadow .22s;
+}
+.admin-content .admin-chapterGallery__item:hover{
+  transform:translateY(-2px);
+  border-color:rgba(135,210,225,.45);
+  box-shadow:0 12px 26px rgba(0,0,0,.2);
+}
+.admin-content .admin-chapterGallery__media{
+  aspect-ratio:4/3;
+  background:#050a11;
+}
+.admin-content .admin-chapterGallery__media img,
+.admin-content .admin-chapterGallery__media video{
+  object-fit:cover;
+  transition:transform .45s;
+}
+.admin-content .admin-chapterGallery__item:hover .admin-chapterGallery__media img,
+.admin-content .admin-chapterGallery__item:hover .admin-chapterGallery__media video{transform:scale(1.04)}
+.admin-content .admin-chapterGallery__itemFoot{
+  min-height:44px;
+  padding:7px 9px;
+  background:rgba(255,255,255,.015);
+}
+.admin-content .admin-chapterGallery__itemFoot span{
+  color:#a9bacb;
+  font:400 9px/1.8 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterGallery__itemFoot button{
+  width:30px;
+  height:30px;
+  border-radius:7px;
+  transition:background .2s,border-color .2s;
+}
+.admin-content .admin-chapterGallery__empty{
+  border-radius:9px;
+  background:rgba(255,255,255,.012);
+  color:#8da0b4;
+  font:400 10px/2.1 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chapterEditor__foot{
+  padding:16px 24px;
+  border-top:1px solid rgba(143,174,204,.12);
+  background:rgba(3,8,14,.24);
+}
+.admin-content .admin-chaptersStudio__note{
+  padding:16px 19px;
+  border:1px solid rgba(128,195,211,.19);
+  border-radius:11px;
+  background:linear-gradient(110deg,rgba(75,145,163,.075),rgba(75,145,163,.02));
+}
+.admin-content .admin-chaptersStudio__note p{
+  color:#a4b8c8;
+  font:400 10px/2.1 "Vazirmatn",sans-serif;
+}
+.admin-content .admin-chaptersStudio__note strong{color:#d8f0f3}
+@media(max-width:1100px){
+  .admin-content .admin-chaptersStudio__grid{grid-template-columns:1fr}
+  .admin-content .admin-chaptersStudio__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .admin-content .admin-chaptersStudio__add{grid-column:1/-1}
+}
+@media(max-width:650px){
+  .admin-content .admin-chaptersStudio__intro{padding:19px;gap:10px;border-radius:13px}
+  .admin-content .admin-chaptersStudio__intro h2{font-size:18px}
+  .admin-content .admin-chaptersStudio__intro p{font-size:10px}
+  .admin-content .admin-chaptersStudio__count{min-width:56px;padding:9px 0}
+  .admin-content .admin-chaptersStudio__count strong{font-size:30px}
+  .admin-content .admin-chaptersStudio__count span{font-size:6px}
+  .admin-content .admin-chaptersStudio__grid{gap:12px}
+  .admin-content .admin-chaptersStudio__list{grid-template-columns:1fr;padding:8px;border-radius:12px}
+  .admin-content .admin-chapterRow{grid-template-columns:25px 52px minmax(0,1fr) 12px;min-height:76px;gap:8px;padding:8px}
+  .admin-content .admin-chapterRow__thumb{width:52px;height:52px}
+  .admin-content .admin-chapterRow__copy strong{font-size:11px}
+  .admin-content .admin-chapterEditor{border-radius:12px}
+  .admin-content .admin-chapterEditor__head{padding:17px}
+  .admin-content .admin-chapterEditor__preview{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:14px}
+  .admin-content .admin-chapterEditor__preview img{height:110px}
+  .admin-content .admin-chapterEditor__preview h3{font-size:15px}
+  .admin-content .admin-chapterEditor__fields{padding:17px;gap:13px}
+  .admin-content .admin-chapterEditor__fields .admin-imagePathRow{flex-direction:column}
+  .admin-content .admin-chapterEditor__fields .admin-imagePathRow .admin-uploadMini{width:100%}
+  .admin-content .admin-chapterGallery{margin:0 12px 12px;padding:13px}
+  .admin-content .admin-chapterGallery__head{gap:8px}
+  .admin-content .admin-chapterGallery__head h3{font-size:14px}
+  .admin-content .admin-chapterGallery__head p{font-size:9px}
+  .admin-content .admin-chapterGallery__head>strong{min-width:58px;padding:7px;font-size:9px}
+  .admin-content .admin-chapterGallery__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .admin-content .admin-chapterEditor__foot{padding:13px 16px}
+}
