@@ -101,8 +101,18 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
+  const memoryThumbsRef = useRef<HTMLElement | null>(null);
   const [signalItems, setSignalItems] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const rail = memoryThumbsRef.current;
+    if (!rail || !selectedMemorySrc) return;
+    const activeThumb = rail.querySelector<HTMLButtonElement>("button.is-active");
+    if (!activeThumb) return;
+    const targetLeft = activeThumb.offsetLeft - (rail.clientWidth - activeThumb.offsetWidth) / 2;
+    rail.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
+  }, [selectedMemorySrc, signalItems]);
 
   const [storySlide, setStorySlide] = useState(0);
   const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
@@ -681,7 +691,7 @@ export default function RadmanUltimate() {
                   : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} />}
               </div>
             </div>
-            <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
+            <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
               {signalItems.map((entry, idx) => {
                 const isVideo = entry.startsWith("video:");
                 const src = isVideo ? entry.slice(6) : entry;
