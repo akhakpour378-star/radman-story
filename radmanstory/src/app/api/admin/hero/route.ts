@@ -110,6 +110,7 @@ export async function PUT(req: NextRequest) {
         title: String(chapter.title || "").trim().slice(0, 120),
         description: String(chapter.description || "").trim().slice(0, 600),
         image: String(chapter.image || "").trim().startsWith("/memory/") ? String(chapter.image).trim() : "/memory/radman-main.JPG",
+        gallery: Array.from(new Set((Array.isArray(chapter.gallery) ? chapter.gallery : []).filter((item: unknown) => typeof item === "string" && (item.startsWith("/memory/") || item.startsWith("video:/memory/")))).values()).slice(0, 200),
       })) : current.chapters || defaults.chapters,
     };
 
