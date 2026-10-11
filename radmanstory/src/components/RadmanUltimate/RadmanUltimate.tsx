@@ -41,6 +41,7 @@ type HeroConfig = {
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
   chapters?: Chapter[];
+  years?: string[];
 };
 
 type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
@@ -293,6 +294,13 @@ export default function RadmanUltimate() {
       alive = false;
     };
   }, []);
+
+  const timelineMemories = (Array.isArray(heroConfig.years) ? heroConfig.years : fallback.map((item) => item.src))
+    .slice(0, 8)
+    .map((src, index) => {
+      const existing = memories.find((item) => item.src === src) || fallback.find((item) => item.src === src);
+      return existing || { src, no: String(index + 1).padStart(2, "0"), title: `The Years · ${String(index + 1).padStart(2, "0")}`, tag: "THE YEARS" };
+    });
 
   const selectedSignalEntry = selectedMemorySrc
     ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
@@ -695,8 +703,8 @@ export default function RadmanUltimate() {
         </div>
         <div className="u-timeline__rail" aria-hidden="true"><span /><i /><i /><i /><i /><i /><i /><i /><i /></div>
         <div className="u-timeline__steps">
-          {memories.slice(0, 8).map((m, i) => (
-            <button className={"u-step u-reveal u-step--" + (i % 4)} key={m.src} onClick={() => setSelected(i)} aria-label={`نمایش خاطره ${m.title}`}>
+          {timelineMemories.map((m, i) => (
+            <button className={"u-step u-reveal u-step--" + (i % 4)} key={m.src} onClick={() => setSelected(Math.max(0, memories.findIndex((item) => item.src === m.src)))} aria-label={`نمایش خاطره ${m.title}`}>
               <span className="u-step__number">{m.no}</span>
               <span className="u-step__image"><img src={asset(m.src)} alt={m.title} loading={i < 4 ? "eager" : "lazy"} /><span className="u-step__imageShade" /></span>
               <span className="u-step__meta"><small>{m.tag}</small><i><ArrowUpRight size={15} /></i></span>
