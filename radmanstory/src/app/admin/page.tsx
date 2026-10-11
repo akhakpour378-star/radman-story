@@ -96,7 +96,7 @@ export default function AdminPage() {
   const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
   const [memoryNameDraft, setMemoryNameDraft] = useState("");
 
-  const goToSection = (section: "dashboard" | "hero" | "story" | "memory" | "library" | "trash") => {
+  const goToSection = (section: "dashboard" | "hero" | "story" | "chapters" | "memory" | "library" | "trash") => {
     setActiveSection(section);
     try {
       const params = new URLSearchParams(window.location.search);
