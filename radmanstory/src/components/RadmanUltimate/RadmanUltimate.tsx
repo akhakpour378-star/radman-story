@@ -86,15 +86,6 @@ const prettyTitle = (_file: string, index: number) =>
 export default function RadmanUltimate() {
   const root = useRef<HTMLElement>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const reelDrag = useRef({
-    active: false,
-    startX: 0,
-    offset: 0,
-    lastOffset: 0,
-    pressedMedia: null as string | null,
-    pressedVideo: false,
-  });
-  const reelManual = useRef(false);
   const [sound, setSound] = useState(false);
   const [memories, setMemories] = useState<Memory[]>(fallback);
   const [heroConfig, setHeroConfig] = useState<HeroConfig>({
