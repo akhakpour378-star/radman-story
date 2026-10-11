@@ -101,6 +101,7 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
+  const [signalItems, setSignalItems] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
 
   const [storySlide, setStorySlide] = useState(0);
@@ -201,6 +202,17 @@ export default function RadmanUltimate() {
 
   useEffect(() => {
     let alive = true;
+    fetch("/api/site/memory-signal", { cache: "no-store" })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: { items?: string[] } | null) => {
+        if (alive) setSignalItems(Array.isArray(data?.items) ? data.items : []);
+      })
+      .catch(() => { if (alive) setSignalItems([]); });
+    return () => { alive = false; };
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
     fetch("/api/admin/hero")
       .then((r) => r.ok ? r.json() : null)
       .then((data: HeroConfig | null) => {
@@ -246,7 +258,7 @@ export default function RadmanUltimate() {
   }, []);
 
   const selectedSignalEntry = selectedMemorySrc
-    ? (heroConfig.memorySignal || []).find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
+    ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
     : null;
   const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
   const selectedMemory = selectedMemorySrc
@@ -553,7 +565,7 @@ export default function RadmanUltimate() {
         </div>
       </section>
       <MemorySignal
-        items={heroConfig.memorySignal || []}
+        items={signalItems}
         resolveSrc={asset}
         onSelect={(src, index) => {
           setSelectedMemorySrc(src);
@@ -652,7 +664,7 @@ export default function RadmanUltimate() {
           <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
           <button type="button" className="u-lightbox__prev" onClick={(e) => {
               e.stopPropagation();
-              const signal = heroConfig.memorySignal || [];
+              const signal = signalItems;
               const currentIndex = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
               const next = (currentIndex - 1 + signal.length) % signal.length;
               const src = signal[next]?.replace(/^video:/, "") || null;
@@ -670,7 +682,7 @@ export default function RadmanUltimate() {
               </div>
             </div>
             <aside className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
-              {(heroConfig.memorySignal || []).map((entry, idx) => {
+              {signalItems.map((entry, idx) => {
                 const isVideo = entry.startsWith("video:");
                 const src = isVideo ? entry.slice(6) : entry;
                 const memory = memories.find((item) => item.src === src);
