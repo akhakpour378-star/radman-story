@@ -560,7 +560,6 @@ export default function RadmanUltimate() {
         <div className="u-nav__center">
           <a href="#story">STORY</a>
           <a href="#chapters">CHAPTERS</a>
-          <a href="#archive">ARCHIVE</a>
         </div>
         <button className="u-nav__sound" onClick={toggleSound} aria-label="Toggle ambient sound">
           {sound ? <Volume2 size={13} /> : <VolumeX size={13} />}<span>{sound ? "ON" : "SOUND"}</span>
@@ -730,25 +729,6 @@ export default function RadmanUltimate() {
         <div className="u-timeline__foot"><span>SCROLL THROUGH THE YEARS</span><span><i /> EVERY FRAME, A MEMORY</span></div>
       </section>
       )}
-
-      <section id="archive" className="u-archive">
-        <div className="u-archive__head u-reveal">
-          <div><span className="u-kicker">02 / THE COMPLETE ARCHIVE</span><h2>Small moments.<br /><em>Kept forever.</em></h2></div>
-          <p>{memories.length} قاب از آرشیو واقعی رادمان؛ با اندازه‌های کنترل‌شده و نسبت تصویر طبیعی تا هر عکس مثل یک اثر مستقل دیده شود.</p>
-        </div>
-        <div className="u-archive__grid">
-          {memories.map((m, i) => (
-            <figure className={"u-card u-card--" + (i % 4)} key={m.src}>
-              <button onClick={() => { setSelectedGalleryType(null); setSelected(i); setSelectedMemorySrc(null); }} aria-label={`Open ${m.title}`}>
-                <img src={asset(m.src)} alt={m.title} loading={i < 5 ? "eager" : "lazy"} />
-                <span>{m.no}</span>
-                <i><Maximize2 size={12} /></i>
-              </button>
-              <figcaption><small>{m.tag}</small><b>{m.title}</b><em>{m.no}</em></figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
 
       <section className="u-film">
         <div className="u-film__copy u-reveal">
