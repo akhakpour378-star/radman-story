@@ -100,19 +100,10 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       frameRef.current = requestAnimationFrame(tick);
     };
     frameRef.current = requestAnimationFrame(tick);
-    const onVisibility = () => {
-      if (document.visibilityState !== "visible" && frameRef.current !== null) {
-        cancelAnimationFrame(frameRef.current);
-        frameRef.current = null;
-        lastFrameRef.current = 0;
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
       lastFrameRef.current = 0;
-      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [focused, hovered, isDragging, media.length, paused, reducedMotion]);
 
