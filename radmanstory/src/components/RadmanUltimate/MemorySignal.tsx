@@ -196,7 +196,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         aria-label="Memory Signal gallery. Use the arrow keys to browse."
         onKeyDown={(event) => {
           if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" });  }
-          if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" }); setPaused(true); }
+          if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" });  }
         }}
       >
         <div className="memory-signal__track" ref={trackRef}>
