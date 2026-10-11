@@ -5241,8 +5241,8 @@
   transition:border-color .35s ease,color .35s ease!important;
 }
 .u .u-chapter__galleryLink>span{display:flex!important;flex-direction:column!important;gap:5px!important}
-.u .u-chapter__galleryLink b{font:500 12px/1.8 inherit!important;letter-spacing:0!important;color:rgba(238,243,247,.92)!important}
-.u .u-chapter__galleryLink small{font:400 9px/1.8 inherit!important;color:rgba(165,181,198,.68)!important}
+.u .u-chapter__galleryLink b{font-family:inherit!important;font-size:12px!important;font-weight:500!important;line-height:1.8!important;letter-spacing:0!important;color:rgba(238,243,247,.92)!important}
+.u .u-chapter__galleryLink small{font-family:inherit!important;font-size:9px!important;font-weight:400!important;line-height:1.8!important;color:rgba(165,181,198,.68)!important}
 .u .u-chapter__galleryLink i{
   display:grid!important;place-items:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important;
   border:1px solid rgba(169,233,240,.28)!important;border-radius:50%!important;color:#a9e9f0!important;
