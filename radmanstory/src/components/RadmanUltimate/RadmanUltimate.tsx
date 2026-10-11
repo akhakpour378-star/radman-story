@@ -17,6 +17,9 @@ import {
   MapPin,
   Volume2,
   VolumeX,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
   X,
 } from "lucide-react";
 import "./RadmanUltimate.css";
@@ -101,9 +104,14 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
+  const [imageZoom, setImageZoom] = useState(1);
   const memoryThumbsRef = useRef<HTMLElement | null>(null);
   const [signalItems, setSignalItems] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
+
+  useEffect(() => {
+    setImageZoom(1);
+  }, [selectedMemorySrc]);
 
   useEffect(() => {
     const rail = memoryThumbsRef.current;
@@ -685,10 +693,18 @@ export default function RadmanUltimate() {
               <div className="u-lightbox__mediaTitle" dir="rtl">
                 <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
               </div>
-              <div className="u-lightbox__image">
+              <div className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "")}>
+                {!selectedIsVideo && (
+                  <div className="u-lightbox__zoomControls" aria-label="Image zoom controls">
+                    <button type="button" onClick={() => setImageZoom((z) => Math.min(3, +(z + 0.25).toFixed(2)))} disabled={imageZoom >= 3} aria-label="Zoom in" title="Zoom in"><ZoomIn size={17} /></button>
+                    <span>{Math.round(imageZoom * 100)}%</span>
+                    <button type="button" onClick={() => setImageZoom((z) => Math.max(1, +(z - 0.25).toFixed(2)))} disabled={imageZoom <= 1} aria-label="Zoom out" title="Zoom out"><ZoomOut size={17} /></button>
+                    <button type="button" onClick={() => setImageZoom(1)} disabled={imageZoom === 1} aria-label="Reset zoom" title="Reset zoom"><RotateCcw size={15} /></button>
+                  </div>
+                )}
                 {selectedIsVideo
                   ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
-                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} />}
+                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} style={{ transform: `scale(${imageZoom})` }} />}
               </div>
             </div>
             <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
