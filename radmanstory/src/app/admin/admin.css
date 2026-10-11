@@ -506,3 +506,25 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-chaptersStudio__note strong{color:#dceaf0}
 @media(max-width:1100px){.admin-chaptersStudio__grid{grid-template-columns:1fr}.admin-chaptersStudio__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.admin-chaptersStudio__add{grid-column:1/-1}}
 @media(max-width:650px){.admin-chaptersStudio__intro{padding:18px;align-items:flex-start}.admin-chaptersStudio__intro h2{font-size:18px}.admin-chaptersStudio__count{min-width:64px;padding:10px 0}.admin-chaptersStudio__count strong{font-size:30px}.admin-chaptersStudio__list{grid-template-columns:1fr;padding:7px}.admin-chapterRow{grid-template-columns:25px 52px minmax(0,1fr) 14px;gap:8px;padding:9px}.admin-chapterRow__thumb{width:52px;height:52px}.admin-chapterEditor__head{flex-direction:column;padding:17px}.admin-chapterEditor__preview{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:14px}.admin-chapterEditor__preview img{height:110px}.admin-chapterEditor__preview h3{font-size:15px}.admin-chapterEditor__fields{grid-template-columns:1fr;padding:17px;gap:13px}.admin-chapterEditor__fields .admin-field{grid-column:1/-1}.admin-chapterEditor__foot{padding:13px 16px;align-items:flex-start;flex-direction:column}}
+
+
+/* Per-chapter gallery management */
+.admin-chapterGallery{margin:22px 0 6px;border:1px solid rgba(129,197,211,.2);background:linear-gradient(145deg,rgba(21,34,47,.9),rgba(10,16,24,.96));padding:20px}
+.admin-chapterGallery__head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.admin-chapterGallery__head>div>span{display:block;color:#8ed3df;font:700 8px/1.8 "DM Sans",sans-serif;letter-spacing:.17em}
+.admin-chapterGallery__head h3{margin:5px 0;color:#edf4f7;font:600 17px "Vazirmatn",sans-serif}
+.admin-chapterGallery__head p{margin:0;color:#92a3b5;font:400 10px/1.9 "Vazirmatn",sans-serif}
+.admin-chapterGallery__head>strong{flex-shrink:0;color:#a9e9f0;font:500 12px "Vazirmatn",sans-serif}
+.admin-chapterGallery__uploads{display:flex;flex-wrap:wrap;gap:9px;margin:17px 0}
+.admin-chapterGallery__uploads .admin-memoryUploadButton{min-width:125px}
+.admin-chapterGallery__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.admin-chapterGallery__item{min-width:0;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#080e15}
+.admin-chapterGallery__media{position:relative;aspect-ratio:4/3;background:#05080d;overflow:hidden}
+.admin-chapterGallery__media img,.admin-chapterGallery__media video{display:block;width:100%;height:100%;object-fit:contain}
+.admin-chapterGallery__media i{position:absolute;left:8px;top:8px;padding:4px 6px;border-radius:4px;background:rgba(0,0,0,.7);color:#a9e9f0;font:700 7px "DM Sans",sans-serif;letter-spacing:.12em}
+.admin-chapterGallery__itemFoot{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px}
+.admin-chapterGallery__itemFoot span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9eafbf;font:400 9px/1.8 "Vazirmatn",sans-serif}
+.admin-chapterGallery__itemFoot button{display:grid;place-items:center;flex-shrink:0;width:28px;height:28px;border:1px solid rgba(255,120,120,.22);background:rgba(255,90,90,.06);color:#ef9a9a;cursor:pointer}
+.admin-chapterGallery__itemFoot button:hover{border-color:rgba(255,120,120,.6);background:rgba(255,90,90,.14)}
+.admin-chapterGallery__empty{padding:28px 16px;border:1px dashed rgba(144,173,198,.2);color:#8e9fb1;text-align:center;font:400 11px/2 "Vazirmatn",sans-serif}
+@media(max-width:650px){.admin-chapterGallery{padding:14px}.admin-chapterGallery__head{align-items:flex-start}.admin-chapterGallery__head h3{font-size:15px}.admin-chapterGallery__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
