@@ -804,7 +804,7 @@ export default function RadmanUltimate() {
                 </div>}
                 {isVideo
                   ? <video key={key} src={asset(src)} controls autoPlay playsInline preload="metadata" />
-                  : <img key={key} src={asset(src)} alt={chapterGallery.title} draggable={false} style={{ transform: `translate(${chapterImagePan.x}px, ${chapterImagePan.y}px) scale(${chapterImageZoom})` }} />}
+                  : <img key={key} src={asset(src)} alt={chapterGallery.title} draggable={false} style={{ "--chapter-gallery-transform": `translate(${chapterImagePan.x}px, ${chapterImagePan.y}px) scale(${chapterImageZoom})` } as React.CSSProperties} />}
                 <span className="u-chapterGallery__counter">{String(chapterGalleryIndex + 1).padStart(2, "0")} / {String(chapterGallery.items.length).padStart(2, "0")}</span>
               </div>
               {chapterGallery.items.length > 1 && <div className="u-chapterGallery__controls">
