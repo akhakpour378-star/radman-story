@@ -171,7 +171,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         onPointerCancel={onPointerUp}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        onFocusCapture={() => setFocused(true)}
+        onFocusCapture={() => { setFocused(true); setPaused(true); }}
         onBlurCapture={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
         }}
