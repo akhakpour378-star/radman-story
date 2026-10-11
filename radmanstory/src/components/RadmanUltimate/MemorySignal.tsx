@@ -23,7 +23,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   const draggedRef = useRef(false);
   const suppressClickRef = useRef(false);
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
@@ -48,19 +47,37 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   }, [media]);
   const getCycleWidth = useCallback(() => {
     const track = trackRef.current;
-    if (!track || media.length < 2) {
+    const viewport = viewportRef.current;
+    if (!track || !viewport || media.length < 2) {
       cycleWidthRef.current = 0;
       return;
     }
+
     const children = Array.from(track.children) as HTMLElement[];
     const first = children[0];
-    const afterCycle = children[media.length];
-    if (first && afterCycle) {
-      cycleWidthRef.current = afterCycle.offsetLeft - first.offsetLeft;
-      const viewport = viewportRef.current;
-      if (viewport && viewport.scrollLeft < cycleWidthRef.current * 0.5) {
-        viewport.scrollLeft = cycleWidthRef.current;
-      }
+    const firstOfNextCopy = children[media.length];
+    if (!first || !firstOfNextCopy) {
+      cycleWidthRef.current = 0;
+      return;
+    }
+
+    // Measure in viewport coordinates: unlike offsetLeft, this remains reliable
+    // when the page around the carousel uses RTL layout or nested offset parents.
+    const cycleWidth = firstOfNextCopy.getBoundingClientRect().left - first.getBoundingClientRect().left;
+    if (!Number.isFinite(cycleWidth) || cycleWidth <= 0) {
+      cycleWidthRef.current = 0;
+      return;
+    }
+
+    const previousCycle = cycleWidthRef.current;
+    cycleWidthRef.current = cycleWidth;
+    if (previousCycle === 0) {
+      // Begin in the middle copy so the track has room to loop in both directions.
+      viewport.scrollLeft = cycleWidth;
+    } else {
+      // Preserve the user's relative position when images/fonts/layout resize.
+      const relative = viewport.scrollLeft % previousCycle;
+      viewport.scrollLeft = cycleWidth + relative;
     }
   }, [media.length]);
 
@@ -85,7 +102,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport || media.length < 2) return;
-    const canMove = !paused && !hovered && !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
+    const canMove = !paused && !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
     if (!canMove) {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
@@ -99,9 +116,13 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       lastFrameRef.current = now;
       const cycle = cycleWidthRef.current;
       if (cycle > 0) {
-        viewport.scrollLeft += elapsed * 0.032;
-        if (viewport.scrollLeft >= cycle * 2) viewport.scrollLeft -= cycle;
-        if (viewport.scrollLeft < cycle * 0.5) viewport.scrollLeft += cycle;
+        // LTR is enforced on the viewport; normalize against the middle copy.
+        const next = viewport.scrollLeft + elapsed * 0.045;
+        const lower = cycle * 0.5;
+        const upper = cycle * 2.5;
+        if (next >= upper) viewport.scrollLeft = next - cycle;
+        else if (next < lower) viewport.scrollLeft = next + cycle;
+        else viewport.scrollLeft = next;
       }
       frameRef.current = requestAnimationFrame(tick);
     };
@@ -111,7 +132,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       frameRef.current = null;
       lastFrameRef.current = 0;
     };
-  }, [focused, hovered, isDragging, media.length, paused, reducedMotion]);
+  }, [focused, isDragging, media.length, paused, reducedMotion]);
 
   const moveByCard = (direction: -1 | 1) => {
     const viewport = viewportRef.current;
@@ -175,8 +196,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
         onFocusCapture={() => setFocused(true)}
         onBlurCapture={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
