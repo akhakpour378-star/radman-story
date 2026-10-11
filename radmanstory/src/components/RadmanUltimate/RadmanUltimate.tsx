@@ -683,21 +683,29 @@ export default function RadmanUltimate() {
         </div>
       </section>
 
-      <section className="u-timeline">
+      <section className="u-timeline u-timeline--editorial">
         <div className="u-timeline__head u-reveal">
-          <span className="u-kicker">01 / THE YEARS</span>
+          <div className="u-timeline__eyebrow"><span className="u-kicker">01 / THE YEARS</span><span className="u-timeline__headNote">A LIFE, FRAME BY FRAME</span></div>
           <h2>Time leaves traces.<br /><em>We keep them.</em></h2>
-          <p>هر تصویر یک نقطه روی خط زمان است؛ اما وقتی کنار تصویر بعدی قرار می‌گیرد، تبدیل به روایت می‌شود.</p>
+          <div className="u-timeline__intro">
+            <span className="u-timeline__introMark" aria-hidden="true">“</span>
+            <p>هر تصویر یک نقطه روی خط زمان است؛ اما وقتی کنار تصویر بعدی قرار می‌گیرد، تبدیل به روایت می‌شود.</p>
+            <span className="u-timeline__introMeta">RADMAN / VISUAL MEMORY</span>
+          </div>
         </div>
-        <div className="u-line" />
+        <div className="u-timeline__rail" aria-hidden="true"><span /><i /><i /><i /><i /><i /><i /><i /><i /></div>
         <div className="u-timeline__steps">
           {memories.slice(0, 8).map((m, i) => (
-            <button className="u-step u-reveal" key={m.src} onClick={() => setSelected(i)}>
-              <span>{m.no}</span><b>{m.title}</b><small>{m.tag}</small>
-              <i><ArrowUpRight size={12} /></i>
+            <button className={"u-step u-reveal u-step--" + (i % 4)} key={m.src} onClick={() => setSelected(i)} aria-label={`نمایش خاطره ${m.title}`}>
+              <span className="u-step__number">{m.no}</span>
+              <span className="u-step__image"><img src={asset(m.src)} alt={m.title} loading={i < 4 ? "eager" : "lazy"} /><span className="u-step__imageShade" /></span>
+              <span className="u-step__meta"><small>{m.tag}</small><i><ArrowUpRight size={15} /></i></span>
+              <b>{m.title}</b>
+              <span className="u-step__index">MEMORY / {String(i + 1).padStart(2, "0")}</span>
             </button>
           ))}
         </div>
+        <div className="u-timeline__foot"><span>SCROLL THROUGH THE YEARS</span><span><i /> EVERY FRAME, A MEMORY</span></div>
       </section>
 
       <section id="archive" className="u-archive">
