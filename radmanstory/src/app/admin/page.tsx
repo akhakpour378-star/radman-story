@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon,
+  ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon, Play,
   LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2, RotateCcw, ArchiveRestore,
 } from "lucide-react";
 import "./admin.css";
@@ -14,6 +14,7 @@ type HeroConfig = {
   story: StorySlide[];
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  movingMemory?: string[];
   chapters: Chapter[];
   years: string[];
   yearsTitles: Record<string, string>;
@@ -90,7 +91,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "library" | "trash">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "moving" | "library" | "trash">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
   const [editingChapter, setEditingChapter] = useState<number>(0);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
@@ -100,7 +101,7 @@ export default function AdminPage() {
   const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
   const [memoryNameDraft, setMemoryNameDraft] = useState("");
 
-  const goToSection = (section: "dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "library" | "trash") => {
+  const goToSection = (section: "dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "moving" | "library" | "trash") => {
     setActiveSection(section);
     try {
       const params = new URLSearchParams(window.location.search);
@@ -138,7 +139,7 @@ export default function AdminPage() {
     try {
       const params = new URLSearchParams(window.location.search);
       const section = params.get("section");
-      if (section === "dashboard" || section === "hero" || section === "story" || section === "years" || section === "chapters" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "years" || section === "chapters" || section === "memory" || section === "moving" || section === "library" || section === "trash") setActiveSection(section);
       const story = params.get("story");
       if (story !== null && story !== "") {
         const n = Number(story);
@@ -363,6 +364,15 @@ export default function AdminPage() {
     } catch (e) { setError(e instanceof Error ? e.message : `آپلود ${prefix} انجام نشد.`); }
     finally { setMemoryUploadType(null); }
   };
+
+  const uploadMovingMemoryVideo = async (file: File) => {
+    if (!file.type.startsWith("video/")) { setError("برای MOVING MEMORY فقط فایل ویدیویی قابل آپلود است."); return; }
+    if (file.size > 100 * 1024 * 1024) { setError("حجم ویدیو نباید بیشتر از ۱۰۰ مگابایت باشد."); return; }
+    setUploading(true); setSaved(false); setError("");
+    try { const form = new FormData(); form.append("file", file); form.append("section", "moving-memory"); const response = await fetch("/api/admin/memory", { method: "POST", body: form }); const data = await response.json(); if (!response.ok) throw new Error(data?.error || "آپلود ویدیو انجام نشد."); const src = String(data.src || data.video || ""); if (!src.startsWith("/memory/")) throw new Error("مسیر ویدیوی برگشتی معتبر نیست."); const key = "video:" + src; setVideos(current => current.includes(src) ? current : [src, ...current]); setAllMedia(current => current.includes(key) ? current : [key, ...current]); setConfig(current => ({ ...current, movingMemory: Array.from(new Set([...(current.movingMemory || []), key])) })); }
+    catch (e) { setError(e instanceof Error ? e.message : "آپلود ویدیو انجام نشد."); } finally { setUploading(false); }
+  };
+  const toggleMovingMemory = (key: string) => { setSaved(false); setError(""); setConfig(current => { const items = current.movingMemory || []; return { ...current, movingMemory: items.includes(key) ? items.filter(item => item !== key) : [...items, key] }; }); };
 
   const uploadYearsImage = async (file: File) => {
     if (!file.type.startsWith("image/")) { setError("برای THE YEARS فقط فایل تصویری قابل آپلود است."); return; }
@@ -620,17 +630,17 @@ export default function AdminPage() {
         <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "years" ? "admin-nav--active" : ""}`} onClick={() => goToSection("years")}><ImageIcon size={16} /><span>THE YEARS / خط زمان</span><i>{config.years?.length || 0}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "moving" ? "admin-nav--active" : ""}`} onClick={() => goToSection("moving")}><Play size={16} /><span>MOVING MEMORY / ویدیوها</span><i>{config.movingMemory?.length || 0}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "trash" ? "admin-nav--active" : ""}`} onClick={() => goToSection("trash")}><ArchiveRestore size={16} /><span>سطل آشغال</span><i>{trashItems.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "chapters" ? "admin-nav--active" : ""}`} onClick={() => goToSection("chapters")}><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><i>{config.chapters?.length || 0}</i></button>
-        <div className="admin-nav" aria-disabled="true"><ImageIcon size={16} /><span>Archive / آرشیو</span><small>SOON</small></div>
         <div className="admin-sidebar__bottom">
           <div><ShieldCheck size={15} /> پنل خصوصی</div>
           <button onClick={logout}><LogOut size={14} /> خروج</button>
         </div>
       </aside>
 
-      <section className={`admin-content ${["hero", "story", "memory", "trash"].includes(activeSection) ? "admin-content--studio" : ""}`}>
+      <section className={`admin-content ${["hero", "story", "memory", "moving", "trash"].includes(activeSection) ? "admin-content--studio" : ""}`}>
         {activeSection === "dashboard" ? (
           <div className="admin-dashboard">
             <header className="admin-dashboard__hero">
@@ -777,7 +787,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">05 / EDITORIAL TIMELINE</span><h1>مدیریت مستقل <em>THE YEARS</em></h1><p>تصاویر خط زمان را انتخاب، اضافه، حذف و مرتب کن. ترتیب این فهرست مستقیماً ترتیب کارت‌ها روی خط زمان سایت را تعیین می‌کند.</p></div>
-              <div className="admin-header__actions"><a href="/#archive" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/#years" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده خط زمان <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-yearsStudio">
@@ -857,6 +867,15 @@ export default function AdminPage() {
               </div>
               <div className="admin-chaptersStudio__note"><ShieldCheck size={16}/><p><strong>کنترل انتشار با شماست.</strong> ویرایش‌ها تا زمان زدن «ذخیره تغییرات» پیش‌نویس می‌مانند. برای نتیجه نهایی، پیش‌نمایش سایت را هم بررسی کن.</p></div>
             </section>
+          </>
+        ) : activeSection === "moving" ? (
+          <>
+            <header className="admin-header"><div><span className="admin-kicker">03 / MOVING MEMORY CONTROL</span><h1>مدیریت <em>MOVING MEMORY</em></h1><p>ویدیوهای منتخب این بخش را بارگذاری یا از کتابخانه انتخاب کن. فقط رسانه‌های انتخاب‌شده در سایت نمایش داده می‌شوند.</p></div><div className="admin-header__actions"><a href="/#moving-memory" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div></header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-movingStudio"><div className="admin-movingStudio__toolbar"><div><span>PERSONAL FILM ARCHIVE</span><h2>ویدیوهای انتخاب‌شده</h2><small>{(config.movingMemory || []).length} ویدیو برای نمایش در سایت</small></div><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/>{uploading ? "در حال آپلود..." : "بارگذاری ویدیوی جدید"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadMovingMemoryVideo(file); e.currentTarget.value=""; }}/></label></div>
+              <div className="admin-movingStudio__grid">{(config.movingMemory || []).map((key,index) => { const src=key.startsWith("video:") ? key.slice(6) : key; return <article className="admin-movingCard" key={key}><video src={mediaUrl(src)} controls playsInline preload="metadata"/><div><span>FILM / {String(index+1).padStart(2,"0")}</span><b title={src.split("/").pop()}>{src.split("/").pop()}</b><button type="button" onClick={() => toggleMovingMemory(key)}>حذف از بخش</button></div></article>; })}{!(config.movingMemory || []).length && <div className="admin-movingEmpty"><Play size={22}/><b>هنوز ویدیویی انتخاب نشده</b><span>از دکمه بارگذاری استفاده کن یا از کتابخانه رسانه‌های موجود را اضافه کن.</span></div>}</div>
+              <div className="admin-movingLibrary"><div><h3>انتخاب از Media Library</h3><p>فقط ویدیوهای موجود نمایش داده می‌شوند؛ انتخاب‌ها با ذخیره تغییرات روی سایت منتشر خواهند شد.</p></div><div className="admin-movingLibrary__items">{allMedia.filter(item => item.startsWith("video:")).map(key => <label key={key} className={"admin-movingLibrary__item" + ((config.movingMemory || []).includes(key) ? " is-selected" : "")}><input type="checkbox" checked={(config.movingMemory || []).includes(key)} onChange={() => toggleMovingMemory(key)}/><span>{key.replace(/^video:/, "").split("/").pop()}</span></label>)}{!allMedia.some(item => item.startsWith("video:")) && <small>کتابخانه هنوز ویدیویی ندارد.</small>}</div></div>
+              <div className="admin-movingNote"><ShieldCheck size={16}/><p><strong>انتشار کنترل‌شده:</strong> تنها ویدیوهای فهرست انتخاب‌شده پس از ذخیره در بخش عمومی نمایش داده می‌شوند.</p></div></section>
           </>
         ) : activeSection === "memory" ? (
           <>
