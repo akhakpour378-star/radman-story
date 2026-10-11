@@ -630,7 +630,7 @@ export default function AdminPage() {
         </div>
       </aside>
 
-      <section className="admin-content">
+      <section className={`admin-content ${["hero", "story", "memory"].includes(activeSection) ? "admin-content--studio" : ""}`}>
         {activeSection === "dashboard" ? (
           <div className="admin-dashboard">
             <header className="admin-dashboard__hero">
