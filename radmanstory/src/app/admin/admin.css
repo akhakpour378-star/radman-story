@@ -1319,3 +1319,327 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-content .admin-yearsCard__info input{width:100%;min-width:0;padding:9px 10px;border:1px solid rgba(154,187,194,.2);background:rgba(255,255,255,.035);color:#edf5f5;font:inherit;font-size:11px;outline:none;direction:rtl;text-align:right}
 .admin-content .admin-yearsCard__info input:focus{border-color:rgba(139,213,220,.7);box-shadow:0 0 0 2px rgba(139,213,220,.08)}
 .admin-content .admin-yearsCard__info input::placeholder{color:#6f858b}
+
+
+/* COHESIVE DARK CONTENT STUDIOS — HERO / STORY / MEMORY SIGNAL */
+.admin-content--studio{
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(100,166,194,.09),transparent 34%),
+    linear-gradient(145deg,#0d151f 0%,#080d14 72%)!important;
+  color:#e9f0f7!important;
+}
+.admin-content--studio .admin-header{
+  border-bottom-color:rgba(151,183,209,.15);
+}
+.admin-content--studio .admin-header h1{color:#f0f5fa!important}
+.admin-content--studio .admin-header h1 em{color:#aebeff!important}
+.admin-content--studio .admin-header p,
+.admin-content--studio .admin-kicker{color:#91a2b5!important}
+.admin-content--studio .admin-error--wide{
+  background:rgba(255,95,95,.07)!important;
+  border-color:rgba(255,120,120,.22)!important;
+  color:#ffb4b4!important;
+}
+.admin-content--studio .admin-primary{color:#eafaff!important}
+.admin-content--studio .admin-secondary{
+  color:#c4d3e2!important;
+  border-color:rgba(145,176,205,.22)!important;
+  background:rgba(255,255,255,.035)!important;
+}
+.admin-content--studio .admin-secondary:hover{
+  border-color:rgba(137,211,225,.5)!important;
+  background:rgba(137,211,225,.07)!important;
+}
+.admin-content--studio .admin-workspace{gap:18px}
+.admin-content--studio .admin-card{
+  color:#e8eff7!important;
+  border-color:rgba(137,169,201,.19)!important;
+  background:
+    radial-gradient(ellipse at 0 0,rgba(91,145,190,.075),transparent 42%),
+    linear-gradient(145deg,#111b29,#0a111b)!important;
+  box-shadow:0 22px 58px rgba(0,0,0,.2)!important;
+}
+.admin-content--studio .admin-card__head{
+  border-bottom-color:rgba(146,177,207,.13)!important;
+  background:linear-gradient(110deg,rgba(255,255,255,.025),transparent)!important;
+}
+.admin-content--studio .admin-card__head>div>span,
+.admin-content--studio .admin-subhead>span{
+  color:#8fcbd8!important;
+}
+.admin-content--studio .admin-card__head h2{color:#f0f5fa!important}
+.admin-content--studio .admin-live{color:#9bd9df!important}
+.admin-content--studio .admin-fields{background:transparent!important}
+.admin-content--studio .admin-field>span,
+.admin-content--studio .admin-storyCard .admin-field span{
+  color:#cbd7e3!important;
+}
+.admin-content--studio .admin-field input,
+.admin-content--studio .admin-storyCard .admin-field input,
+.admin-content--studio .admin-storyCard .admin-field textarea,
+.admin-content--studio .admin-memoryEditPanel__fields input{
+  background:rgba(4,10,17,.62)!important;
+  border:1px solid rgba(139,172,203,.23)!important;
+  color:#edf4fb!important;
+  border-radius:9px;
+}
+.admin-content--studio .admin-field input::placeholder,
+.admin-content--studio .admin-storyCard .admin-field input::placeholder{color:#687d92!important}
+.admin-content--studio .admin-field input:focus,
+.admin-content--studio .admin-storyCard .admin-field input:focus,
+.admin-content--studio .admin-storyCard .admin-field textarea:focus{
+  border-color:rgba(137,213,225,.75)!important;
+  box-shadow:0 0 0 3px rgba(137,213,225,.08)!important;
+  background:#0a1420!important;
+}
+.admin-content--studio .admin-field small{color:#8195a9!important}
+.admin-content--studio .admin-fontBlock,
+.admin-content--studio .admin-mediaBlock{
+  background:rgba(255,255,255,.018)!important;
+  border-top-color:rgba(146,177,207,.13)!important;
+}
+.admin-content--studio .admin-subhead small{color:#8295a9!important}
+.admin-content--studio .admin-fontOptions button{
+  background:rgba(4,10,17,.56)!important;
+  border-color:rgba(139,172,203,.19)!important;
+  color:#dce7f0!important;
+}
+.admin-content--studio .admin-fontOptions button span{color:#8a9bad!important}
+.admin-content--studio .admin-fontOptions button:hover,
+.admin-content--studio .admin-fontOptions button.is-selected{
+  background:rgba(115,190,207,.09)!important;
+  border-color:rgba(137,213,225,.55)!important;
+}
+.admin-content--studio .admin-mediaButton,
+.admin-content--studio .admin-uploadButton,
+.admin-content--studio .admin-uploadMini,
+.admin-content--studio .admin-libraryMini{
+  color:#c3eaf0!important;
+  background:rgba(104,177,198,.09)!important;
+  border-color:rgba(131,202,218,.3)!important;
+  border-radius:9px;
+}
+.admin-content--studio .admin-mediaButton:hover,
+.admin-content--studio .admin-uploadButton:hover,
+.admin-content--studio .admin-uploadMini:hover,
+.admin-content--studio .admin-libraryMini:hover{
+  background:rgba(104,177,198,.16)!important;
+  border-color:rgba(131,218,230,.65)!important;
+}
+.admin-content--studio .admin-card__footer{
+  border-top-color:rgba(146,177,207,.13)!important;
+  background:rgba(3,8,14,.2)!important;
+}
+.admin-content--studio .admin-card__footer small,
+.admin-content--studio .admin-dirty{color:#8b9db0!important}
+.admin-content--studio .admin-footerActions button{
+  border-color:rgba(139,172,203,.22)!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#c3d0dd!important;
+}
+.admin-content--studio .admin-preview__note{
+  background:rgba(90,151,170,.06)!important;
+  border-color:rgba(129,197,211,.2)!important;
+  color:#a5b8c7!important;
+}
+.admin-content--studio .admin-preview__note>span{color:#8fcbd8!important}
+.admin-content--studio .admin-bottom{
+  border-color:rgba(151,183,209,.15)!important;
+  color:#8395a8!important;
+}
+
+/* Story table and slide editor */
+.admin-content--studio .admin-storyToolbar,
+.admin-content--studio .admin-storyTableWrap,
+.admin-content--studio .admin-storyEditPanel{
+  color:#e7eef6!important;
+  border:1px solid rgba(137,169,201,.19)!important;
+  border-radius:14px;
+  background:linear-gradient(145deg,#111b29,#0a111b)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.17)!important;
+  overflow:hidden;
+}
+.admin-content--studio .admin-storyToolbar{
+  margin-top:18px;
+  padding:18px 20px;
+}
+.admin-content--studio .admin-storyToolbar span{color:#8fcbd8!important}
+.admin-content--studio .admin-storyToolbar small{color:#91a3b6!important}
+.admin-content--studio .admin-storyFontPicker{
+  background:rgba(4,10,17,.52)!important;
+  border-color:rgba(139,172,203,.2)!important;
+  border-radius:9px;
+}
+.admin-content--studio .admin-storyFontPicker>span{color:#8fa1b4!important}
+.admin-content--studio .admin-storyFontPicker button{color:#bac9d8!important;border-radius:6px}
+.admin-content--studio .admin-storyFontPicker button:hover,
+.admin-content--studio .admin-storyFontPicker button.is-selected{
+  background:rgba(115,190,207,.1)!important;
+  border-color:rgba(137,213,225,.48)!important;
+  color:#dff7fa!important;
+}
+.admin-content--studio .admin-addStory{
+  border-radius:9px!important;
+  background:rgba(105,177,199,.1)!important;
+  border-color:rgba(131,202,218,.32)!important;
+  color:#c3eaf0!important;
+}
+.admin-content--studio .admin-storyTable th{
+  background:#172333!important;
+  border-bottom-color:rgba(145,177,207,.17)!important;
+  color:#a8b9ca!important;
+}
+.admin-content--studio .admin-storyTable td{
+  border-bottom-color:rgba(145,177,207,.1)!important;
+  color:#c4d0dd!important;
+}
+.admin-content--studio .admin-storyTable tbody tr:hover,
+.admin-content--studio .admin-storyTable tbody tr.is-editing{
+  background:rgba(111,181,204,.075)!important;
+}
+.admin-content--studio .admin-storyTable__index{color:#8ba3ba!important}
+.admin-content--studio .admin-storyTable__title{color:#edf4fa!important}
+.admin-content--studio .admin-storyTable td small{color:#8fa2b6!important}
+.admin-content--studio .admin-storyTable__thumb{border-color:rgba(147,198,220,.25)!important;border-radius:7px}
+.admin-content--studio .admin-storyTable__actions button{
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(139,172,203,.22)!important;
+  color:#c0cfdd!important;
+  border-radius:7px;
+}
+.admin-content--studio .admin-storyTable__actions button:hover:not(:disabled){
+  background:rgba(115,190,207,.1)!important;
+  border-color:rgba(137,213,225,.5)!important;
+  color:#e8fbfd!important;
+}
+.admin-content--studio .admin-storyEditPanel__head{
+  border-bottom-color:rgba(145,177,207,.14)!important;
+}
+.admin-content--studio .admin-storyEditPanel__head h2{color:#edf4fa!important}
+.admin-content--studio .admin-storyEditPanel__head span{color:#8fcbd8!important}
+.admin-content--studio .admin-storyEditPanel__head>button{
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(139,172,203,.22)!important;
+  color:#c5d4e3!important;
+  border-radius:8px;
+}
+.admin-content--studio .admin-storyEditPanel__body>.admin-storyCard__fields{
+  background:linear-gradient(145deg,#111b29,#0a111b)!important;
+}
+.admin-content--studio .admin-storyEditVisual{border-color:rgba(139,172,203,.2)!important}
+.admin-content--studio .admin-storyEditPanel__body>.admin-storyCard__fields .admin-field{padding-top:8px}
+
+/* Memory Signal manager and media editor */
+.admin-content--studio .admin-memoryManager,
+.admin-content--studio .admin-memoryEditPanel{
+  color:#e7eef6!important;
+  border:1px solid rgba(137,169,201,.19)!important;
+  border-radius:15px;
+  background:linear-gradient(145deg,#111b29,#0a111b)!important;
+  box-shadow:0 20px 55px rgba(0,0,0,.18)!important;
+  overflow:hidden;
+}
+.admin-content--studio .admin-memoryManager{margin-top:18px}
+.admin-content--studio .admin-memoryManager__toolbar{
+  padding:22px 24px!important;
+  border-bottom:1px solid rgba(145,177,207,.14)!important;
+  background:linear-gradient(110deg,rgba(255,255,255,.025),transparent)!important;
+}
+.admin-content--studio .admin-memoryManager__toolbar>div:first-child>span{
+  color:#8fcbd8!important;
+  letter-spacing:.18em;
+}
+.admin-content--studio .admin-memoryManager__toolbar h2{color:#f0f5fa!important}
+.admin-content--studio .admin-memoryManager__toolbar small{color:#91a3b6!important}
+.admin-content--studio .admin-memoryTableWrap{overflow:auto}
+.admin-content--studio .admin-memoryTable{
+  width:100%;
+  background:transparent!important;
+  color:#c5d2df!important;
+  border-collapse:collapse;
+}
+.admin-content--studio .admin-memoryTable thead th{
+  background:#172333!important;
+  border-bottom:1px solid rgba(145,177,207,.17)!important;
+  color:#a8b9ca!important;
+}
+.admin-content--studio .admin-memoryTable tbody td{
+  background:transparent!important;
+  border-bottom:1px solid rgba(145,177,207,.1)!important;
+  color:#c5d2df!important;
+}
+.admin-content--studio .admin-memoryTable tbody tr:hover,
+.admin-content--studio .admin-memoryTable tbody tr.is-editing{
+  background:rgba(111,181,204,.07)!important;
+}
+.admin-content--studio .admin-memoryTable__thumb{
+  border:1px solid rgba(147,198,220,.22)!important;
+  border-radius:8px!important;
+  overflow:hidden;
+}
+.admin-content--studio .admin-memoryTable__name{color:#dbe6f0!important}
+.admin-content--studio .admin-memoryType,
+.admin-content--studio .admin-memoryStatus{border-radius:7px}
+.admin-content--studio .admin-memoryEditButton,
+.admin-content--studio .admin-memoryDeleteButton{
+  border-radius:8px!important;
+}
+.admin-content--studio .admin-memoryEditPanel{margin-top:18px}
+.admin-content--studio .admin-memoryEditPanel__head{
+  border-bottom:1px solid rgba(145,177,207,.14)!important;
+  background:rgba(255,255,255,.02)!important;
+}
+.admin-content--studio .admin-memoryEditPanel__head h2{color:#edf4fa!important}
+.admin-content--studio .admin-memoryEditPanel__head span{color:#8fcbd8!important}
+.admin-content--studio .admin-memoryEditPanel__headActions>button:not(.admin-memoryDeleteButton){
+  border:1px solid rgba(139,172,203,.22)!important;
+  border-radius:8px;
+  background:rgba(255,255,255,.035)!important;
+  color:#c5d4e3!important;
+}
+.admin-content--studio .admin-memoryEditPanel__body{
+  background:transparent!important;
+}
+.admin-content--studio .admin-memoryEditPanel__fields{
+  background:transparent!important;
+}
+.admin-content--studio .admin-memoryEditPanel__fields .admin-field>span{color:#cbd7e3!important}
+.admin-content--studio .admin-memoryEditPanel__fields .admin-field small{color:#8195a9!important}
+.admin-content--studio .admin-memoryNameSave{
+  border-color:rgba(131,202,218,.3)!important;
+  background:rgba(104,177,198,.09)!important;
+  color:#c3eaf0!important;
+  border-radius:9px;
+}
+.admin-content--studio .admin-memoryToggle,
+.admin-content--studio .admin-memoryOrder{
+  border-color:rgba(139,172,203,.2)!important;
+  background:rgba(255,255,255,.025)!important;
+  color:#d7e4ef!important;
+  border-radius:10px;
+}
+.admin-content--studio .admin-memoryOrder button{
+  border-color:rgba(139,172,203,.22)!important;
+  background:rgba(255,255,255,.04)!important;
+  color:#c5d4e3!important;
+  border-radius:7px;
+}
+.admin-content--studio .admin-memoryEmpty{
+  color:#91a3b6!important;
+  background:rgba(255,255,255,.012)!important;
+}
+@media(max-width:800px){
+  .admin-content--studio .admin-storyToolbar{align-items:flex-start;flex-direction:column}
+  .admin-content--studio .admin-storyToolbar__actions{align-items:stretch;flex-direction:column;width:100%}
+  .admin-content--studio .admin-memoryManager__toolbar{align-items:flex-start;flex-direction:column;gap:14px}
+  .admin-content--studio .admin-memoryUploadActions{width:100%;flex-wrap:wrap}
+}
+@media(max-width:650px){
+  .admin-content--studio .admin-workspace{grid-template-columns:1fr!important}
+  .admin-content--studio .admin-content{padding:20px}
+  .admin-content--studio .admin-memoryTable{min-width:780px}
+  .admin-content--studio .admin-memoryTableWrap{overflow-x:auto}
+  .admin-content--studio .admin-memoryEditPanel__body{grid-template-columns:1fr!important}
+  .admin-content--studio .admin-storyEditPanel__body{grid-template-columns:1fr!important}
+  .admin-content--studio .admin-storyEditPanel__body>.admin-storyCard__image{min-height:260px!important}
+}
