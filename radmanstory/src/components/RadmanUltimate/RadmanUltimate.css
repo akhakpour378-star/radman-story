@@ -4532,3 +4532,15 @@
   .u .u-lightbox__zoomControls{top:8px;right:8px;gap:4px;padding:5px;border-radius:11px}
   .u .u-lightbox__zoomControls button{width:29px;height:29px;border-radius:8px}
 }
+
+
+/* Final zoom override: supersedes earlier legacy transform:none!important rule. */
+.u .u-lightbox__image > img{
+  transform:scale(var(--lightbox-zoom,1))!important;
+  transform-origin:center center!important;
+  transition:transform .12s ease-out!important;
+  will-change:transform;
+}
+.u .u-lightbox__image.is-zoomed{cursor:zoom-in!important}
+.u .u-lightbox__image{overscroll-behavior:contain!important;touch-action:pan-x pan-y}
+.u .u-lightbox__zoomControls{z-index:10!important}
