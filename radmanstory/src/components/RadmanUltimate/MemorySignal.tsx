@@ -25,6 +25,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
 
   const media = useMemo(() => {
@@ -78,7 +79,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport || media.length < 2) return;
-    const canMove = !paused && !hovered && !focused && !reducedMotion && document.visibilityState === "visible" && !pointerRef.current;
+    const canMove = !paused && !hovered && !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
     if (!canMove) {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
@@ -113,7 +114,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       lastFrameRef.current = 0;
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [focused, hovered, media.length, paused, reducedMotion]);
+  }, [focused, hovered, isDragging, media.length, paused, reducedMotion]);
 
   const moveByCard = (direction: -1 | 1) => {
     const viewport = viewportRef.current;
@@ -130,6 +131,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     if (!viewport) return;
     pointerRef.current = { id: event.pointerId, x: event.clientX, scroll: viewport.scrollLeft };
     draggedRef.current = false;
+    setIsDragging(true);
     viewport.setPointerCapture(event.pointerId);
   };
 
@@ -149,6 +151,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     const pointer = pointerRef.current;
     if (!pointer || pointer.id !== event.pointerId) return;
     pointerRef.current = null;
+    setIsDragging(false);
     if (draggedRef.current) {
       suppressClickRef.current = true;
       window.setTimeout(() => { suppressClickRef.current = false; }, 0);
