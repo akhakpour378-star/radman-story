@@ -17,7 +17,7 @@ type HeroConfig = {
   chapters: Chapter[];
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
-type Chapter = { id:string; period:string; title:string; description:string; image:string };
+type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
 type TrashItem = { id:string; src:string; original:string; trashedAt:string; file:string };
 
 const defaults: HeroConfig = {
@@ -250,9 +250,59 @@ export default function AdminPage() {
   const addChapter = () => {
     if ((config.chapters || []).length >= 20) { setError("حداکثر ۲۰ فصل قابل تعریف است."); return; }
     const index = (config.chapters || []).length;
-    const chapter: Chapter = { id:"chapter-" + Date.now().toString(36), period:"CHAPTER " + String(index + 1).padStart(2,"0") + " / NEW MEMORY", title:"عنوان فصل جدید", description:"روایت این فصل را اینجا بنویس.", image: config.image };
+    const chapter: Chapter = { id:"chapter-" + Date.now().toString(36), period:"CHAPTER " + String(index + 1).padStart(2,"0") + " / NEW MEMORY", title:"عنوان فصل جدید", description:"روایت این فصل را اینجا بنویس.", image: config.image, gallery: [] };
     setConfig(c => ({ ...c, chapters:[...(c.chapters || []), chapter] })); setEditingChapter(index); setSaved(false); setError("");
   };
+  const uploadChapterMedia = async (file: File, type: "image" | "video") => {
+    const isVideo = type === "video";
+    if (isVideo ? !file.type.startsWith("video/") : !file.type.startsWith("image/")) {
+      setError(isVideo ? "فقط فایل ویدیویی قابل آپلود است." : "فقط فایل تصویری قابل آپلود است.");
+      return;
+    }
+    if (file.size > (isVideo ? 100 : 15) * 1024 * 1024) {
+      setError(isVideo ? "حجم ویدیو نباید بیشتر از ۱۰۰ مگابایت باشد." : "حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد.");
+      return;
+    }
+    setUploading(true); setSaved(false); setError("");
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("section", "chapters");
+      const response = await fetch("/api/admin/memory", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || "آپلود رسانه انجام نشد.");
+      const src = String(data.src || (isVideo ? data.video : data.image));
+      const key = isVideo ? "video:" + src : src;
+      setConfig(current => ({
+        ...current,
+        chapters: (current.chapters || []).map((chapter, index) =>
+          index === editingChapter
+            ? { ...chapter, gallery: Array.from(new Set([...(chapter.gallery || []), key])) }
+            : chapter
+        ),
+      }));
+      if (isVideo) setVideos(current => current.includes(src) ? current : [src, ...current]);
+      else setImages(current => current.includes(src) ? current : [src, ...current]);
+      setAllMedia(current => current.includes(key) ? current : [key, ...current]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "آپلود رسانه انجام نشد.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeChapterGalleryItem = (chapterIndex: number, key: string) => {
+    setSaved(false); setError("");
+    setConfig(current => ({
+      ...current,
+      chapters: (current.chapters || []).map((chapter, index) =>
+        index === chapterIndex
+          ? { ...chapter, gallery: (chapter.gallery || []).filter(item => item !== key) }
+          : chapter
+      ),
+    }));
+  };
+
   const removeChapter = (index: number) => {
     if ((config.chapters || []).length <= 1) { setError("حداقل یک فصل باید باقی بماند."); return; }
     setConfig(c => ({ ...c, chapters:(c.chapters || []).filter((_,i) => i !== index) }));
@@ -705,6 +755,26 @@ export default function AdminPage() {
                     <label className="admin-field"><span>روایت فصل</span><textarea rows={4} maxLength={600} value={config.chapters[editingChapter].description} onChange={e => updateChapter(editingChapter,"description",e.target.value)} placeholder="شرح کوتاه این دوره از زندگی رادمان"/></label>
                     <label className="admin-field"><span>مسیر تصویر</span><div className="admin-imagePathRow"><input value={config.chapters[editingChapter].image} onChange={e => updateChapter(editingChapter,"image",e.target.value)} placeholder="/memory/chapters/..." /><label className="admin-uploadMini"><Upload size={13}/> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { const f=e.target.files?.[0]; if(f) void uploadImage(f,"chapters",src => updateChapter(editingChapter,"image",src)); e.currentTarget.value=""; }}/></label></div><small>تصویر در پوشه اختصاصی Chapters ذخیره می‌شود. بهتر است برای هر فصل عکس مرتبط با همان خاطره انتخاب شود.</small></label>
                   </div>
+                  <section className="admin-chapterGallery">
+                    <div className="admin-chapterGallery__head">
+                      <div><span>CHAPTER MEDIA / PRIVATE COLLECTION</span><h3>گالری اختصاصی این فصل</h3><p>تصاویر و ویدیوهای اینجا فقط در گالری همین فصل نمایش داده می‌شوند.</p></div>
+                      <strong>{config.chapters[editingChapter].gallery?.length || 0} رسانه</strong>
+                    </div>
+                    <div className="admin-chapterGallery__uploads">
+                      <label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/>{uploading ? "در حال آپلود..." : "آپلود تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadChapterMedia(file,"image"); e.currentTarget.value=""; }}/></label>
+                      <label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/>{uploading ? "در حال آپلود..." : "آپلود ویدیو"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadChapterMedia(file,"video"); e.currentTarget.value=""; }}/></label>
+                    </div>
+                    {(config.chapters[editingChapter].gallery || []).length ? <div className="admin-chapterGallery__grid">
+                      {(config.chapters[editingChapter].gallery || []).map(key => {
+                        const isVideo = key.startsWith("video:");
+                        const src = isVideo ? key.slice(6) : key;
+                        return <div className="admin-chapterGallery__item" key={key}>
+                          <div className="admin-chapterGallery__media">{isVideo ? <video src={mediaUrl(src)} muted playsInline preload="metadata" /> : <img src={mediaUrl(src)} alt="" />}{isVideo && <i>VIDEO</i>}</div>
+                          <div className="admin-chapterGallery__itemFoot"><span>{isVideo ? "ویدیو" : "تصویر"} · {src.split("/").pop()}</span><button type="button" onClick={() => removeChapterGalleryItem(editingChapter,key)} aria-label="حذف از گالری این فصل" title="حذف از گالری این فصل"><Trash2 size={14}/></button></div>
+                        </div>;
+                      })}
+                    </div> : <div className="admin-chapterGallery__empty">هنوز رسانه‌ای برای این فصل اضافه نشده است. با آپلود تصویر یا ویدیو، گالری این فصل ساخته می‌شود.</div>}
+                  </section>
                   <div className="admin-chapterEditor__foot"><span>شناسه داخلی: {config.chapters[editingChapter].id}</span><button type="button" className="admin-memoryDeleteButton" onClick={() => removeChapter(editingChapter)} disabled={(config.chapters || []).length<=1}><Trash2 size={14}/> حذف این فصل</button></div>
                 </div> : <div className="admin-chapterEditor admin-chapterEditor--empty">برای شروع، یک فصل از فهرست انتخاب کن یا فصل تازه‌ای بساز.</div>}
               </div>
