@@ -15,6 +15,7 @@ type HeroConfig = {
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
   chapters: Chapter[];
+  years: string[];
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
 type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
@@ -41,6 +42,7 @@ const defaults: HeroConfig = {
     { id:"little-discoveries", period:"CHAPTER 06 / DISCOVERY", title:"ماجراجویی‌های کوچک", description:"جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", image:"/memory/radman-sit.jpeg" },
     { id:"together", period:"CHAPTER 07 / TOGETHER", title:"قصه‌ای که ادامه دارد", description:"لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", image:"/memory/radman-and-me.png" },
   ],
+  years: ["/memory/radman-main.JPG", "/memory/radman-second.JPG", "/memory/radman-01.JPG", "/memory/radman-02.JPG", "/memory/radman-03.JPG", "/memory/radman-sit.jpeg", "/memory/radman-and-me.png"],
 };
 
 const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story" | "memorySignal" | "memoryTitles">, { label: string; hint: string }> = {
@@ -86,7 +88,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "chapters" | "memory" | "library" | "trash">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "library" | "trash">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
   const [editingChapter, setEditingChapter] = useState<number>(0);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
@@ -96,7 +98,7 @@ export default function AdminPage() {
   const [selectedTrashIds, setSelectedTrashIds] = useState<string[]>([]);
   const [memoryNameDraft, setMemoryNameDraft] = useState("");
 
-  const goToSection = (section: "dashboard" | "hero" | "story" | "chapters" | "memory" | "library" | "trash") => {
+  const goToSection = (section: "dashboard" | "hero" | "story" | "years" | "chapters" | "memory" | "library" | "trash") => {
     setActiveSection(section);
     try {
       const params = new URLSearchParams(window.location.search);
@@ -134,7 +136,7 @@ export default function AdminPage() {
     try {
       const params = new URLSearchParams(window.location.search);
       const section = params.get("section");
-      if (section === "dashboard" || section === "hero" || section === "story" || section === "chapters" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "years" || section === "chapters" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
       const story = params.get("story");
       if (story !== null && story !== "") {
         const n = Number(story);
@@ -360,6 +362,43 @@ export default function AdminPage() {
     finally { setMemoryUploadType(null); }
   };
 
+  const uploadYearsImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) { setError("برای THE YEARS فقط فایل تصویری قابل آپلود است."); return; }
+    if (file.size > 15 * 1024 * 1024) { setError("حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد."); return; }
+    setUploading(true); setError(""); setSaved(false);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("section", "years");
+      const response = await fetch("/api/admin/memory", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || "آپلود تصویر انجام نشد.");
+      const src = String(data.src || data.image || "");
+      if (!src.startsWith("/memory/")) throw new Error("مسیر تصویر برگشتی معتبر نیست.");
+      setImages(current => current.includes(src) ? current : [src, ...current]);
+      setAllMedia(current => current.includes(src) ? current : [src, ...current]);
+      setConfig(current => ({ ...current, years: Array.from(new Set([...(current.years || []), src])) }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "آپلود تصویر انجام نشد.");
+    } finally { setUploading(false); }
+  };
+
+  const removeYearsImage = (src: string) => {
+    setConfig(current => ({ ...current, years: (current.years || []).filter(item => item !== src) }));
+    setSaved(false); setError("");
+  };
+
+  const moveYearsImage = (index: number, direction: -1 | 1) => {
+    setConfig(current => {
+      const next = [...(current.years || [])];
+      const target = index + direction;
+      if (target < 0 || target >= next.length) return current;
+      [next[index], next[target]] = [next[target], next[index]];
+      return { ...current, years: next };
+    });
+    setSaved(false); setError("");
+  };
+
   const deleteMemoryMedia = async (item: { key: string; src: string; type: "image" | "video" }) => {
     if (!window.confirm(`آیا از حذف این رسانه مطمئن هستید؟ این فایل از آرشیو نیز حذف می‌شود.`)) return;
     setError(""); setSaved(false);
@@ -576,7 +615,9 @@ export default function AdminPage() {
         <div className="admin-sidebar__label">CONTROL CENTER</div>
         <button type="button" className={`admin-nav ${activeSection === "dashboard" ? "admin-nav--active" : ""}`} onClick={() => goToSection("dashboard")}><LayoutDashboard size={16} /><span>داشبورد</span><i>HOME</i></button>
         <button type="button" className={`admin-nav ${activeSection === "hero" ? "admin-nav--active" : ""}`} onClick={() => goToSection("hero")}><ImageIcon size={16} /><span>Hero / صفحه آغازین</span><i>LIVE</i></button>
-        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "story" ? "admin-nav--active" : ""}`} onClick={() => goToSection("story")}><Sparkles size={16} /><span>Story / معرفی</span><i>LIVE</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "years" ? "admin-nav--active" : ""}`} onClick={() => goToSection("years")}><ImageIcon size={16} /><span>THE YEARS / خط زمان</span><i>{config.years?.length || 0}</i></button>
+        <button type="button" className={`admin-nav ${activeSection === "memory" ? "admin-nav--active" : ""}`} onClick={() => goToSection("memory")}><ImageIcon size={16} /><span>Memory Signal / رسانه‌ها</span><i>LIVE</i></button>
         <button type="button" className={`admin-nav ${activeSection === "trash" ? "admin-nav--active" : ""}`} onClick={() => goToSection("trash")}><ArchiveRestore size={16} /><span>سطل آشغال</span><i>{trashItems.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "library" ? "admin-nav--active" : ""}`} onClick={() => goToSection("library")}><ImageIcon size={16} /><span>Media Library / کتابخانه</span><i>{allMedia.length}</i></button>
         <button type="button" className={`admin-nav ${activeSection === "chapters" ? "admin-nav--active" : ""}`} onClick={() => goToSection("chapters")}><ImageIcon size={16} /><span>Chapters / فصل‌ها</span><i>{config.chapters?.length || 0}</i></button>
@@ -729,6 +770,40 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+          </>
+        ) : activeSection === "years" ? (
+          <>
+            <header className="admin-header">
+              <div><span className="admin-kicker">05 / EDITORIAL TIMELINE</span><h1>مدیریت مستقل <em>THE YEARS</em></h1><p>تصاویر خط زمان را انتخاب، اضافه، حذف و مرتب کن. ترتیب این فهرست مستقیماً ترتیب کارت‌ها روی خط زمان سایت را تعیین می‌کند.</p></div>
+              <div className="admin-header__actions"><a href="/#archive" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+            </header>
+            {error && <div className="admin-error admin-error--wide">{error}</div>}
+            <section className="admin-yearsStudio">
+              <div className="admin-yearsStudio__intro">
+                <div><span>THE YEARS / VISUAL TIMELINE</span><h2>آرشیو تصویری خط زمان</h2><p>هر کارت یک قاب از مسیر رشد رادمان است. از دکمه‌های جابه‌جایی برای تنظیم ترتیب راست‌به‌چپ استفاده کن؛ تغییرات پس از ذخیره منتشر می‌شوند.</p></div>
+                <div className="admin-yearsStudio__count"><strong>{String((config.years || []).length).padStart(2,"0")}</strong><span>FRAMES</span></div>
+              </div>
+              <div className="admin-yearsStudio__toolbar">
+                <div><b>قاب‌های انتخاب‌شده</b><span>ترتیب نمایش از راست به چپ</span></div>
+                <label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/>{uploading ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadYearsImage(file); e.currentTarget.value=""; }}/></label>
+              </div>
+              {(config.years || []).length ? (
+                <div className="admin-yearsGrid">
+                  {(config.years || []).map((src,index) => (
+                    <article className="admin-yearsCard" key={src}>
+                      <div className="admin-yearsCard__media"><img src={mediaUrl(src)} alt={src.split("/").pop() || "THE YEARS"} /><span>{String(index+1).padStart(2,"0")}</span><i>THE YEARS</i></div>
+                      <div className="admin-yearsCard__info"><strong>{src.split("/").pop()}</strong><small>{src}</small></div>
+                      <div className="admin-yearsCard__actions">
+                        <button type="button" onClick={() => moveYearsImage(index,-1)} disabled={index===0} aria-label="انتقال به ابتدای خط زمان" title="انتقال به راست / قبلی">←</button>
+                        <button type="button" onClick={() => moveYearsImage(index,1)} disabled={index===(config.years || []).length-1} aria-label="انتقال به انتهای خط زمان" title="انتقال به چپ / بعدی">→</button>
+                        <button type="button" className="is-delete" onClick={() => removeYearsImage(src)} aria-label="حذف از THE YEARS" title="حذف از خط زمان"><Trash2 size={14}/></button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : <div className="admin-yearsEmpty"><ImageIcon size={28}/><strong>خط زمان هنوز تصویری ندارد</strong><span>با «افزودن تصویر» اولین قاب را اضافه کن؛ بدون تصویر انتخاب‌شده، کارت خط زمانی نمایش داده نمی‌شود.</span></div>}
+              <div className="admin-yearsStudio__note"><ShieldCheck size={16}/><p><strong>پیش‌نمایش زنده‌ی چیدمان</strong> این پنل فقط رسانه‌های انتخاب‌شده برای THE YEARS را نمایش می‌دهد؛ فایل‌های Media Library به‌تنهایی وارد خط زمان نمی‌شوند.</p></div>
+            </section>
           </>
         ) : activeSection === "chapters" ? (
           <>
