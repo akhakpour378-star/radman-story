@@ -14,8 +14,10 @@ type HeroConfig = {
   story: StorySlide[];
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  chapters: Chapter[];
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
+type Chapter = { id:string; period:string; title:string; description:string; image:string };
 type TrashItem = { id:string; src:string; original:string; trashedAt:string; file:string };
 
 const defaults: HeroConfig = {
@@ -29,6 +31,15 @@ const defaults: HeroConfig = {
     { eyebrow:"THE LITTLE YEARS", title:"A childhood / made of moments.", lead:"روزهای کودکی از کنارمان آرام عبور می‌کنند؛ اما بعضی لحظه‌ها آن‌قدر عمیق می‌شوند که سال‌ها بعد هم زنده می‌مانند.", body:"لبخندها، بازی‌ها، نگاه‌ها و همان اتفاق‌های ساده، امروز بخشی از بزرگ‌ترین خاطرات من هستند.", image:"/memory/radman-01.JPG", label:"LITTLE DAYS" },
     { eyebrow:"GROWING", title:"Watching you / become yourself.", lead:"هر روز چیزی تازه در تو شکل می‌گرفت؛ یک نگاه، یک عادت، یک لبخند و جهانی که کم‌کم مخصوص خودت می‌شد.", body:"این قاب‌ها فقط عکس نیستند؛ نشانه‌هایی هستند از اینکه چطور زمان، آرام و بی‌صدا، تو را بزرگ‌تر کرد.", image:"/memory/radman-02.JPG", label:"GROWING" },
     { eyebrow:"TOGETHER", title:"Some memories / never leave.", lead:"بعضی لحظه‌ها تمام نمی‌شوند. فقط شکلشان عوض می‌شود و جایی عمیق‌تر درون ما ادامه پیدا می‌کنند.", body:"این آرشیو برای نگه داشتن همان لحظه‌هاست؛ برای اینکه هر بار که برمی‌گردیم، هنوز چیزی از آن روزها پیدا کنیم.", image:"/memory/radman-and-me.png", label:"TOGETHER" },
+  ],
+  chapters: [
+    { id:"birth", period:"CHAPTER 01 / THE ARRIVAL", title:"روزی که جهانم تغییر کرد", description:"از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", image:"/memory/radman-main.JPG" },
+    { id:"first-months", period:"CHAPTER 02 / FIRST MONTHS", title:"روزهای اول کنار تو", description:"نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", image:"/memory/radman-second.JPG" },
+    { id:"first-steps", period:"CHAPTER 03 / FIRST STEPS", title:"اولین قدم‌ها", description:"از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.", image:"/memory/radman-01.JPG" },
+    { id:"words-and-play", period:"CHAPTER 04 / WORDS & PLAY", title:"کلمات، بازی‌ها و کشف‌ها", description:"واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.", image:"/memory/radman-02.JPG" },
+    { id:"kindergarten", period:"CHAPTER 05 / A NEW WORLD", title:"شروع ماجرای مهدکودک", description:"تجربه محیطی تازه، آشنایی‌ها، بازی‌های گروهی و قدم‌های نخست در دنیای بیرون از خانه.", image:"/memory/radman-03.JPG" },
+    { id:"little-discoveries", period:"CHAPTER 06 / DISCOVERY", title:"ماجراجویی‌های کوچک", description:"جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", image:"/memory/radman-sit.jpeg" },
+    { id:"together", period:"CHAPTER 07 / TOGETHER", title:"قصه‌ای که ادامه دارد", description:"لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", image:"/memory/radman-and-me.png" },
   ],
 };
 
@@ -75,8 +86,9 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "memory" | "library" | "trash">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "hero" | "story" | "chapters" | "memory" | "library" | "trash">("dashboard");
   const [editingStory, setEditingStory] = useState<number | null>(null);
+  const [editingChapter, setEditingChapter] = useState<number>(0);
   const [editingMemory, setEditingMemory] = useState<string | null>(null);
   const [selectedMemoryKeys, setSelectedMemoryKeys] = useState<string[]>([]);
   const [selectedStoryIndexes, setSelectedStoryIndexes] = useState<number[]>([]);
@@ -90,6 +102,7 @@ export default function AdminPage() {
       const params = new URLSearchParams(window.location.search);
       if (section === "dashboard") params.delete("section"); else params.set("section", section);
       if (section !== "story") params.delete("story");
+      if (section !== "chapters") params.delete("chapter");
       if (section !== "memory") params.delete("memory");
       const query = params.toString();
       window.history.replaceState(null, "", query ? "/admin?" + query : "/admin");
@@ -121,12 +134,14 @@ export default function AdminPage() {
     try {
       const params = new URLSearchParams(window.location.search);
       const section = params.get("section");
-      if (section === "dashboard" || section === "hero" || section === "story" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
+      if (section === "dashboard" || section === "hero" || section === "story" || section === "chapters" || section === "memory" || section === "library" || section === "trash") setActiveSection(section);
       const story = params.get("story");
       if (story !== null && story !== "") {
         const n = Number(story);
         if (Number.isInteger(n) && n >= 0) setEditingStory(n);
       }
+      const chapter = params.get("chapter");
+      if (chapter !== null && chapter !== "") { const n = Number(chapter); if (Number.isInteger(n) && n >= 0) setEditingChapter(n); }
       const memory = params.get("memory");
       if (memory) setEditingMemory(memory);
     } catch {}
@@ -231,12 +246,27 @@ export default function AdminPage() {
   const reset = () => { setConfig(savedConfig); setSaved(false); setError(""); };
   const restoreDefaults = () => { setConfig(defaults); setSaved(false); setError(""); };
   const updateStory = (index: number, key: keyof StorySlide, value: string) => { setSaved(false); setError(""); setConfig(c => ({ ...c, story: c.story.map((slide,i) => i === index ? { ...slide, [key]: value } : slide) })); };
+  const updateChapter = (index: number, key: keyof Chapter, value: string) => { setSaved(false); setError(""); setConfig(c => ({ ...c, chapters: (c.chapters || []).map((chapter,i) => i === index ? { ...chapter, [key]: value } : chapter) })); };
+  const addChapter = () => {
+    if ((config.chapters || []).length >= 20) { setError("حداکثر ۲۰ فصل قابل تعریف است."); return; }
+    const index = (config.chapters || []).length;
+    const chapter: Chapter = { id:"chapter-" + Date.now().toString(36), period:"CHAPTER " + String(index + 1).padStart(2,"0") + " / NEW MEMORY", title:"عنوان فصل جدید", description:"روایت این فصل را اینجا بنویس.", image: config.image };
+    setConfig(c => ({ ...c, chapters:[...(c.chapters || []), chapter] })); setEditingChapter(index); setSaved(false); setError("");
+  };
+  const removeChapter = (index: number) => {
+    if ((config.chapters || []).length <= 1) { setError("حداقل یک فصل باید باقی بماند."); return; }
+    setConfig(c => ({ ...c, chapters:(c.chapters || []).filter((_,i) => i !== index) }));
+    setEditingChapter(Math.max(0, Math.min(index, (config.chapters || []).length - 2))); setSaved(false); setError("");
+  };
+  const moveChapter = (index: number, direction: -1 | 1) => {
+    setConfig(c => { const next=[...(c.chapters || [])]; const target=index+direction; if(target<0 || target>=next.length) return c; [next[index],next[target]]=[next[target],next[index]]; return {...c,chapters:next}; }); setEditingChapter(index+direction); setSaved(false); setError("");
+  };
   const addStorySlide = () => {
     if (config.story.length >= 8) { setError("حداکثر ۸ اسلاید برای Story قابل تعریف است."); return; }
     setSaved(false); setError("");
     setConfig(c => ({ ...c, story: [...c.story, { eyebrow:"NEW CHAPTER", title:"A new memory / begins here.", lead:"متن اصلی این اسلاید را وارد کنید.", body:"توضیحات این اسلاید را وارد کنید.", image:c.image, label:"NEW MEMORY" }] }));
   };
-  const uploadImage = async (file: File, section: "hero" | "story", apply?: (src: string) => void) => {
+  const uploadImage = async (file: File, section: "hero" | "story" | "chapters", apply?: (src: string) => void) => {
     if (!file.type.startsWith("image/")) { setError("فقط فایل تصویری قابل آپلود است."); return; }
     if (file.size > 15 * 1024 * 1024) { setError("حجم تصویر نباید بیشتر از ۱۵ مگابایت باشد."); return; }
     setUploading(true); setError(""); setSaved(false);
