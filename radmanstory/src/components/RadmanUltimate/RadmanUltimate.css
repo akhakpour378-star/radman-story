@@ -6265,3 +6265,15 @@
   .u .u-timeline--editorial .u-step>b{font-size:clamp(16px,4.8vw,21px)}
   .u .u-timeline--editorial .u-step__index{font-size:6px;letter-spacing:.1em}
 }
+
+
+/* Timeline direction + square editorial image frames */
+.u .u-timeline--editorial .u-timeline__rail{direction:rtl}
+.u .u-timeline--editorial .u-timeline__rail span{left:auto;right:8%;background:linear-gradient(270deg,transparent,#9ce7ef 45%,#c3c5ff);animation-direction:reverse}
+.u .u-timeline--editorial .u-timeline__rail i{order:initial}
+.u .u-timeline--editorial .u-timeline__steps{direction:rtl}
+.u .u-timeline--editorial .u-step__image,
+.u .u-timeline--editorial .u-step:nth-child(3n+1) .u-step__image,
+.u .u-timeline--editorial .u-step:nth-child(3n+2) .u-step__image{border-radius:0!important}
+.u .u-timeline--editorial .u-step__image img{border-radius:0!important}
+.u .u-timeline--editorial .u-step__image:before{border-radius:0!important}
