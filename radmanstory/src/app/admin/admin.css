@@ -528,3 +528,51 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-chapterGallery__itemFoot button:hover{border-color:rgba(255,120,120,.6);background:rgba(255,90,90,.14)}
 .admin-chapterGallery__empty{padding:28px 16px;border:1px dashed rgba(144,173,198,.2);color:#8e9fb1;text-align:center;font:400 11px/2 "Vazirmatn",sans-serif}
 @media(max-width:650px){.admin-chapterGallery{padding:14px}.admin-chapterGallery__head{align-items:flex-start}.admin-chapterGallery__head h3{font-size:15px}.admin-chapterGallery__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* CHAPTER DELETE — dedicated full-size danger action */
+.admin-chapterEditor__foot .admin-chapterDeleteButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:40px;
+  padding:0 17px;
+  border:1px solid rgba(255,126,143,.38);
+  border-radius:9px;
+  background:linear-gradient(135deg,rgba(143,35,55,.22),rgba(72,20,32,.28));
+  color:#ff9eaa;
+  font:600 10px/1.5 "Vazirmatn",sans-serif;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 5px 16px rgba(0,0,0,.12);
+  transition:background .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.admin-chapterEditor__foot .admin-chapterDeleteButton svg{
+  flex:0 0 auto;
+  width:15px;
+  height:15px;
+}
+.admin-chapterEditor__foot .admin-chapterDeleteButton:hover:not(:disabled){
+  border-color:rgba(255,126,143,.72);
+  background:linear-gradient(135deg,rgba(166,42,64,.38),rgba(94,24,40,.46));
+  color:#ffe1e5;
+  box-shadow:0 0 0 3px rgba(255,126,143,.07),0 8px 22px rgba(0,0,0,.2);
+  transform:translateY(-1px);
+}
+.admin-chapterEditor__foot .admin-chapterDeleteButton:focus-visible{
+  outline:2px solid #9ce7ef;
+  outline-offset:3px;
+}
+.admin-chapterEditor__foot .admin-chapterDeleteButton:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+@media(max-width:650px){
+  .admin-chapterEditor__foot .admin-chapterDeleteButton{
+    min-height:38px;
+    width:100%;
+    justify-content:center;
+  }
+}
