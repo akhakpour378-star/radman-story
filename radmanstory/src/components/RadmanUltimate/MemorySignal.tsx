@@ -19,7 +19,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   const cycleWidthRef = useRef(0);
   const frameRef = useRef<number | null>(null);
   const lastFrameRef = useRef(0);
-  const pointerRef = useRef<{ id: number; x: number; scroll: number } | null>(null);
+  const pointerRef = useRef<{ id: number; x: number; scroll: number; captureTarget: HTMLElement } | null>(null);
   const draggedRef = useRef(false);
   const suppressClickRef = useRef(false);
   const [paused, setPaused] = useState(false);
@@ -120,10 +120,11 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
-    pointerRef.current = { id: event.pointerId, x: event.clientX, scroll: viewport.scrollLeft };
+    const captureTarget = event.target instanceof HTMLElement ? event.target : viewport;
+    pointerRef.current = { id: event.pointerId, x: event.clientX, scroll: viewport.scrollLeft, captureTarget };
     draggedRef.current = false;
     setIsDragging(true);
-    viewport.setPointerCapture(event.pointerId);
+    try { captureTarget.setPointerCapture(event.pointerId); } catch {}
   };
 
   const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -149,7 +150,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       setPaused(true);
     }
     draggedRef.current = false;
-    if (viewportRef.current?.hasPointerCapture(event.pointerId)) viewportRef.current.releasePointerCapture(event.pointerId);
+    try { if (pointer.captureTarget.hasPointerCapture(event.pointerId)) pointer.captureTarget.releasePointerCapture(event.pointerId); } catch {}
   };
 
   const openMedia = (entry: string, index: number) => {
