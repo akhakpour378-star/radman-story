@@ -1,10 +1,10 @@
 /* Memory Signal — isolated styles; no legacy u-reel selectors or keyframes. */
 .memory-signal{position:relative;width:100%;padding:clamp(28px,4vw,58px) 0 22px;background:transparent;isolation:isolate}
-.memory-signal__viewport{position:relative;width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;scroll-behavior:auto;cursor:grab;touch-action:pan-x pan-y;outline:none;user-select:none;-webkit-overflow-scrolling:touch}
+.memory-signal__viewport{position:relative;width:100%;direction:ltr;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;scroll-behavior:auto;cursor:grab;touch-action:pan-x pan-y;scrollbar-gutter:auto;outline:none;user-select:none;-webkit-overflow-scrolling:touch}
 .memory-signal__viewport::-webkit-scrollbar{display:none}
 .memory-signal__viewport:active{cursor:grabbing}
 .memory-signal__viewport:focus-visible{outline:1px solid rgba(198,174,122,.72);outline-offset:5px}
-.memory-signal__track{display:flex;align-items:stretch;gap:14px;width:max-content;padding:4px clamp(18px,5vw,7vw) 18px;will-change:scroll-position}
+.memory-signal__track{direction:ltr;display:flex;align-items:stretch;gap:14px;width:max-content;padding:4px clamp(18px,5vw,7vw) 18px;will-change:scroll-position}
 .memory-signal__card{position:relative;display:block;flex:0 0 clamp(230px,27vw,390px);width:clamp(230px,27vw,390px);height:clamp(300px,36vw,470px);overflow:hidden;padding:0;border:1px solid rgba(230,220,198,.12);border-radius:4px;background:#101111;isolation:isolate;cursor:pointer;transform:translateZ(0);box-shadow:0 14px 40px rgba(0,0,0,.16);transition:border-color .45s ease,box-shadow .45s ease,transform .65s cubic-bezier(.2,.75,.2,1)}
 .memory-signal__card img,.memory-signal__card video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;transform:scale(1.001);filter:saturate(.86) contrast(1.02);transition:transform 1s cubic-bezier(.2,.7,.15,1),filter .7s ease}
 .memory-signal__card::after{position:absolute;inset:0;z-index:1;content:"";pointer-events:none;background:linear-gradient(180deg,rgba(5,8,8,.04),transparent 40%,rgba(5,8,8,.22));opacity:.9;transition:opacity .6s ease}
