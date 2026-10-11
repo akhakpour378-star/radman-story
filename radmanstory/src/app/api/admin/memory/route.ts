@@ -306,6 +306,20 @@ export async function PATCH(req: NextRequest) {
           slide && typeof slide === "object" && slide.image === oldSrc ? { ...slide, image: src } : slide
         );
       }
+      if (Array.isArray(hero.chapters)) {
+        hero.chapters = hero.chapters.map((chapter: any) => {
+          if (!chapter || typeof chapter !== "object") return chapter;
+          const next = { ...chapter };
+          if (next.image === oldSrc) next.image = src;
+          if (Array.isArray(next.gallery)) next.gallery = next.gallery.map((entry: unknown) => {
+            if (typeof entry !== "string") return entry;
+            const video = entry.startsWith("video:");
+            const value = video ? entry.slice(6) : entry;
+            return value === oldSrc ? (video ? "video:" + src : src) : entry;
+          });
+          return next;
+        });
+      }
       await fs.writeFile(heroFile, JSON.stringify(hero, null, 2) + "\n", "utf8");
     } catch {
       // The physical rename succeeded; the admin PUT will retry persistence.
