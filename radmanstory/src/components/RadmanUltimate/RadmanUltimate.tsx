@@ -109,6 +109,10 @@ export default function RadmanUltimate() {
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
   const [chapterGallery, setChapterGallery] = useState<{ title:string; period:string; items:string[] } | null>(null);
   const [chapterGalleryIndex, setChapterGalleryIndex] = useState(0);
+  const [chapterImageZoom, setChapterImageZoom] = useState(1);
+  const [chapterImagePan, setChapterImagePan] = useState({ x: 0, y: 0 });
+  const [isPanningChapterImage, setIsPanningChapterImage] = useState(false);
+  const chapterImageDragRef = useRef<{ pointerId: number; startX: number; startY: number; panX: number; panY: number } | null>(null);
   const [imageZoom, setImageZoom] = useState(1);
   const [imagePan, setImagePan] = useState({ x: 0, y: 0 });
   const [isPanningImage, setIsPanningImage] = useState(false);
@@ -454,6 +458,17 @@ export default function RadmanUltimate() {
   }, [selected, selectedMemorySrc, chapterGallery, memories.length]);
 
   useEffect(() => {
+    setChapterImageZoom(1);
+    setChapterImagePan({ x: 0, y: 0 });
+    setIsPanningChapterImage(false);
+    chapterImageDragRef.current = null;
+  }, [chapterGalleryIndex, chapterGallery]);
+
+  useEffect(() => {
+    if (chapterImageZoom === 1) setChapterImagePan({ x: 0, y: 0 });
+  }, [chapterImageZoom]);
+
+  useEffect(() => {
     if (!chapterGallery) return;
     const onGalleryKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setChapterGallery(null);
@@ -746,8 +761,50 @@ export default function RadmanUltimate() {
             const isVideo = key.startsWith("video:");
             const src = isVideo ? key.slice(6) : key;
             return <div className="u-chapterGallery__experience" onClick={event => event.stopPropagation()}>
-              <div className="u-chapterGallery__stage">
-                {isVideo ? <video key={key} src={asset(src)} controls autoPlay playsInline preload="metadata" /> : <img key={key} src={asset(src)} alt={chapterGallery.title} />}
+              <div
+                className={"u-chapterGallery__stage" + (!isVideo && chapterImageZoom > 1 ? " is-zoomed" : "") + (isPanningChapterImage ? " is-panning" : "")}
+                onWheel={event => {
+                  if (isVideo) return;
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setChapterImageZoom(zoom => Math.max(1, Math.min(3, +(zoom + (event.deltaY < 0 ? 0.15 : -0.15)).toFixed(2))));
+                }}
+                onPointerDown={event => {
+                  if (isVideo || chapterImageZoom <= 1 || (event.target as HTMLElement).tagName !== "IMG" || event.button !== 0) return;
+                  event.preventDefault();
+                  chapterImageDragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, panX: chapterImagePan.x, panY: chapterImagePan.y };
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  setIsPanningChapterImage(true);
+                }}
+                onPointerMove={event => {
+                  const drag = chapterImageDragRef.current;
+                  if (!drag || drag.pointerId !== event.pointerId) return;
+                  setChapterImagePan({ x: drag.panX + event.clientX - drag.startX, y: drag.panY + event.clientY - drag.startY });
+                }}
+                onPointerUp={event => {
+                  if (chapterImageDragRef.current?.pointerId !== event.pointerId) return;
+                  chapterImageDragRef.current = null;
+                  setIsPanningChapterImage(false);
+                  if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+                }}
+                onPointerCancel={() => { chapterImageDragRef.current = null; setIsPanningChapterImage(false); }}
+                onDoubleClick={() => {
+                  if (isVideo) return;
+                  const nextZoom = chapterImageZoom === 1 ? 2 : 1;
+                  setChapterImageZoom(nextZoom);
+                  if (nextZoom === 1) setChapterImagePan({ x: 0, y: 0 });
+                }}
+                title={!isVideo ? (chapterImageZoom > 1 ? "Drag to move · Scroll to zoom · Double-click to reset" : "Scroll to zoom · Double-click to zoom in") : undefined}
+              >
+                {!isVideo && <div className="u-chapterGallery__zoomControls" onClick={event => event.stopPropagation()} aria-label="Image zoom controls">
+                  <button type="button" onClick={() => setChapterImageZoom(zoom => Math.min(3, +(zoom + 0.25).toFixed(2)))} disabled={chapterImageZoom >= 3} aria-label="Zoom in" title="Zoom in"><ZoomIn size={16}/></button>
+                  <span>{Math.round(chapterImageZoom * 100)}%</span>
+                  <button type="button" onClick={() => setChapterImageZoom(zoom => Math.max(1, +(zoom - 0.25).toFixed(2)))} disabled={chapterImageZoom <= 1} aria-label="Zoom out" title="Zoom out"><ZoomOut size={16}/></button>
+                  <button type="button" onClick={() => { setChapterImageZoom(1); setChapterImagePan({ x: 0, y: 0 }); }} disabled={chapterImageZoom === 1} aria-label="Reset zoom" title="Reset zoom"><RotateCcw size={14}/></button>
+                </div>}
+                {isVideo
+                  ? <video key={key} src={asset(src)} controls autoPlay playsInline preload="metadata" />
+                  : <img key={key} src={asset(src)} alt={chapterGallery.title} draggable={false} style={{ transform: `translate(${chapterImagePan.x}px, ${chapterImagePan.y}px) scale(${chapterImageZoom})` }} />}
                 <span className="u-chapterGallery__counter">{String(chapterGalleryIndex + 1).padStart(2, "0")} / {String(chapterGallery.items.length).padStart(2, "0")}</span>
               </div>
               {chapterGallery.items.length > 1 && <div className="u-chapterGallery__controls">
