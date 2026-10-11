@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const sectionValue = String(form.get("section") || "memory").toLowerCase();
     const sectionAliases: Record<string, string> = { "memory-signal": "signal", "memory": "signal", "memories": "signal" };
     const normalizedSection = sectionAliases[sectionValue] || sectionValue;
-    const section = ["hero", "story", "signal"].includes(normalizedSection) ? normalizedSection : "signal";
+    const section = ["hero", "story", "chapters", "signal"].includes(normalizedSection) ? normalizedSection : "signal";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "فایل تصویر ارسال نشده است." }, { status: 400 });
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     const hash = crypto.createHash("sha256").update(buffer).digest("hex");
 
     const root = path.resolve(process.cwd(), "..");
-    // هر بخش پوشه مستقل خودش را دارد: /memory/hero ، /memory/story ، /memory/memory
+    // هر بخش پوشه مستقل خودش را دارد: /memory/hero ، /memory/story ، /memory/chapters ، /memory/memory
     // تصویر و ویدیوهای یک بخش مستقیماً داخل همان پوشه قرار می‌گیرند.
     const dir = path.join(root, "memory", section);
     await fs.mkdir(dir, { recursive: true });
