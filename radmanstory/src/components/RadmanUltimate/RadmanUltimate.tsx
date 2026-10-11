@@ -248,7 +248,7 @@ export default function RadmanUltimate() {
   const selectedSignalEntry = selectedMemorySrc
     ? (heroConfig.memorySignal || []).find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
     : null;
-  const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:"));
+  const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
   const selectedMemory = selectedMemorySrc
     ? memories.find((m) => m.src === selectedMemorySrc) || {
         src: selectedMemorySrc,
