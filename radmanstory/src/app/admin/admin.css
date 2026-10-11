@@ -452,3 +452,57 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-library__move button{padding:10px 16px;border:1px solid rgba(105,170,255,.45);border-radius:9px;background:rgba(105,170,255,.12);color:inherit;cursor:pointer}
 .admin-library__move button:disabled{opacity:.4;cursor:not-allowed}
 @media(max-width:640px){.admin-library__folders{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-library__folderCard{min-height:120px;padding:15px}.admin-library__move{align-items:stretch}.admin-library__move select,.admin-library__move button{width:100%}}
+
+
+/* CHAPTERS CONTENT STUDIO */
+.admin-chaptersStudio{max-width:1540px;margin:18px auto 0;color:var(--admin-text,#edf2f8)}
+.admin-chaptersStudio__intro{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:25px 28px;border:1px solid rgba(130,157,190,.2);background:radial-gradient(ellipse at 0 0,rgba(91,145,210,.12),transparent 45%),linear-gradient(135deg,#111c2a,#0b121c);box-shadow:0 18px 55px rgba(0,0,0,.14)}
+.admin-chaptersStudio__intro>div:first-child>span,.admin-chapterEditor__head>div>span{display:block;color:#8fa8c4;font:700 8px/1.8 "DM Sans",sans-serif;letter-spacing:.2em}
+.admin-chaptersStudio__intro h2{margin:5px 0 8px;color:#f1f5f9;font:600 23px "Vazirmatn",sans-serif}
+.admin-chaptersStudio__intro p{max-width:720px;margin:0;color:#9aa9ba;font:400 12px/2 "Vazirmatn",sans-serif}
+.admin-chaptersStudio__count{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:100px;padding:14px;border-right:1px solid rgba(255,255,255,.1)}
+.admin-chaptersStudio__count strong{font:400 42px/1 "DM Sans",sans-serif;color:#a8dce4;letter-spacing:-.07em}
+.admin-chaptersStudio__count span{font:700 7px "DM Sans",sans-serif;color:#7f91a6;letter-spacing:.18em}
+.admin-chaptersStudio__grid{display:grid;grid-template-columns:minmax(280px,.78fr) minmax(0,1.35fr);gap:16px;margin-top:16px;align-items:start}
+.admin-chaptersStudio__list{display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid rgba(130,157,190,.17);background:#0d1622}
+.admin-chapterRow{display:grid;grid-template-columns:34px 62px minmax(0,1fr) 18px;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid transparent;background:rgba(255,255,255,.018);color:inherit;text-align:right;cursor:pointer;transition:background .2s,border-color .2s}
+.admin-chapterRow:hover{background:rgba(255,255,255,.045);border-color:rgba(145,175,207,.22)}
+.admin-chapterRow.is-active{background:linear-gradient(100deg,rgba(110,172,222,.13),rgba(110,172,222,.035));border-color:rgba(135,201,226,.45);box-shadow:inset -2px 0 #91d8e2}
+.admin-chapterRow__num{font:400 13px "DM Sans",sans-serif;color:#8eabc3;text-align:center}
+.admin-chapterRow__thumb{width:62px;height:62px;overflow:hidden;background:#080d14;border:1px solid rgba(255,255,255,.1)}
+.admin-chapterRow__thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.admin-chapterRow__copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.admin-chapterRow__copy small{color:#8aa9c5;font:700 7px/1.6 "DM Sans",sans-serif;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.admin-chapterRow__copy strong{color:#e9eff5;font:600 12px/1.7 "Vazirmatn",sans-serif}
+.admin-chapterRow__copy em{color:#8796a8;font:400 9px/1.8 "Vazirmatn",sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:normal}
+.admin-chapterRow__chevron{color:#8ed3df;font-size:16px}
+.admin-chaptersStudio__add{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin-top:3px;border:1px dashed rgba(130,190,218,.35);background:rgba(110,172,222,.045);color:#b8dce5;font:600 11px "Vazirmatn",sans-serif;cursor:pointer;transition:background .2s,border-color .2s}
+.admin-chaptersStudio__add:hover{background:rgba(110,172,222,.1);border-color:rgba(130,210,229,.7)}
+.admin-chapterEditor{min-width:0;border:1px solid rgba(130,157,190,.2);background:linear-gradient(145deg,#111b29,#0b121c);box-shadow:0 18px 55px rgba(0,0,0,.12)}
+.admin-chapterEditor--empty{padding:50px 24px;text-align:center;color:#92a1b3}
+.admin-chapterEditor__head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.admin-chapterEditor__head h2{margin:5px 0 5px;color:#f2f5f8;font:600 19px "Vazirmatn",sans-serif}
+.admin-chapterEditor__head p{margin:0;color:#8e9db0;font:400 10px/1.9 "Vazirmatn",sans-serif}
+.admin-chapterEditor__order{display:flex;gap:6px;flex-shrink:0}
+.admin-chapterEditor__order button{padding:8px 10px;border:1px solid rgba(130,157,190,.22);background:rgba(255,255,255,.035);color:#bdcbd9;font:600 9px "Vazirmatn",sans-serif;cursor:pointer}
+.admin-chapterEditor__order button:hover:not(:disabled){border-color:#83cbd8;background:rgba(131,203,216,.08)}
+.admin-chapterEditor__order button:disabled{opacity:.3;cursor:not-allowed}
+.admin-chapterEditor__preview{display:grid;grid-template-columns:minmax(130px,.7fr) minmax(0,1fr);gap:18px;align-items:center;padding:18px 24px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.018)}
+.admin-chapterEditor__preview img{width:100%;height:145px;object-fit:cover;border:1px solid rgba(255,255,255,.12);background:#080d14}
+.admin-chapterEditor__preview span{color:#8ed3df;font:700 7px "DM Sans",sans-serif;letter-spacing:.1em}
+.admin-chapterEditor__preview h3{margin:8px 0;color:#edf2f8;font:600 19px/1.6 "Vazirmatn",sans-serif}
+.admin-chapterEditor__preview p{margin:0;color:#9aa8b8;font:400 10px/2 "Vazirmatn",sans-serif}
+.admin-chapterEditor__fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:22px 24px}
+.admin-chapterEditor__fields .admin-field{min-width:0}
+.admin-chapterEditor__fields .admin-field:nth-child(3),.admin-chapterEditor__fields .admin-field:nth-child(4){grid-column:1/-1}
+.admin-chapterEditor__fields textarea{width:100%;resize:vertical;min-height:100px;padding:12px;border:1px solid rgba(130,157,190,.22);background:#0a121d;color:#edf2f8;font:400 12px/2 "Vazirmatn",sans-serif;outline:none}
+.admin-chapterEditor__fields textarea:focus,.admin-chapterEditor__fields input:focus{border-color:#8acbd5}
+.admin-chapterEditor__fields .admin-field small{display:block;margin-top:7px;color:#8090a3;font:400 9px/1.9 "Vazirmatn",sans-serif}
+.admin-chapterEditor__foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 24px;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.12)}
+.admin-chapterEditor__foot>span{font:500 9px "DM Sans",sans-serif;color:#75869a;direction:ltr}
+.admin-chaptersStudio__note{display:flex;align-items:flex-start;gap:12px;margin-top:16px;padding:15px 18px;border:1px solid rgba(129,197,211,.18);background:rgba(83,147,164,.045);color:#9eb1c0}
+.admin-chaptersStudio__note svg{flex-shrink:0;color:#8ed3df;margin-top:2px}
+.admin-chaptersStudio__note p{margin:0;font:400 10px/2 "Vazirmatn",sans-serif}
+.admin-chaptersStudio__note strong{color:#dceaf0}
+@media(max-width:1100px){.admin-chaptersStudio__grid{grid-template-columns:1fr}.admin-chaptersStudio__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.admin-chaptersStudio__add{grid-column:1/-1}}
+@media(max-width:650px){.admin-chaptersStudio__intro{padding:18px;align-items:flex-start}.admin-chaptersStudio__intro h2{font-size:18px}.admin-chaptersStudio__count{min-width:64px;padding:10px 0}.admin-chaptersStudio__count strong{font-size:30px}.admin-chaptersStudio__list{grid-template-columns:1fr;padding:7px}.admin-chapterRow{grid-template-columns:25px 52px minmax(0,1fr) 14px;gap:8px;padding:9px}.admin-chapterRow__thumb{width:52px;height:52px}.admin-chapterEditor__head{flex-direction:column;padding:17px}.admin-chapterEditor__preview{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:14px}.admin-chapterEditor__preview img{height:110px}.admin-chapterEditor__preview h3{font-size:15px}.admin-chapterEditor__fields{grid-template-columns:1fr;padding:17px;gap:13px}.admin-chapterEditor__fields .admin-field{grid-column:1/-1}.admin-chapterEditor__foot{padding:13px 16px;align-items:flex-start;flex-direction:column}}
