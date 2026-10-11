@@ -642,7 +642,7 @@ export default function RadmanUltimate() {
           <article className="u-chapter" key={num}>
             <div className="u-chapter__top"><span>{m.tag}</span><small>CHAPTER / {num}</small></div>
             <div className="u-chapter__layout">
-              <button className="u-chapter__image" onClick={() => { setSelectedMemorySrc(m.src); setSelected(memories.findIndex((item) => item.src === m.src)); }} aria-label={`Open ${m.title}`}>
+              <button className="u-chapter__image" onClick={() => { setChapterGallery({ title, period: m.tag, items: gallery }); setChapterGalleryIndex(0); }} aria-label={`Open ${title} chapter gallery`}>
                 <img src={asset(m.src)} alt={m.title} />
                 <div className="u-chapter__imageFrame" aria-hidden="true"><span>RADMAN / ARCHIVE</span><i /></div>
                 <div className="u-chapter__imageMeta"><b>{m.tag}</b><small>{m.title}</small></div>
