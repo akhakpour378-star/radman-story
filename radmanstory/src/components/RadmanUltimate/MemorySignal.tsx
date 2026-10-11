@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import "./MemorySignal.css";
 
@@ -123,7 +124,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     setPaused(true);
   };
 
-  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -132,7 +133,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     viewport.setPointerCapture(event.pointerId);
   };
 
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const pointer = pointerRef.current;
     const viewport = viewportRef.current;
     if (!pointer || pointer.id !== event.pointerId || !viewport) return;
@@ -144,7 +145,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     }
   };
 
-  const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
     const pointer = pointerRef.current;
     if (!pointer || pointer.id !== event.pointerId) return;
     pointerRef.current = null;
