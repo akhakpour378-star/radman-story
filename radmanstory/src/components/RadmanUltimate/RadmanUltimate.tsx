@@ -693,7 +693,17 @@ export default function RadmanUltimate() {
               <div className="u-lightbox__mediaTitle" dir="rtl">
                 <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
               </div>
-              <div className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "")}>
+              <div
+                className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "")}
+                onWheel={(e) => {
+                  if (selectedIsVideo) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setImageZoom((z) => Math.max(1, Math.min(3, +(z + (e.deltaY < 0 ? 0.15 : -0.15)).toFixed(2))));
+                }}
+                onDoubleClick={() => { if (!selectedIsVideo) setImageZoom((z) => z === 1 ? 2 : 1); }}
+                title={!selectedIsVideo ? "Scroll to zoom · Double-click to reset" : undefined}
+              >
                 {!selectedIsVideo && (
                   <div className="u-lightbox__zoomControls" aria-label="Image zoom controls">
                     <button type="button" onClick={() => setImageZoom((z) => Math.min(3, +(z + 0.25).toFixed(2)))} disabled={imageZoom >= 3} aria-label="Zoom in" title="Zoom in"><ZoomIn size={17} /></button>
@@ -704,7 +714,7 @@ export default function RadmanUltimate() {
                 )}
                 {selectedIsVideo
                   ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
-                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} style={{ transform: `scale(${imageZoom})` }} />}
+                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} style={{ "--lightbox-zoom": imageZoom } as React.CSSProperties} />}
               </div>
             </div>
             <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
