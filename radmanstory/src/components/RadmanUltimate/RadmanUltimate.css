@@ -5916,3 +5916,72 @@
   .u .u-chapterGallery__stage>img,
   .u .u-chapterGallery__stage>video{max-height:calc(100dvh - 180px)!important}
 }
+
+
+/* FIX: keep the chapter-gallery zoom transform above the earlier high-specificity reset. */
+.u .u-chapterGallery .u-chapterGallery__stage > img{
+  transform:var(--chapter-gallery-transform,none)!important;
+  transform-origin:center center!important;
+  transition:transform .16s ease-out!important;
+  will-change:transform!important;
+  max-width:none!important;
+  max-height:none!important;
+  touch-action:none!important;
+  user-select:none!important;
+  -webkit-user-drag:none!important;
+}
+.u .u-chapterGallery .u-chapterGallery__stage.is-zoomed > img{
+  cursor:grab!important;
+}
+.u .u-chapterGallery .u-chapterGallery__stage.is-panning > img{
+  cursor:grabbing!important;
+  transition:none!important;
+}
+
+/* Chapter cards: let the photograph occupy the frame instead of floating inside it. */
+.u .u-chapter__image,
+.u .u-chapter:nth-child(even) .u-chapter__image{
+  aspect-ratio:5 / 4!important;
+  min-height:clamp(280px,36vw,560px)!important;
+  padding:0!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+.u .u-chapter__image > img{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  margin:0!important;
+  object-fit:cover!important;
+  object-position:center 42%!important;
+  border-radius:inherit!important;
+  transform:scale(1.015)!important;
+}
+.u .u-chapter__image:hover > img{
+  transform:scale(1.065)!important;
+}
+.u .u-chapter__imageFrame{
+  pointer-events:none!important;
+  z-index:2!important;
+}
+.u .u-chapter__imageMeta{
+  z-index:4!important;
+}
+.u .u-chapter__imageOpen{
+  z-index:5!important;
+}
+@media(max-width:850px){
+  .u .u-chapter__image,
+  .u .u-chapter:nth-child(even) .u-chapter__image{
+    min-height:0!important;
+    aspect-ratio:4 / 3!important;
+    padding:0!important;
+  }
+  .u .u-chapter__image > img{
+    object-fit:cover!important;
+    padding:0!important;
+  }
+}
