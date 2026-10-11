@@ -39,10 +39,10 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
 
   const loopItems = useMemo(() => {
     if (!media.length) return [];
-    // Even a single selected item gets repeated copies, so the track can still loop.
     const copies = media.length < 5 ? 7 : media.length < 8 ? 5 : 3;
     return Array.from({ length: copies }, () => media).flat();
   }, [media]);
+
   const getCycleWidth = useCallback(() => {
     const track = trackRef.current;
     const viewport = viewportRef.current;
@@ -59,8 +59,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       return;
     }
 
-    // Measure in viewport coordinates: unlike offsetLeft, this remains reliable
-    // when the page around the carousel uses RTL layout or nested offset parents.
     const cycleWidth = firstOfNextCopy.getBoundingClientRect().left - first.getBoundingClientRect().left;
     if (!Number.isFinite(cycleWidth) || cycleWidth <= 0) {
       cycleWidthRef.current = 0;
@@ -70,12 +68,11 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     const previousCycle = cycleWidthRef.current;
     cycleWidthRef.current = cycleWidth;
     if (previousCycle === 0) {
-      // Begin in the middle copy so the track has room to loop in both directions.
-      viewport.scrollLeft = cycleWidth;
+      // Start in the middle of the repeated track, with a full copy on either side.
+      viewport.scrollLeft = cycleWidth * 2;
     } else {
-      // Preserve the user's relative position when images/fonts/layout resize.
-      const relative = viewport.scrollLeft % previousCycle;
-      viewport.scrollLeft = cycleWidth + relative;
+      const relative = ((viewport.scrollLeft % previousCycle) + previousCycle) % previousCycle;
+      viewport.scrollLeft = cycleWidth * 2 + relative;
     }
   }, [media.length]);
 
@@ -114,12 +111,13 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       lastFrameRef.current = now;
       const cycle = cycleWidthRef.current;
       if (cycle > 0) {
-        // LTR is enforced on the viewport; normalize against the middle copy.
-        const next = viewport.scrollLeft + elapsed * 0.045;
-        const lower = cycle * 0.5;
-        const upper = cycle * 2.5;
-        if (next >= upper) viewport.scrollLeft = next - cycle;
-        else if (next < lower) viewport.scrollLeft = next + cycle;
+        // Move the content visually from left to right. Keep scrollLeft in the
+        // central two copies and wrap by exactly one measured cycle at either seam.
+        const next = viewport.scrollLeft - elapsed * 0.045;
+        const lower = cycle;
+        const upper = cycle * 3;
+        if (next <= lower) viewport.scrollLeft = next + cycle;
+        else if (next >= upper) viewport.scrollLeft = next - cycle;
         else viewport.scrollLeft = next;
       }
       frameRef.current = requestAnimationFrame(tick);
@@ -131,8 +129,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       lastFrameRef.current = 0;
     };
   }, [focused, isDragging, media.length, reducedMotion]);
-
-
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
@@ -195,8 +191,8 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         aria-roledescription="carousel"
         aria-label="Memory Signal gallery. Use the arrow keys to browse."
         onKeyDown={(event) => {
-          if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" });  }
-          if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" });  }
+          if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" }); }
+          if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" }); }
         }}
       >
         <div className="memory-signal__track" ref={trackRef}>
@@ -226,7 +222,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
           })}
         </div>
       </div>
-
     </section>
   );
 }
