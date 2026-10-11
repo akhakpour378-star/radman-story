@@ -691,6 +691,7 @@ export default function RadmanUltimate() {
         </div>
       </section>
 
+      {timelineMemories.length > 0 && (
       <section className="u-timeline u-timeline--editorial">
         <div className="u-timeline__head u-reveal">
           <div className="u-timeline__eyebrow"><span className="u-kicker">01 / THE YEARS</span><span className="u-timeline__headNote">A LIFE, FRAME BY FRAME</span></div>
@@ -715,6 +716,7 @@ export default function RadmanUltimate() {
         </div>
         <div className="u-timeline__foot"><span>SCROLL THROUGH THE YEARS</span><span><i /> EVERY FRAME, A MEMORY</span></div>
       </section>
+      )}
 
       <section id="archive" className="u-archive">
         <div className="u-archive__head u-reveal">
