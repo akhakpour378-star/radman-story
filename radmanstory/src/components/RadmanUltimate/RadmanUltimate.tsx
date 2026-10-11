@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import "./RadmanUltimate.css";
+import MemorySignal from "./MemorySignal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -402,102 +403,6 @@ export default function RadmanUltimate() {
   }, [memories.length]);
 
   useEffect(() => {
-    const reel = root.current?.querySelector<HTMLElement>(".memory-loop");
-    const track = reel?.querySelector<HTMLElement>(".memory-loop__track");
-    if (!reel || !track) return;
-    const groups = Array.from(track.querySelectorAll<HTMLElement>(":scope > .memory-loop__group"));
-    if (groups.length < 2) return;
-
-    let raf = 0;
-    let last = 0;
-    let cycle = 0;
-    let offset = 0;
-    let dragging = false;
-    let moved = false;
-    let startX = 0;
-    let startOffset = 0;
-    let pointerId: number | null = null;
-    let clickedMedia: string | null = null;
-    const speed = 34;
-
-    const measure = () => {
-      cycle = groups[0].getBoundingClientRect().width;
-      if (cycle > 0) {
-        offset = ((offset % cycle) + cycle) % cycle;
-        track.style.transform = `translate3d(${-offset}px,0,0)`;
-      }
-    };
-    const animate = (now: number) => {
-      if (!last) last = now;
-      const dt = Math.min(40, now - last);
-      last = now;
-      if (!dragging && cycle > 0 && document.visibilityState === "visible") {
-        offset = (offset + speed * dt / 1000) % cycle;
-        track.style.transform = `translate3d(${-offset}px,0,0)`;
-      }
-      raf = requestAnimationFrame(animate);
-    };
-    const down = (e: PointerEvent) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      dragging = true; moved = false; pointerId = e.pointerId;
-      startX = e.clientX; startOffset = offset;
-      const item = e.target instanceof Element ? e.target.closest<HTMLElement>(".memory-loop__item") : null;
-      clickedMedia = item?.dataset.media ?? null;
-      reel.classList.add("is-dragging");
-      try { reel.setPointerCapture(e.pointerId); } catch {}
-    };
-    const move = (e: PointerEvent) => {
-      if (!dragging || e.pointerId !== pointerId) return;
-      const delta = e.clientX - startX;
-      if (Math.abs(delta) > 4) moved = true;
-      if (!moved || cycle <= 0) return;
-      offset = ((startOffset - delta) % cycle + cycle) % cycle;
-      track.style.transform = `translate3d(${-offset}px,0,0)`;
-      if (e.cancelable) e.preventDefault();
-    };
-    const finish = (e: PointerEvent) => {
-      if (!dragging || e.pointerId !== pointerId) return;
-      dragging = false; pointerId = null;
-      reel.classList.remove("is-dragging");
-      if (!moved && clickedMedia) {
-        setSelectedMemorySrc(clickedMedia);
-        const index = memories.findIndex((memory) => memory.src === clickedMedia);
-        setSelected(index >= 0 ? index : null);
-      }
-      clickedMedia = null;
-      try { if (reel.hasPointerCapture(e.pointerId)) reel.releasePointerCapture(e.pointerId); } catch {}
-    };
-
-    reel.style.overflow = "hidden";
-    reel.style.touchAction = "pan-y";
-    reel.style.cursor = "grab";
-    track.style.display = "flex";
-    track.style.width = "max-content";
-    track.style.gap = "0";
-    track.style.animation = "none";
-    track.style.willChange = "transform";
-    groups.forEach(group => { group.style.flex = "0 0 auto"; });
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(reel);
-    groups.forEach(group => observer.observe(group));
-    window.addEventListener("resize", measure);
-    reel.addEventListener("pointerdown", down);
-    reel.addEventListener("pointermove", move, { passive: false });
-    reel.addEventListener("pointerup", finish);
-    reel.addEventListener("pointercancel", finish);
-    raf = requestAnimationFrame(animate);
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-      reel.removeEventListener("pointerdown", down);
-      reel.removeEventListener("pointermove", move);
-      reel.removeEventListener("pointerup", finish);
-      reel.removeEventListener("pointercancel", finish);
-    };
-  }, [heroConfig.memorySignal?.length, memories.length]);
-  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
       if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); }
@@ -656,44 +561,14 @@ export default function RadmanUltimate() {
           </div>
         </div>
       </section>
-      <section
-        className="memory-loop"
-        aria-label="Selected memories"
-
-      >
-        <div className="memory-loop__track">
-          {(() => {
-            const entries = heroConfig.memorySignal || [];
-            // For [1,2,3,4], each cycle is [4,1,2,3].
-            // Duplicating that exact cycle yields ...3,4,1,2,3,4,1...
-            // Never include a second "4" at the end of a cycle.
-            const cycleEntries = entries.length > 1
-              ? [entries[entries.length - 1], ...entries.slice(0, -1)]
-              : entries;
-            return [0, 1].map((copy) => (
-              <div className="memory-loop__group" key={copy} aria-hidden={copy === 1}>
-                {cycleEntries.map((src, itemIndex) => {
-                  const isVideo = src.startsWith("video:");
-                  const media = isVideo ? src.slice(6) : src;
-                  const memoryIndex = memories.findIndex((m) => m.src === media);
-                  const key = `signal-${copy}-${itemIndex}-${isVideo ? "video" : "image"}-${media}`;
-                  return isVideo ? (
-                    <button type="button" className="memory-loop__item memory-loop__item--video" key={key}
-                      data-media={media} data-video="true" aria-label="Play memory video" tabIndex={copy === 1 ? -1 : 0}>
-                      <video src={asset(media)} muted playsInline preload="metadata" />
-                      <i className="u-mediaPlay" aria-hidden="true"><Play size={17} fill="currentColor" /></i>
-                    </button>
-                  ) : (
-                    <button type="button" className="memory-loop__item" key={key}
-                      data-media={media} data-video="false" aria-label={memories[memoryIndex]?.title || "Memory"} tabIndex={copy === 1 ? -1 : 0}>
-                      <img src={asset(media)} alt={memories[memoryIndex]?.title || "Memory"} loading="lazy" />
-                    </button>
-                  );
-                })}
-              </div>
-            ));
-          })()}
-        </div>     </section>
+      <MemorySignal
+        items={heroConfig.memorySignal || []}
+        resolveSrc={asset}
+        onSelect={(src, index) => {
+          setSelectedMemorySrc(src);
+          setSelected(index);
+        }}
+      />
 
       <section id="chapters" className="u-chapters">
         {chapters.map(([num, title, copy, m]) => (
