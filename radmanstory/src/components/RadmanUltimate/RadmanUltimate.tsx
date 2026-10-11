@@ -260,7 +260,7 @@ export default function RadmanUltimate() {
   const selectedSignalEntry = selectedMemorySrc
     ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
     : null;
-  const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
+  const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
   const selectedMemory = selectedMemorySrc
     ? memories.find((m) => m.src === selectedMemorySrc) || {
         src: selectedMemorySrc,
@@ -705,7 +705,7 @@ export default function RadmanUltimate() {
           </div>
           <button type="button" className="u-lightbox__next" onClick={(e) => {
               e.stopPropagation();
-              const signal = heroConfig.memorySignal || [];
+              const signal = signalItems;
               const current = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
               const next = (current + 1) % signal.length;
               const src = signal[next]?.replace(/^video:/, "") || null;
