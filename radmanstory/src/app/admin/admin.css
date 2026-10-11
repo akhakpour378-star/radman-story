@@ -1803,3 +1803,26 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-content--studio .admin-trashManager__toolbar{padding:17px!important}
   .admin-content--studio .admin-trashManager__actions button{min-width:calc(50% - 5px)}
 }
+
+
+/* MOVING MEMORY — polished editorial management */
+.admin-content--studio .admin-movingStudio{border-color:rgba(137,169,201,.27);background:radial-gradient(ellipse at 0% 0%,rgba(129,154,255,.09),transparent 35%),linear-gradient(145deg,#111b29,#080e17);box-shadow:0 24px 70px rgba(24,42,61,.16)}
+.admin-content--studio .admin-movingStudio__toolbar{background:linear-gradient(110deg,rgba(169,183,255,.055),transparent 60%)}
+.admin-content--studio .admin-movingStudio__toolbar>div>span{display:inline-flex;align-items:center;gap:10px}
+.admin-content--studio .admin-movingStudio__toolbar>div>span:before{content:"";width:22px;height:1px;background:#aeb7ff}
+.admin-content--studio .admin-movingStudio__toolbar h2{font-size:22px;letter-spacing:-.02em}
+.admin-content--studio .admin-movingCard{position:relative;border-color:rgba(165,182,222,.2);transition:transform .25s,border-color .25s,box-shadow .25s}
+.admin-content--studio .admin-movingCard:hover{transform:translateY(-3px);border-color:rgba(165,182,255,.55);box-shadow:0 18px 38px rgba(0,0,0,.2)}
+.admin-content--studio .admin-movingCard video{aspect-ratio:16/10;object-fit:cover}
+.admin-content--studio .admin-movingCard>div{padding:14px}
+.admin-content--studio .admin-movingCard>div span{color:#aeb7ff}
+.admin-content--studio .admin-movingCard>div b{font-size:12px}
+.admin-content--studio .admin-movingCard button{transition:background .2s,border-color .2s,transform .2s}
+.admin-content--studio .admin-movingCard button:hover{transform:translateY(-1px)}
+.admin-content--studio .admin-movingLibrary{background:rgba(255,255,255,.012)}
+.admin-content--studio .admin-movingLibrary h3{font-size:15px}
+.admin-content--studio .admin-movingLibrary__item{transition:border-color .2s,background .2s,transform .2s}
+.admin-content--studio .admin-movingLibrary__item:hover{transform:translateY(-1px);border-color:rgba(165,182,255,.45)}
+.admin-content--studio .admin-movingLibrary__item input{accent-color:#aeb7ff}
+.admin-content--studio .admin-movingNote{background:linear-gradient(90deg,rgba(143,157,255,.055),transparent);border-top-color:rgba(165,182,255,.12)}
+@media(max-width:600px){.admin-content--studio .admin-movingStudio__toolbar h2{font-size:19px}.admin-content--studio .admin-movingCard video{aspect-ratio:16/10}}
