@@ -22,7 +22,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   const pointerRef = useRef<{ id: number; x: number; scroll: number; captureTarget: HTMLElement } | null>(null);
   const draggedRef = useRef(false);
   const suppressClickRef = useRef(false);
-  const [paused, setPaused] = useState(false);
   const [focused, setFocused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
@@ -101,7 +100,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport || media.length < 1) return;
-    const canMove = !paused && !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
+    const canMove = !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
     if (!canMove) {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
@@ -131,7 +130,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
       frameRef.current = null;
       lastFrameRef.current = 0;
     };
-  }, [focused, isDragging, media.length, paused, reducedMotion]);
+  }, [focused, isDragging, media.length, reducedMotion]);
 
 
 
@@ -166,7 +165,6 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     if (draggedRef.current) {
       suppressClickRef.current = true;
       window.setTimeout(() => { suppressClickRef.current = false; }, 0);
-      setPaused(true);
     }
     draggedRef.current = false;
     try { if (pointer.captureTarget.hasPointerCapture(event.pointerId)) pointer.captureTarget.releasePointerCapture(event.pointerId); } catch {}
@@ -188,7 +186,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        onFocusCapture={() => setFocused(true)}
+        onFocusCapture={(event) => { if (event.target === event.currentTarget) setFocused(true); }}
         onBlurCapture={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
         }}
@@ -197,7 +195,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         aria-roledescription="carousel"
         aria-label="Memory Signal gallery. Use the arrow keys to browse."
         onKeyDown={(event) => {
-          if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" }); setPaused(true); }
+          if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" });  }
           if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" }); setPaused(true); }
         }}
       >
