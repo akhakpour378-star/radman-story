@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { Play } from "lucide-react";
 import "./MemorySignal.css";
 
 type Props = {
@@ -133,14 +133,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
     };
   }, [focused, isDragging, media.length, paused, reducedMotion]);
 
-  const moveByCard = (direction: -1 | 1) => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const first = trackRef.current?.querySelector<HTMLElement>(".memory-signal__card");
-    const distance = first ? first.getBoundingClientRect().width + 14 : viewport.clientWidth * 0.7;
-    viewport.scrollBy({ left: direction * distance, behavior: reducedMotion ? "auto" : "smooth" });
-    setPaused(true);
-  };
+
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
@@ -204,8 +197,8 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
         aria-roledescription="carousel"
         aria-label="Memory Signal gallery. Use the arrow keys to browse."
         onKeyDown={(event) => {
-          if (event.key === "ArrowRight") { event.preventDefault(); moveByCard(1); }
-          if (event.key === "ArrowLeft") { event.preventDefault(); moveByCard(-1); }
+          if (event.key === "ArrowRight") { event.preventDefault(); viewportRef.current?.scrollBy({ left: 205, behavior: reducedMotion ? "auto" : "smooth" }); setPaused(true); }
+          if (event.key === "ArrowLeft") { event.preventDefault(); viewportRef.current?.scrollBy({ left: -205, behavior: reducedMotion ? "auto" : "smooth" }); setPaused(true); }
         }}
       >
         <div className="memory-signal__track" ref={trackRef}>
@@ -226,7 +219,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
                 aria-label={video ? "Open memory video" : `Open memory ${originalIndex + 1}`}
               >
                 {video
-                  ? <video src={resolveSrc(src)} muted playsInline preload="metadata" draggable={false} />
+                  ? <video src={resolveSrc(src)} muted autoPlay loop playsInline preload="metadata" draggable={false} />
                   : <img src={resolveSrc(src)} alt="" loading={renderIndex < media.length ? "eager" : "lazy"} draggable={false} />}
                 {video && <span className="memory-signal__play" aria-hidden="true"><Play size={18} fill="currentColor" /></span>}
                 <span className="memory-signal__shine" aria-hidden="true" />
@@ -235,18 +228,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
           })}
         </div>
       </div>
-      <div className="memory-signal__controls" aria-label="Memory gallery controls">
-        <button type="button" onClick={() => moveByCard(-1)} aria-label="Previous memories"><ArrowLeft size={16} /></button>
-        <button
-          type="button"
-          onClick={() => setPaused((value) => !value)}
-          aria-label={paused ? "Resume automatic movement" : "Pause automatic movement"}
-          title={paused ? "Resume movement" : "Pause movement"}
-        >
-          {paused ? <Play size={14} fill="currentColor" /> : <Pause size={14} />}
-        </button>
-        <button type="button" onClick={() => moveByCard(1)} aria-label="Next memories"><ArrowRight size={16} /></button>
-      </div>
+
     </section>
   );
 }
