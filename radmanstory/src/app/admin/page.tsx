@@ -787,7 +787,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">05 / EDITORIAL TIMELINE</span><h1>مدیریت مستقل <em>THE YEARS</em></h1><p>تصاویر خط زمان را انتخاب، اضافه، حذف و مرتب کن. ترتیب این فهرست مستقیماً ترتیب کارت‌ها روی خط زمان سایت را تعیین می‌کند.</p></div>
-              <div className="admin-header__actions"><a href="/#years" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده خط زمان <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-yearsStudio">
