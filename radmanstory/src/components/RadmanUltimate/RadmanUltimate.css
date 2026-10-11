@@ -5985,3 +5985,20 @@
     padding:0!important;
   }
 }
+
+/* Preserve a viewport-sized base image; zoom changes only its visual transform. */
+.u .u-chapterGallery .u-chapterGallery__stage > img{
+  max-width:min(100%,calc(100vw - 180px))!important;
+  max-height:calc(100dvh - 255px)!important;
+}
+@media(max-width:850px){
+  .u .u-chapterGallery .u-chapterGallery__stage > img{
+    max-width:calc(100vw - 52px)!important;
+    max-height:calc(100dvh - 225px)!important;
+  }
+}
+@media(max-height:620px){
+  .u .u-chapterGallery .u-chapterGallery__stage > img{
+    max-height:calc(100dvh - 180px)!important;
+  }
+}
