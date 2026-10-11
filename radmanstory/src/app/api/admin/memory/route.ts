@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const sectionValue = String(form.get("section") || "memory").toLowerCase();
     const sectionAliases: Record<string, string> = { "memory-signal": "signal", "memory": "signal", "memories": "signal" };
     const normalizedSection = sectionAliases[sectionValue] || sectionValue;
-    const section = ["hero", "story", "chapters", "signal"].includes(normalizedSection) ? normalizedSection : "signal";
+    const section = ["hero", "story", "chapters", "signal", "years"].includes(normalizedSection) ? normalizedSection : "signal";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "فایل تصویر ارسال نشده است." }, { status: 400 });
