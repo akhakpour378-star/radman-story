@@ -4855,3 +4855,62 @@
   .u .u-chapter__image,.u .u-chapter__image img,.u .u-chapter__imageMeta,.u .u-chapter__imageOpen{transition:none!important}
   .u .u-chapter__image{transform:none!important}
 }
+
+/* Scroll-reactive chapter lines */
+.u .u-chapter::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  top:0;
+  left:8vw;
+  right:8vw;
+  height:1px;
+  pointer-events:none;
+  opacity:.22;
+  transform:scaleX(.28);
+  transform-origin:center;
+  background:linear-gradient(90deg,transparent,rgba(169,233,240,.92) 22%,rgba(135,144,232,.95) 50%,rgba(169,233,240,.92) 78%,transparent);
+  box-shadow:0 0 0 rgba(169,233,240,0);
+  animation:chapterSeparatorWake linear both;
+  animation-timeline:view();
+  animation-range:entry 0% cover 36%;
+}
+@keyframes chapterSeparatorWake{
+  0%{opacity:.18;transform:scaleX(.22);height:1px;box-shadow:0 0 0 rgba(169,233,240,0)}
+  55%{opacity:.78;transform:scaleX(.78);height:1.5px;box-shadow:0 0 12px rgba(169,233,240,.18)}
+  100%{opacity:1;transform:scaleX(1);height:2px;box-shadow:0 0 20px rgba(169,233,240,.32)}
+}
+.u .u-chapter__copy .u-rule{
+  transform:scaleX(.42);
+  transform-origin:right center;
+  opacity:.4;
+  box-shadow:0 0 0 rgba(169,233,240,0);
+  animation:chapterRuleWake linear both;
+  animation-timeline:view();
+  animation-range:entry 0% cover 42%;
+}
+.u .u-chapter__copy .u-rule::after{
+  transform:scale(.72);
+  transition:box-shadow .25s ease;
+  animation:chapterRulePoint linear both;
+  animation-timeline:view();
+  animation-range:entry 0% cover 42%;
+}
+@keyframes chapterRuleWake{
+  0%{transform:scaleX(.32);opacity:.3;filter:saturate(.65);box-shadow:0 0 0 rgba(169,233,240,0)}
+  60%{transform:scaleX(.78);opacity:.8;filter:saturate(1.15);box-shadow:0 0 10px rgba(169,233,240,.18)}
+  100%{transform:scaleX(1);opacity:1;filter:saturate(1.35);box-shadow:0 0 17px rgba(169,233,240,.28)}
+}
+@keyframes chapterRulePoint{
+  0%{transform:scale(.55);box-shadow:0 0 4px rgba(169,233,240,.25)}
+  100%{transform:scale(1.15);box-shadow:0 0 16px rgba(169,233,240,.85)}
+}
+@media(max-width:850px){
+  .u .u-chapter::after{left:40px;right:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .u .u-chapter::after,.u .u-chapter__copy .u-rule,.u .u-chapter__copy .u-rule::after{
+    animation:none!important;transform:none!important;opacity:1!important;
+  }
+}
+
