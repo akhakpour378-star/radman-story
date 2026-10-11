@@ -41,5 +41,56 @@
       "image": "/memory/radman-and-me.png",
       "label": "TOGETHER"
     }
+  ],
+  "chapters": [
+    {
+      "id": "birth",
+      "period": "CHAPTER 01 / THE ARRIVAL",
+      "title": "روزی که جهانم تغییر کرد",
+      "description": "از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.",
+      "image": "/memory/radman-main.JPG"
+    },
+    {
+      "id": "first-months",
+      "period": "CHAPTER 02 / FIRST MONTHS",
+      "title": "روزهای اول کنار تو",
+      "description": "نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.",
+      "image": "/memory/radman-second.JPG"
+    },
+    {
+      "id": "first-steps",
+      "period": "CHAPTER 03 / FIRST STEPS",
+      "title": "اولین قدم‌ها",
+      "description": "از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.",
+      "image": "/memory/radman-01.JPG"
+    },
+    {
+      "id": "words-and-play",
+      "period": "CHAPTER 04 / WORDS & PLAY",
+      "title": "کلمات، بازی‌ها و کشف‌ها",
+      "description": "واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.",
+      "image": "/memory/radman-02.JPG"
+    },
+    {
+      "id": "kindergarten",
+      "period": "CHAPTER 05 / A NEW WORLD",
+      "title": "شروع ماجرای مهدکودک",
+      "description": "تجربه محیطی تازه، آشنایی‌ها، بازی‌های گروهی و قدم‌های نخست در دنیای بیرون از خانه.",
+      "image": "/memory/radman-03.JPG"
+    },
+    {
+      "id": "little-discoveries",
+      "period": "CHAPTER 06 / DISCOVERY",
+      "title": "ماجراجویی‌های کوچک",
+      "description": "جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.",
+      "image": "/memory/radman-sit.jpeg"
+    },
+    {
+      "id": "together",
+      "period": "CHAPTER 07 / TOGETHER",
+      "title": "قصه‌ای که ادامه دارد",
+      "description": "لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.",
+      "image": "/memory/radman-and-me.png"
+    }
   ]
 }
