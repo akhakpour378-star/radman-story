@@ -16,6 +16,7 @@ type HeroConfig = {
   memoryTitles?: Record<string, string>;
   chapters: Chapter[];
   years: string[];
+  yearsTitles: Record<string, string>;
 };
 type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
 type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
@@ -43,6 +44,7 @@ const defaults: HeroConfig = {
     { id:"together", period:"CHAPTER 07 / TOGETHER", title:"قصه‌ای که ادامه دارد", description:"لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", image:"/memory/radman-and-me.png" },
   ],
   years: ["/memory/radman-main.JPG", "/memory/radman-second.JPG", "/memory/radman-01.JPG", "/memory/radman-02.JPG", "/memory/radman-03.JPG", "/memory/radman-sit.jpeg", "/memory/radman-and-me.png"],
+  yearsTitles: {},
 };
 
 const fieldMeta: Record<keyof Omit<HeroConfig, "image" | "persianFont" | "story" | "memorySignal" | "memoryTitles">, { label: string; hint: string }> = {
@@ -377,14 +379,14 @@ export default function AdminPage() {
       if (!src.startsWith("/memory/")) throw new Error("مسیر تصویر برگشتی معتبر نیست.");
       setImages(current => current.includes(src) ? current : [src, ...current]);
       setAllMedia(current => current.includes(src) ? current : [src, ...current]);
-      setConfig(current => ({ ...current, years: Array.from(new Set([...(current.years || []), src])) }));
+      setConfig(current => ({ ...current, years: Array.from(new Set([...(current.years || []), src])), yearsTitles: { ...(current.yearsTitles || {}), [src]: current.yearsTitles?.[src] || "" } }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "آپلود تصویر انجام نشد.");
     } finally { setUploading(false); }
   };
 
   const removeYearsImage = (src: string) => {
-    setConfig(current => ({ ...current, years: (current.years || []).filter(item => item !== src) }));
+    setConfig(current => ({ ...current, years: (current.years || []).filter(item => item !== src), yearsTitles: Object.fromEntries(Object.entries(current.yearsTitles || {}).filter(([key]) => key !== src)) }));
     setSaved(false); setError("");
   };
 
@@ -784,7 +786,7 @@ export default function AdminPage() {
                 <div className="admin-yearsStudio__count"><strong>{String((config.years || []).length).padStart(2,"0")}</strong><span>FRAMES</span></div>
               </div>
               <div className="admin-yearsStudio__toolbar">
-                <div><b>قاب‌های انتخاب‌شده</b><span>ترتیب نمایش از راست به چپ</span></div>
+                <div><b>قاب‌های انتخاب‌شده</b><span>شماره‌ها بر اساس ترتیب فعلی‌اند؛ برای هر تصویر عنوانی بنویس تا در کارت و مدال سایت نمایش داده شود.</span></div>
                 <label className="admin-memoryUploadButton admin-memoryUploadButton--image"><Upload size={14}/>{uploading ? "در حال آپلود..." : "افزودن تصویر"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadYearsImage(file); e.currentTarget.value=""; }}/></label>
               </div>
               {(config.years || []).length ? (
@@ -792,7 +794,7 @@ export default function AdminPage() {
                   {(config.years || []).map((src,index) => (
                     <article className="admin-yearsCard" key={src}>
                       <div className="admin-yearsCard__media"><img src={mediaUrl(src)} alt={src.split("/").pop() || "THE YEARS"} /><span>{String(index+1).padStart(2,"0")}</span><i>THE YEARS</i></div>
-                      <div className="admin-yearsCard__info"><strong>{src.split("/").pop()}</strong><small>{src}</small></div>
+                      <div className="admin-yearsCard__info"><label htmlFor={`years-title-${index}`}>عنوان نمایشی روی سایت</label><input id={`years-title-${index}`} value={config.yearsTitles?.[src] || ""} onChange={e => { const value=e.target.value; setConfig(current => ({ ...current, yearsTitles: { ...(current.yearsTitles || {}), [src]: value } })); setSaved(false); setError(""); }} placeholder={`عنوان قاب ${String(index+1).padStart(2,"0")}`} maxLength={120} /><small>{src}</small></div>
                       <div className="admin-yearsCard__actions">
                         <button type="button" onClick={() => moveYearsImage(index,-1)} disabled={index===0} aria-label="انتقال به ابتدای خط زمان" title="انتقال به راست / قبلی">←</button>
                         <button type="button" onClick={() => moveYearsImage(index,1)} disabled={index===(config.years || []).length-1} aria-label="انتقال به انتهای خط زمان" title="انتقال به چپ / بعدی">→</button>
