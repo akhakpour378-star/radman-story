@@ -775,7 +775,7 @@ export default function AdminPage() {
                       })}
                     </div> : <div className="admin-chapterGallery__empty">هنوز رسانه‌ای برای این فصل اضافه نشده است. با آپلود تصویر یا ویدیو، گالری این فصل ساخته می‌شود.</div>}
                   </section>
-                  <div className="admin-chapterEditor__foot"><span>شناسه داخلی: {config.chapters[editingChapter].id}</span><button type="button" className="admin-memoryDeleteButton" onClick={() => removeChapter(editingChapter)} disabled={(config.chapters || []).length<=1}><Trash2 size={14}/> حذف این فصل</button></div>
+                  <div className="admin-chapterEditor__foot"><span>شناسه داخلی: {config.chapters[editingChapter].id}</span><button type="button" className="admin-chapterDeleteButton" onClick={() => removeChapter(editingChapter)} disabled={(config.chapters || []).length<=1}><Trash2 size={14}/> حذف این فصل</button></div>
                 </div> : <div className="admin-chapterEditor admin-chapterEditor--empty">برای شروع، یک فصل از فهرست انتخاب کن یا فصل تازه‌ای بساز.</div>}
               </div>
               <div className="admin-chaptersStudio__note"><ShieldCheck size={16}/><p><strong>کنترل انتشار با شماست.</strong> ویرایش‌ها تا زمان زدن «ذخیره تغییرات» پیش‌نویس می‌مانند. برای نتیجه نهایی، پیش‌نمایش سایت را هم بررسی کن.</p></div>
