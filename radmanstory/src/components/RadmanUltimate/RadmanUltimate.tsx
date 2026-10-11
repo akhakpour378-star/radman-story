@@ -105,13 +105,23 @@ export default function RadmanUltimate() {
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
   const [imageZoom, setImageZoom] = useState(1);
+  const [imagePan, setImagePan] = useState({ x: 0, y: 0 });
+  const [isPanningImage, setIsPanningImage] = useState(false);
+  const imagePanDragRef = useRef<{ pointerId: number; startX: number; startY: number; panX: number; panY: number } | null>(null);
   const memoryThumbsRef = useRef<HTMLElement | null>(null);
   const [signalItems, setSignalItems] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
 
   useEffect(() => {
     setImageZoom(1);
+    setImagePan({ x: 0, y: 0 });
+    setIsPanningImage(false);
+    imagePanDragRef.current = null;
   }, [selectedMemorySrc]);
+
+  useEffect(() => {
+    if (imageZoom === 1) setImagePan({ x: 0, y: 0 });
+  }, [imageZoom]);
 
   useEffect(() => {
     const rail = memoryThumbsRef.current;
@@ -694,15 +704,40 @@ export default function RadmanUltimate() {
                 <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
               </div>
               <div
-                className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "")}
+                className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "") + (isPanningImage ? " is-panning" : "")}
                 onWheel={(e) => {
                   if (selectedIsVideo) return;
                   e.preventDefault();
                   e.stopPropagation();
                   setImageZoom((z) => Math.max(1, Math.min(3, +(z + (e.deltaY < 0 ? 0.15 : -0.15)).toFixed(2))));
                 }}
-                onDoubleClick={() => { if (!selectedIsVideo) setImageZoom((z) => z === 1 ? 2 : 1); }}
-                title={!selectedIsVideo ? "Scroll to zoom · Double-click to reset" : undefined}
+                onPointerDown={(e) => {
+                  if (selectedIsVideo || imageZoom <= 1 || (e.target as HTMLElement).tagName !== "IMG" || e.button !== 0) return;
+                  e.preventDefault();
+                  imagePanDragRef.current = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, panX: imagePan.x, panY: imagePan.y };
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  setIsPanningImage(true);
+                }}
+                onPointerMove={(e) => {
+                  const drag = imagePanDragRef.current;
+                  if (!drag || drag.pointerId !== e.pointerId) return;
+                  setImagePan({ x: drag.panX + e.clientX - drag.startX, y: drag.panY + e.clientY - drag.startY });
+                }}
+                onPointerUp={(e) => {
+                  if (imagePanDragRef.current?.pointerId !== e.pointerId) return;
+                  imagePanDragRef.current = null;
+                  setIsPanningImage(false);
+                  if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+                }}
+                onPointerCancel={() => { imagePanDragRef.current = null; setIsPanningImage(false); }}
+                onDoubleClick={() => {
+                  if (!selectedIsVideo) {
+                    const nextZoom = imageZoom === 1 ? 2 : 1;
+                    setImageZoom(nextZoom);
+                    if (nextZoom === 1) setImagePan({ x: 0, y: 0 });
+                  }
+                }}
+                title={!selectedIsVideo ? (imageZoom > 1 ? "Drag to move · Scroll to zoom · Double-click to reset" : "Scroll to zoom · Double-click to zoom in") : undefined}
               >
                 {!selectedIsVideo && (
                   <div className="u-lightbox__zoomControls" aria-label="Image zoom controls">
@@ -714,7 +749,7 @@ export default function RadmanUltimate() {
                 )}
                 {selectedIsVideo
                   ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
-                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} style={{ "--lightbox-zoom": imageZoom } as React.CSSProperties} />}
+                  : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} draggable={false} style={{ "--lightbox-zoom": imageZoom, "--lightbox-pan-x": `${imagePan.x}px`, "--lightbox-pan-y": `${imagePan.y}px` } as React.CSSProperties} />}
               </div>
             </div>
             <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
