@@ -40,7 +40,10 @@ type HeroConfig = {
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
   memorySignal?: string[];
   memoryTitles?: Record<string, string>;
+  chapters?: Chapter[];
 };
+
+type Chapter = { id:string; period:string; title:string; description:string; image:string };
 
 type Memory = {
   src: string;
@@ -464,25 +467,31 @@ export default function RadmanUltimate() {
   };
 
   const chapters = useMemo(() => {
-    const used = new Set<string>();
-    const pick = (preferred: number[], matcher?: (m: Memory) => boolean) => {
-      const ordered = [
-        ...(matcher ? memories.filter(matcher) : []),
-        ...preferred.map(i => memories[i]).filter(Boolean),
-        ...memories,
-      ];
-      const found = ordered.find(m => !used.has(m.src));
-      if (found) used.add(found.src);
-      return found ?? memories[0] ?? fallback[0];
-    };
-
+    const configured = heroConfig.chapters || [];
+    if (configured.length) {
+      return configured.map((chapter, index) => {
+        const src = chapter.image || memories[index % Math.max(memories.length, 1)]?.src || fallback[0].src;
+        const match = memories.find((memory) => memory.src === src);
+        const memory: Memory = {
+          ...(match || { src, no: String(index + 1).padStart(2, "0"), title: chapter.title, tag: chapter.period }),
+          src,
+          no: String(index + 1).padStart(2, "0"),
+          title: chapter.title,
+          tag: chapter.period,
+        };
+        return [String(index + 1).padStart(2, "0"), chapter.title, chapter.description, memory] as const;
+      });
+    }
     return [
-      ["01", "THE BEGINNING", "A face arrives and an ordinary life becomes a story.", pick([0])],
-      ["02", "THE LITTLE YEARS", "The years move quickly. The archive keeps what time cannot.", pick([2, 3])],
-      ["03", "BECOMING", "Hundreds of ordinary moments slowly become a childhood.", pick([7, 4, 5])],
-      ["04", "TOGETHER", "Some memories are not about a place. They are about who was there.", pick([], m => /together|and-me/i.test(m.src))],
+      ["01", "روزی که جهانم تغییر کرد", "از لحظه تولد و اولین دیدار تا ثبت جزئیات روزی که آغاز قصه رادمان شد.", memories[0] || fallback[0]],
+      ["02", "روزهای اول کنار تو", "نگاه‌های تازه، آغوش‌های طولانی و لحظه‌های کوچک ماه‌های نخست زندگی.", memories[1] || fallback[1]],
+      ["03", "اولین قدم‌ها", "از تلاش‌های کوچک برای ایستادن تا قدم‌هایی که هر بار دنیای تازه‌ای باز می‌کردند.", memories[2] || fallback[2]],
+      ["04", "کلمات، بازی‌ها و کشف‌ها", "واژه‌های تازه، بازی‌های دوست‌داشتنی و شکل گرفتن دنیای مخصوص خودت.", memories[3] || fallback[3]],
+      ["05", "شروع ماجرای مهدکودک", "تجربه محیطی تازه، آشنایی‌ها و قدم‌های نخست در دنیای بیرون از خانه.", memories[4] || fallback[4]],
+      ["06", "ماجراجویی‌های کوچک", "جاهای تازه، کنجکاوی‌های کودکانه و خاطراتی که از یک روز معمولی، روزی ماندگار می‌سازند.", memories[5] || fallback[5]],
+      ["07", "قصه‌ای که ادامه دارد", "لحظه‌های کنار هم بودن؛ خاطراتی برای نگه داشتن و فصل‌هایی که هنوز نوشته نشده‌اند.", memories[6] || fallback[6]],
     ] as const;
-  }, [memories]);
+  }, [heroConfig.chapters, memories]);
 
   return (
     <main ref={root} className={"u u-font-" + heroConfig.persianFont}>
@@ -616,7 +625,7 @@ export default function RadmanUltimate() {
           <article className="u-chapter" key={num}>
             <div className="u-chapter__top"><span>{m.tag}</span><small>CHAPTER / {num}</small></div>
             <div className="u-chapter__layout">
-              <button className="u-chapter__image" onClick={() => setSelected(memories.indexOf(m))} aria-label={`Open ${m.title}`}>
+              <button className="u-chapter__image" onClick={() => { setSelectedMemorySrc(m.src); setSelected(memories.findIndex((item) => item.src === m.src)); }} aria-label={`Open ${m.title}`}>
                 <img src={asset(m.src)} alt={m.title} />
                 <div className="u-chapter__imageFrame" aria-hidden="true"><span>RADMAN / ARCHIVE</span><i /></div>
                 <div className="u-chapter__imageMeta"><b>{m.tag}</b><small>{m.title}</small></div>
