@@ -4939,7 +4939,7 @@
   bottom:0!important;
   left:50%!important;
   width:2px!important;
-  transform:translateX(-50%) scaleY(.08)!important;
+  transform:translateX(-50%);
   transform-origin:top center!important;
   opacity:.25!important;
   pointer-events:none!important;
@@ -5099,9 +5099,10 @@
 .u .u-chapter__top small{font-size:7px!important;letter-spacing:.16em!important}
 @media(max-width:850px){
   .u .u-chapters__list::before,.u .u-chapters__list::after{
-    left:18px!important;transform:translateX(-50%) scaleY(.08)!important;
+    left:18px!important;
   }
-  .u .u-chapters__list::after{transform-origin:top center!important}
+  .u .u-chapters__list::before{transform:translateX(-50%)!important}
+  .u .u-chapters__list::after{transform:translateX(-50%);transform-origin:top center!important}
   .u .u-chapter::before{left:18px!important}
   .u .u-chapter__top{padding-left:34px!important}
   .u .u-chapter__layout{
