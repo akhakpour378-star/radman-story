@@ -1643,3 +1643,30 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-content--studio .admin-storyEditPanel__body{grid-template-columns:1fr!important}
   .admin-content--studio .admin-storyEditPanel__body>.admin-storyCard__image{min-height:260px!important}
 }
+
+
+/* LIGHT PAGE CANVAS — keep the studio panels dark for contrast */
+.admin-content--studio{
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(91,158,184,.13),transparent 34%),
+    linear-gradient(145deg,#f5f8fb 0%,#edf2f7 72%)!important;
+  color:#263648!important;
+}
+.admin-content--studio .admin-header h1{color:#172536!important}
+.admin-content--studio .admin-header h1 em{color:#536bb7!important}
+.admin-content--studio .admin-header p{color:#5f7185!important}
+.admin-content--studio .admin-kicker{color:#61758a!important}
+.admin-content--studio .admin-secondary{
+  color:#344b60!important;
+  border-color:rgba(69,100,128,.24)!important;
+  background:rgba(255,255,255,.72)!important;
+}
+.admin-content--studio .admin-secondary:hover{
+  background:#fff!important;
+  border-color:rgba(67,151,172,.55)!important;
+}
+.admin-content--studio .admin-bottom{
+  border-color:rgba(69,100,128,.18)!important;
+  color:#607286!important;
+}
+.admin-content--studio .admin-bottom b{color:#287c8b!important}
