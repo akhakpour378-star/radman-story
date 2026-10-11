@@ -42,6 +42,7 @@ type HeroConfig = {
   memoryTitles?: Record<string, string>;
   chapters?: Chapter[];
   years?: string[];
+  yearsTitles?: Record<string, string>;
 };
 
 type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
@@ -108,6 +109,7 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
+  const [selectedGalleryType, setSelectedGalleryType] = useState<"years" | null>(null);
   const [chapterGallery, setChapterGallery] = useState<{ title:string; period:string; items:string[] } | null>(null);
   const [chapterGalleryIndex, setChapterGalleryIndex] = useState(0);
   const [chapterImageZoom, setChapterImageZoom] = useState(1);
@@ -299,15 +301,19 @@ export default function RadmanUltimate() {
     .slice(0, 8)
     .map((src, index) => {
       const existing = memories.find((item) => item.src === src) || fallback.find((item) => item.src === src);
-      return existing || { src, no: String(index + 1).padStart(2, "0"), title: `The Years · ${String(index + 1).padStart(2, "0")}`, tag: "THE YEARS" };
+      const title = heroConfig.yearsTitles?.[src]?.trim();
+      return { ...(existing || { src, no: String(index + 1).padStart(2, "0"), title: "", tag: "THE YEARS" }), src, no: String(index + 1).padStart(2, "0"), title: title || existing?.title || `The Years · ${String(index + 1).padStart(2, "0")}`, tag: "THE YEARS" };
     });
 
-  const selectedSignalEntry = selectedMemorySrc
-    ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
-    : null;
+  const activeLightboxItems = selectedGalleryType === "years" ? timelineMemories.map((item) => item.src) : signalItems;
+  const selectedSignalEntry = selectedGalleryType === "years"
+    ? selectedMemorySrc
+    : selectedMemorySrc
+      ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
+      : null;
   const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
   const selectedMemory = selectedMemorySrc
-    ? memories.find((m) => m.src === selectedMemorySrc) || {
+    ? (timelineMemories.find((m) => m.src === selectedMemorySrc) || memories.find((m) => m.src === selectedMemorySrc)) || {
         src: selectedMemorySrc,
         no: "—",
         title: prettyTitle(selectedMemorySrc, 0),
@@ -454,8 +460,15 @@ export default function RadmanUltimate() {
     const onKey = (e: KeyboardEvent) => {
       if (selected === null) return;
       if (e.key === "Escape") { setSelected(null); setSelectedMemorySrc(null); setSelectedGalleryType(null); }
-      if (e.key === "ArrowRight") setSelected((v) => (v === null ? 0 : (v + 1) % memories.length));
-      if (e.key === "ArrowLeft") setSelected((v) => (v === null ? 0 : (v - 1 + memories.length) % memories.length));
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        const items = selectedGalleryType === "years" ? timelineMemories.map((item) => item.src) : memories.map((item) => item.src);
+        const current = items.indexOf(selectedMemorySrc || selectedMemory?.src || "");
+        const direction = e.key === "ArrowRight" ? 1 : -1;
+        if (items.length) {
+          const next = (Math.max(0, current) + direction + items.length) % items.length;
+          setSelected(next); setSelectedMemorySrc(items[next]);
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = (selected !== null || selectedMemorySrc !== null || chapterGallery !== null) ? "hidden" : "";
@@ -463,7 +476,7 @@ export default function RadmanUltimate() {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [selected, selectedMemorySrc, chapterGallery, memories.length]);
+  }, [selected, selectedMemorySrc, chapterGallery, memories.length, selectedGalleryType, heroConfig.years]);
 
   useEffect(() => {
     setChapterImageZoom(1);
@@ -705,8 +718,8 @@ export default function RadmanUltimate() {
         <div className="u-timeline__rail" aria-hidden="true"><span /><i /><i /><i /><i /><i /><i /><i /><i /></div>
         <div className="u-timeline__steps">
           {timelineMemories.map((m, i) => (
-            <button className={"u-step u-reveal u-step--" + (i % 4)} key={m.src} onClick={() => setSelected(Math.max(0, memories.findIndex((item) => item.src === m.src)))} aria-label={`نمایش خاطره ${m.title}`}>
-              <span className="u-step__number">{m.no}</span>
+            <button className={"u-step u-reveal u-step--" + (i % 4)} key={m.src} onClick={() => { setSelectedGalleryType("years"); setSelected(timelineMemories.findIndex((item) => item.src === m.src)); setSelectedMemorySrc(m.src); }} aria-label={`نمایش خاطره ${m.title}`}>
+              <span className="u-step__number">{String(i + 1).padStart(2, "0")}</span>
               <span className="u-step__image"><img src={asset(m.src)} alt={m.title} loading={i < 4 ? "eager" : "lazy"} /><span className="u-step__imageShade" /></span>
               <span className="u-step__meta"><small>{m.tag}</small><i><ArrowUpRight size={15} /></i></span>
               <b>{m.title}</b>
@@ -726,7 +739,7 @@ export default function RadmanUltimate() {
         <div className="u-archive__grid">
           {memories.map((m, i) => (
             <figure className={"u-card u-card--" + (i % 4)} key={m.src}>
-              <button onClick={() => setSelected(i)} aria-label={`Open ${m.title}`}>
+              <button onClick={() => { setSelectedGalleryType(null); setSelected(i); setSelectedMemorySrc(null); }} aria-label={`Open ${m.title}`}>
                 <img src={asset(m.src)} alt={m.title} loading={i < 5 ? "eager" : "lazy"} />
                 <span>{m.no}</span>
                 <i><Maximize2 size={12} /></i>
@@ -849,7 +862,7 @@ export default function RadmanUltimate() {
           <button className="u-lightbox__close" onClick={() => { setSelected(null); setSelectedMemorySrc(null); }} aria-label="Close"><X /></button>
           <button type="button" className="u-lightbox__prev" onClick={(e) => {
               e.stopPropagation();
-              const signal = signalItems;
+              const signal = activeLightboxItems;
               const currentIndex = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
               const next = (currentIndex - 1 + signal.length) % signal.length;
               const src = signal[next]?.replace(/^video:/, "") || null;
@@ -858,7 +871,7 @@ export default function RadmanUltimate() {
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
               <div className="u-lightbox__mediaTitle" dir="rtl">
-                <b>{heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title}</b>
+                <b>{selectedGalleryType === "years" ? (heroConfig.yearsTitles?.[selectedMemory.src]?.trim() || selectedMemory.title) : (heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title)}</b>
               </div>
               <div
                 className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "") + (isPanningImage ? " is-panning" : "")}
@@ -909,8 +922,8 @@ export default function RadmanUltimate() {
                   : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} draggable={false} style={{ "--lightbox-zoom": imageZoom, "--lightbox-pan-x": `${imagePan.x}px`, "--lightbox-pan-y": `${imagePan.y}px` } as React.CSSProperties} />}
               </div>
             </div>
-            <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label="Memory Signal gallery">
-              {signalItems.map((entry, idx) => {
+            <aside ref={memoryThumbsRef} className="u-lightbox__thumbs" aria-label={selectedGalleryType === "years" ? "THE YEARS gallery" : "Memory Signal gallery"}>
+              {activeLightboxItems.map((entry, idx) => {
                 const isVideo = entry.startsWith("video:");
                 const src = isVideo ? entry.slice(6) : entry;
                 const memory = memories.find((item) => item.src === src);
@@ -933,7 +946,7 @@ export default function RadmanUltimate() {
           </div>
           <button type="button" className="u-lightbox__next" onClick={(e) => {
               e.stopPropagation();
-              const signal = signalItems;
+              const signal = activeLightboxItems;
               const current = signal.findIndex((entry) => entry.replace(/^video:/, "") === selectedMemory.src);
               const next = (current + 1) % signal.length;
               const src = signal[next]?.replace(/^video:/, "") || null;
