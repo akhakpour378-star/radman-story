@@ -39,16 +39,15 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
   }, [items]);
 
   const loopItems = useMemo(() => {
-    if (media.length < 2) return media;
-    // Keep enough repeated content to scroll continuously even on very wide screens,
-    // without multiplying a large archive into hundreds of DOM nodes.
+    if (!media.length) return [];
+    // Even a single selected item gets repeated copies, so the track can still loop.
     const copies = media.length < 5 ? 7 : media.length < 8 ? 5 : 3;
     return Array.from({ length: copies }, () => media).flat();
   }, [media]);
   const getCycleWidth = useCallback(() => {
     const track = trackRef.current;
     const viewport = viewportRef.current;
-    if (!track || !viewport || media.length < 2) {
+    if (!track || !viewport || media.length < 1) {
       cycleWidthRef.current = 0;
       return;
     }
@@ -101,7 +100,7 @@ export default function MemorySignal({ items, resolveSrc, onSelect }: Props) {
 
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (!viewport || media.length < 2) return;
+    if (!viewport || media.length < 1) return;
     const canMove = !paused && !focused && !reducedMotion && document.visibilityState === "visible" && !isDragging;
     if (!canMove) {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
