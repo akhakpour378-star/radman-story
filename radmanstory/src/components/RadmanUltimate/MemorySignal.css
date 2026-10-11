@@ -19,4 +19,3 @@
 .memory-signal__card:hover .memory-signal__play{background:rgba(181,151,94,.8);border-color:rgba(255,255,255,.9);transform:translate(-50%,-50%) scale(1.08)}
 
 @media(max-width:850px){.memory-signal{padding:7vh 0 9vh}.memory-signal__track{gap:12px;padding:0 12px 0 7vw}.memory-signal__card{flex-basis:145px;width:145px;height:190px}.memory-signal__card:nth-child(2n){margin-top:34px}.memory-signal__card:nth-child(3n){margin-top:12px}}
-@media(prefers-reduced-motion:reduce){.memory-signal__card,.memory-signal__card img,.memory-signal__card video,.memory-signal__shine,.memory-signal__play,.memory-signal__controls button{transition:none!important}.memory-signal__viewport{scroll-behavior:auto}}
