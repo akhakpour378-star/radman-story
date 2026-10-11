@@ -602,9 +602,19 @@ export default function RadmanUltimate() {
       />
 
       <section id="chapters" className="u-chapters">
+        <header className="u-chapters__intro u-reveal">
+          <div className="u-chapters__introMark" aria-hidden="true"><span>R</span><i /></div>
+          <div className="u-chapters__introCopy">
+            <span className="u-kicker">THE YEARS, IN CHAPTERS</span>
+            <h2>هر خاطره، <em>فصلی از زندگی</em></h2>
+            <p>از نخستین روزها تا لحظه‌هایی که بزرگ شدن را معنا می‌کنند؛ روایت رادمان، فصل به فصل.</p>
+          </div>
+          <div className="u-chapters__introCount"><strong>{String(chapters.length).padStart(2, "0")}</strong><span>CHAPTERS<br />IN THIS STORY</span></div>
+        </header>
+        <div className="u-chapters__list">
         {chapters.map(([num, title, copy, m]) => (
           <article className="u-chapter" key={num}>
-            <div className="u-chapter__top"><span>{m.tag}</span><small>STORY / 04</small></div>
+            <div className="u-chapter__top"><span>{m.tag}</span><small>CHAPTER / {num}</small></div>
             <div className="u-chapter__layout">
               <button className="u-chapter__image" onClick={() => setSelected(memories.indexOf(m))} aria-label={`Open ${m.title}`}>
                 <img src={asset(m.src)} alt={m.title} />
@@ -621,6 +631,7 @@ export default function RadmanUltimate() {
             </div>
           </article>
         ))}
+        </div>
       </section>
 
       <section className="u-timeline">
