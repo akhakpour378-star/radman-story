@@ -5253,7 +5253,7 @@
 .u .u-chapterGallery{
   position:fixed!important;inset:0!important;z-index:10000!important;display:flex!important;flex-direction:column!important;
   overflow:auto!important;padding:clamp(76px,9vh,108px) clamp(18px,5vw,76px) 28px!important;
-  color:#f2f5f7!important;background:#070a10!important;isolation:isolate!important;
+  color:#f2f5f7!important;background:radial-gradient(ellipse at 50% 25%,rgba(48,78,98,.23),transparent 52%),linear-gradient(135deg,#090d14,#05070b 65%,#0b0c15)!important;isolation:isolate!important;
 }
 .u .u-chapterGallery__backdrop{
   position:fixed!important;inset:0!important;z-index:-1!important;pointer-events:none!important;
