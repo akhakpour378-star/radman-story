@@ -37,6 +37,7 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  movingMemoryTitle?: string;
   persianFont: "iranyekan" | "iransans";
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
   memorySignal?: string[];
@@ -65,6 +66,7 @@ const defaultHeroConfig: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  movingMemoryTitle: "Photos hold time. Film holds breath.",
   persianFont: "iranyekan",
 };
 
@@ -107,6 +109,7 @@ export default function RadmanUltimate() {
     place: "NIKAN AQDASIEH",
     city: "Tehran · Iran",
     cta: "ENTER THE STORY",
+    movingMemoryTitle: "Photos hold time. Film holds breath.",
     persianFont: "iranyekan",
   });
   const [selected, setSelected] = useState<number | null>(null);
@@ -740,7 +743,7 @@ export default function RadmanUltimate() {
           <div className="u-film__heading u-reveal">
             <div className="u-film__copy">
               <span className="u-kicker">03 / MOVING MEMORY</span>
-              <h2>Photos hold time.<br /><em>Film holds breath.</em></h2>
+              <h2 className="u-film__customTitle"><span>{heroConfig.movingMemoryTitle || "Photos hold time. Film holds breath."}</span><i aria-hidden="true" /></h2>
               <p>لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.</p>
             </div>
           </div>
