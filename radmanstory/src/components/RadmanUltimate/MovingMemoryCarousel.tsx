@@ -196,11 +196,11 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
         })}
       </div>
       <div className="mm3d__controls">
-        <button type="button" aria-label="Previous film" onClick={() => { move(-1); setPaused(false); }}><ArrowLeft size={16} /></button>
+        <button type="button" aria-label="Previous film" onClick={() => { move(-1); setPaused(false); }}><ArrowRight size={16} /></button>
         <div className="mm3d__progress" aria-label={`Film ${active + 1} of ${count}`}>
           <span>{String(active + 1).padStart(2, "0")}</span><i><b style={{ width: `${((active + 1) / count) * 100}%` }} /></i><span>{String(count).padStart(2, "0")}</span>
         </div>
-        <button type="button" aria-label="Next film" onClick={() => { move(1); setPaused(false); }}><ArrowRight size={16} /></button>
+        <button type="button" aria-label="Next film" onClick={() => { move(1); setPaused(false); }}><ArrowLeft size={16} /></button>
         <button type="button" className="mm3d__autoplay" aria-label={paused ? "Resume carousel" : "Pause carousel"} onClick={() => setPaused((value) => !value)}>{paused ? <Play size={13} /> : <Pause size={13} />}</button>
       </div>
       <p className="mm3d__hint">DRAG TO EXPLORE <span>·</span> SELECT THE CENTER FRAME TO WATCH</p>
