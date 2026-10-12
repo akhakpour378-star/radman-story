@@ -8226,3 +8226,37 @@
     white-space: nowrap !important;
   }
 }
+
+
+/* TABLET HERO refinement: lower the title, place the Persian line directly above birth details,
+   and keep the hospital value on the same five-column row. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .u .u-hero--editorial .u-hero__copy {
+    top: 21% !important;
+  }
+  .u .u-hero--editorial .u-hero__lead {
+    position: absolute !important;
+    top: auto !important;
+    bottom: 126px !important;
+    right: 5% !important;
+    left: auto !important;
+    width: 90% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    text-align: right !important;
+    font-size: clamp(11px, 1.25vw, 14px) !important;
+    line-height: 1.75 !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place strong {
+    display: block !important;
+    max-width: 100% !important;
+    font-size: clamp(7px, .9vw, 10px) !important;
+    line-height: 1.35 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place em {
+    display: none !important;
+  }
+}
