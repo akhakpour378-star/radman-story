@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import "./RadmanUltimate.css";
 import MemorySignal from "./MemorySignal";
+import MovingMemoryCarousel from "./MovingMemoryCarousel";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -742,41 +743,13 @@ export default function RadmanUltimate() {
               <h2>Photos hold time.<br /><em>Film holds breath.</em></h2>
               <p>لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.</p>
             </div>
-            <div className="u-film__index" aria-label="تعداد ویدیوهای منتخب">
-              <span>RADMAN / MOVING MEMORY</span>
-              <b>{String((heroConfig.movingMemory || []).length).padStart(2, "0")}</b>
-              <small>SELECTED FILMS</small>
-            </div>
           </div>
-          <div className="u-film__reel">
-            {(heroConfig.movingMemory || []).map((entry, index) => {
-              const src = entry.startsWith("video:") ? entry.slice(6) : entry;
-              const title = heroConfig.memoryTitles?.[entry] || heroConfig.memoryTitles?.[src] || "";
-              return (
-                <article className={"u-filmCard u-filmCard--" + (index % 3)} key={entry}>
-                  <div className="u-filmCard__frame">
-                    <video
-                      src={asset(src)}
-                      controls
-                      playsInline
-                      preload="metadata"
-                      aria-label={title || `Radman memory film ${index + 1}`}
-                      onPlay={event => event.currentTarget.parentElement?.classList.add("is-playing")}
-                      onPause={event => event.currentTarget.parentElement?.classList.remove("is-playing")}
-                      onEnded={event => event.currentTarget.parentElement?.classList.remove("is-playing")}
-                    />
-                    <span className="u-filmCard__number">FILM / {String(index + 1).padStart(2, "0")}</span>
-                    <span className="u-filmCard__play" aria-hidden="true"><Play size={18} fill="currentColor" /></span>
-                  </div>
-                  <div className="u-filmCard__meta">
-                    <span>{title || "RADMAN / MOVING MEMORY"}</span>
-                    <b>{String(index + 1).padStart(2, "0")}</b>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-          <div className="u-film__foot"><span>REAL MOMENTS. NEVER STILL.</span><i /></div>
+          <MovingMemoryCarousel
+            items={heroConfig.movingMemory || []}
+            titles={heroConfig.memoryTitles}
+            resolveSrc={asset}
+            onSelect={(src) => { setSelected(null); setSelectedGalleryType(null); setSelectedMemorySrc(src); }}
+          />
         </section>
       )}
 
