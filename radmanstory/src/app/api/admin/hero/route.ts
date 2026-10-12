@@ -15,6 +15,9 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  heroTitle: string;
+  heroTitleAccent: string;
+  heroLead: string;
   movingMemoryTitle?: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
@@ -38,6 +41,9 @@ const defaults: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  heroTitle: "Radman",
+  heroTitleAccent: "Forever.",
+  heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   persianFont: "iranyekan",
   story: [
@@ -95,6 +101,9 @@ export async function PUT(req: NextRequest) {
       place: String(body.place || current.place).trim().slice(0, 100),
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
+      heroTitle: String(body.heroTitle ?? current.heroTitle ?? "Radman").trim().slice(0, 80) || "Radman",
+      heroTitleAccent: String(body.heroTitleAccent ?? current.heroTitleAccent ?? "Forever.").trim().slice(0, 80) || "Forever.",
+      heroLead: String(body.heroLead ?? current.heroLead ?? "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.").trim().slice(0, 300),
       movingMemoryTitle: String(body.movingMemoryTitle ?? current.movingMemoryTitle ?? "Photos hold time. Film holds breath.").trim().slice(0, 120) || "Photos hold time. Film holds breath.",
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
       years: Array.from(new Set((Array.isArray(body.years) ? body.years : (current.years || defaults.years)).filter((item: unknown) => typeof item === "string" && item.startsWith("/memory/")))).slice(0, 50),
