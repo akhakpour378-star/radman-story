@@ -17,7 +17,7 @@
 .mm3d__card.is-active .mm3d__play{width:50px;height:50px;color:#c9fff4;border-color:rgba(184,244,232,.8);box-shadow:0 0 0 7px rgba(184,244,232,.04)}
 .mm3d__card:hover .mm3d__play{background:rgba(40,64,71,.72);scale:1.06}
 .mm3d__filmno{position:absolute;top:13px;left:13px;color:#edf3ff;font:500 7px/1 "DM Sans",sans-serif;letter-spacing:.18em;padding:7px 8px;background:rgba(3,7,13,.6);backdrop-filter:blur(10px)}
-.mm3d__caption{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:clamp(125px,17vw,202px);padding:0 2px 11px;border-bottom:1px solid var(--mm3d-line);font:500 8px/1.5 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9ba9bc;opacity:0;transition:opacity .4s ease}
+.mm3d__caption{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:0 2px 11px;border-bottom:1px solid var(--mm3d-line);font:500 8px/1.5 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9ba9bc;opacity:0;transition:opacity .4s ease}
 .mm3d__card.is-active .mm3d__caption{opacity:1}
 .mm3d__caption i{font-style:normal;color:#b8f4e8}
 .mm3d__controls{display:flex;align-items:center;justify-content:center;gap:16px;max-width:480px;margin:0 auto;padding:12px 16px 0}
@@ -29,6 +29,6 @@
 .mm3d__progress>i b{position:absolute;left:0;top:0;height:1px;background:#b8f4e8;box-shadow:0 0 8px #b8f4e866;transition:width .6s ease}
 .mm3d__hint{margin:18px auto 0;text-align:center;color:#647389;font:500 6px/1.7 "DM Sans",sans-serif;letter-spacing:.22em}
 .mm3d__hint span{padding:0 7px;color:#b8f4e8}
-@media(max-width:760px){.mm3d{padding-top:22px}.mm3d__topline{margin:0 18px;font-size:6px}.mm3d__stage{height:350px;perspective:1000px}.mm3d__card{width:clamp(175px,53vw,250px)}.mm3d__card{transition-duration:.65s}.mm3d__caption{margin-top:145px}.mm3d__image{aspect-ratio:1.12/1}.mm3d__filmno{top:9px;left:9px;font-size:6px}.mm3d__play{width:38px;height:38px}.mm3d__card.is-active .mm3d__play{width:44px;height:44px}.mm3d__controls{gap:10px}.mm3d__hint{font-size:5px;letter-spacing:.14em;margin-top:14px}}
-@media(max-width:390px){.mm3d__stage{height:310px}.mm3d__card{width:178px}.mm3d__caption{margin-top:130px}.mm3d__topline span:last-child{letter-spacing:.1em}}
+@media(max-width:760px){.mm3d{padding-top:22px}.mm3d__topline{margin:0 18px;font-size:6px}.mm3d__stage{height:350px;perspective:1000px}.mm3d__card{width:clamp(175px,53vw,250px)}.mm3d__card{transition-duration:.65s}.mm3d__caption{margin-top:12px}.mm3d__image{aspect-ratio:1.12/1}.mm3d__filmno{top:9px;left:9px;font-size:6px}.mm3d__play{width:38px;height:38px}.mm3d__card.is-active .mm3d__play{width:44px;height:44px}.mm3d__controls{gap:10px}.mm3d__hint{font-size:5px;letter-spacing:.14em;margin-top:14px}}
+@media(max-width:390px){.mm3d__stage{height:310px}.mm3d__card{width:178px}.mm3d__caption{margin-top:12px}.mm3d__topline span:last-child{letter-spacing:.1em}}
 @media(prefers-reduced-motion:reduce){.mm3d__card,.mm3d__image video,.mm3d__play,.mm3d__progress>i b{transition:none!important}.mm3d__stage{perspective:none}}
