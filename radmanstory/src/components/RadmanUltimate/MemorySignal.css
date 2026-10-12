@@ -21,3 +21,18 @@
 @media(max-width:850px){.memory-signal{padding:7vh 0 9vh}.memory-signal__track{gap:12px;padding:0 12px 0 7vw}.memory-signal__card{flex-basis:145px;width:145px;height:190px;border-radius:13px;clip-path:inset(0 round 13px)}.memory-signal__card:nth-child(2n){margin-top:34px}.memory-signal__card:nth-child(3n){margin-top:12px}}
 
 @media(prefers-reduced-motion:reduce){.memory-signal__card,.memory-signal__card img,.memory-signal__card video,.memory-signal__shine,.memory-signal__play{transition:none!important}.memory-signal__viewport{scroll-behavior:auto}}
+
+
+/* Mobile polish: tighter rhythm and more room for the actual photographs. */
+@media(max-width:600px){
+  .memory-signal { padding: 42px 0 50px!important; }
+  .memory-signal__track { gap: 10px!important; padding-left: 18px!important; padding-right: 18px!important; }
+  .memory-signal__card { flex-basis: 138px!important; width:138px!important; height:178px!important; border-radius:10px!important; clip-path:inset(0 round 10px)!important; box-shadow:0 14px 32px #0008!important; }
+  .memory-signal__card:after { inset:7px!important; }
+  .memory-signal__card:nth-child(2n) { margin-top:20px!important; transform:none!important; }
+  .memory-signal__card:nth-child(3n) { margin-top:7px!important; transform:none!important; }
+  .memory-signal__play { width:36px!important; height:36px!important; }
+}
+@media(max-width:360px){
+  .memory-signal__card { flex-basis:124px!important; width:124px!important; height:162px!important; }
+}
