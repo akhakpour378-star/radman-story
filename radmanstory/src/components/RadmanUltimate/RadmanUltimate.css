@@ -7413,9 +7413,10 @@
     border:1px solid rgba(190,224,239,.16)!important;
     border-top:1px solid rgba(156,231,239,.55)!important;
     border-radius:0 0 14px 14px!important;
-    background:linear-gradient(135deg,rgba(19,28,39,.96),rgba(8,13,21,.97))!important;
-    box-shadow:0 18px 42px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.025)!important;
-    backdrop-filter:blur(16px)!important;
+    background:linear-gradient(135deg,rgba(19,28,39,.70),rgba(8,13,21,.76))!important;
+    box-shadow:0 18px 42px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.04)!important;
+    backdrop-filter:blur(18px)!important;
+    -webkit-backdrop-filter:blur(18px)!important;
     pointer-events:auto!important;
   }
   .u .u-hero__birthData .u-birthData__item {
@@ -7440,7 +7441,7 @@
     display:block!important;
     margin-top:0!important;
     color:#f2f4f4!important;
-    font:500 18px/1.25 "Playfair Display",Georgia,serif!important;
+    font:500 14px/1.35 "Playfair Display",Georgia,serif!important;
     letter-spacing:-.02em!important;
     overflow-wrap:anywhere!important;
   }
@@ -7454,13 +7455,13 @@
     padding-bottom:2px!important;
   }
   .u .u-hero__birthData .u-birthData__place strong {
-    font:500 13px/1.7 var(--fa-font),Tahoma,sans-serif!important;
+    font:500 11px/1.7 var(--fa-font),Tahoma,sans-serif!important;
   }
   .u .u-hero__birthData .u-birthData__place em {
     display:block!important;
     margin-top:3px!important;
     color:#8b9aa9!important;
-    font:400 9px/1.6 var(--fa-font),Tahoma,sans-serif!important;
+    font:400 8px/1.6 var(--fa-font),Tahoma,sans-serif!important;
   }
   .u .u-hero--editorial .u-hero__fade { display:none!important; }
   .u .u-hero--editorial .u-hero__cta { display:none!important; }
@@ -7471,5 +7472,5 @@
   .u .u-hero--editorial .u-hero__frame { height:61svh!important; min-height:390px!important; }
   .u .u-hero--editorial .u-hero__birthData { top:calc(61svh + 1px)!important; right:10px!important; left:10px!important; padding:9px 12px 12px!important; gap:0 12px!important; }
   .u .u-hero__birthData .u-birthData__item small { font-size:6px!important; letter-spacing:.08em!important; }
-  .u .u-hero__birthData .u-birthData__item strong { font-size:16px!important; }
+  .u .u-hero__birthData .u-birthData__item strong { font-size:13px!important; }
 }
