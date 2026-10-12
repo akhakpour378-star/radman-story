@@ -8381,3 +8381,40 @@
   }
 
 }
+
+/* DESKTOP HERO FIX — keep the Persian lead inside the copy column, away from birth details. */
+@media (min-width: 1025px) {
+  .u .u-hero--editorial .u-hero__copy {
+    position: absolute !important;
+    z-index: 8 !important;
+    left: 5vw !important;
+    right: auto !important;
+    top: 48% !important;
+    bottom: auto !important;
+    width: min(470px, 39vw) !important;
+    max-width: 470px !important;
+    transform: translateY(-50%) !important;
+    text-align: left !important;
+  }
+
+  .u .u-hero--editorial .u-hero__lead {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 18px 0 0 !important;
+    transform: none !important;
+    text-align: right !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    line-height: 1.9 !important;
+  }
+
+  .u .u-hero--editorial .u-hero__birthData {
+    z-index: 14 !important;
+    right: 5vw !important;
+    left: auto !important;
+    width: min(195px, 17vw) !important;
+  }
+}
