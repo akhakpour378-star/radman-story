@@ -615,7 +615,7 @@ export default function RadmanUltimate() {
             <span className="u-kicker"><span aria-hidden="true" /> A PERSONAL ARCHIVE</span>
             <h1 className="u-hero__title">
               <span className="u-hero__titleLine">{heroConfig.heroTitle || "Radman"}</span>
-              <span className="u-hero__titleLine--soft">{heroConfig.heroTitleAccent || "Forever."}</span>
+              <span className="u-hero__titleLine--soft">{(heroConfig.heroTitleAccent || "Forever").replace(/[.。]+$/, "")}</span>
             </h1>
             <div className="u-hero__submark"><i aria-hidden="true" /><span>EVERY MOMENT, A PART OF YOU</span></div>
           </div>
