@@ -20,7 +20,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const startRef = useRef<{ x: number; y: number; index: number; pointerId: number } | null>(null);
+  const startRef = useRef<{ x: number; y: number; index: number; pointerId: number; captureTarget: HTMLElement } | null>(null);
   const movedRef = useRef(false);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 
