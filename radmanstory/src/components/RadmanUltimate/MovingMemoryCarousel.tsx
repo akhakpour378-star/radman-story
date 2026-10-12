@@ -171,7 +171,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
               className={"mm3d__card" + (offset === 0 ? " is-active" : "")}
               key={entry}
               style={{
-                transform: `translateX(${offset * 67}%) translateZ(${-distance * 116}px) rotateY(${offset * -27}deg) scale(${offset === 0 ? 1 : Math.max(.68, 1 - distance * .13)})`,
+                transform: `translate(-50%, -50%) translateX(${offset * 67}%) translateZ(${-distance * 116}px) rotateY(${offset * -27}deg) scale(${offset === 0 ? 1 : Math.max(.68, 1 - distance * .13)})`,
                 zIndex: 20 - distance,
                 opacity: distance > 2 ? 0 : Math.max(.18, 1 - distance * .3),
                 pointerEvents: distance > 2 ? "none" : "auto",
