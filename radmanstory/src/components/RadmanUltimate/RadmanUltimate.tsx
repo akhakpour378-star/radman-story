@@ -678,7 +678,7 @@ export default function RadmanUltimate() {
           <article className="u-chapter" key={num}>
             <div className="u-chapter__top"><span>{m.tag}</span><small>CHAPTER / {num}</small></div>
             <div className="u-chapter__layout">
-              <button className="u-chapter__image" onClick={() => { setChapterGallery({ title, period: m.tag, items: gallery }); setChapterGalleryIndex(0); }} aria-label={`Open ${title} chapter gallery`}>
+              <button className="u-chapter__image" onClick={() => { setChapterGallery({ title, period: m.tag, items: [...gallery] }); setChapterGalleryIndex(0); }} aria-label={`Open ${title} chapter gallery`}>
                 <img src={asset(m.src)} alt={m.title} />
                 <div className="u-chapter__imageFrame" aria-hidden="true"><span>RADMAN / ARCHIVE</span><i /></div>
                 <div className="u-chapter__imageMeta"><b>{m.tag}</b><small>{m.title}</small></div>
@@ -692,7 +692,7 @@ export default function RadmanUltimate() {
                 <button
                   type="button"
                   className="u-chapter__galleryLink"
-                  onClick={() => { setChapterGallery({ title, period: m.tag, items: gallery }); setChapterGalleryIndex(0); }}
+                  onClick={() => { setChapterGallery({ title, period: m.tag, items: [...gallery] }); setChapterGalleryIndex(0); }}
                 >
                   <span><b>ورود به دنیای این فصل</b><small>{gallery.length ? String(gallery.length).padStart(2, "0") + " تصویر و ویدیو" : "گالری خاطرات این فصل"}</small></span>
                   <i><ArrowUpRight size={17} /></i>
