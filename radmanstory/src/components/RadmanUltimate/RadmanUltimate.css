@@ -8275,6 +8275,13 @@
     text-align: center !important;
   }
   .u .u-hero--editorial .u-hero__birthData {
+    position: absolute !important;
+    z-index: 14 !important;
+    right: 5% !important;
+    left: 5% !important;
+    bottom: clamp(18px, 3.2vh, 38px) !important;
+    width: 90% !important;
+    box-sizing: border-box !important;
     display: flex !important;
     flex-flow: row nowrap !important;
     align-items: center !important;
