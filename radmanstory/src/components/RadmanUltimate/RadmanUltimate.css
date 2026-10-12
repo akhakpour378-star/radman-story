@@ -7348,3 +7348,128 @@
   .u .u-birthData__item strong { font-size: 13px!important; }
   .u .radman-story-slider__slides article .u-storyCinema__lead { font-size: 12px!important; line-height:1.85!important; }
 }
+
+
+/* MOBILE HERO — birth details as a dedicated premium strip below the photograph */
+@media (max-width: 600px) {
+  .u .u-hero--editorial {
+    height:auto!important;
+    min-height:calc(64svh + 190px)!important;
+    padding:0!important;
+    overflow:hidden!important;
+    display:block!important;
+    background:linear-gradient(180deg,#070a10 0%,#0b1017 100%)!important;
+  }
+  .u .u-hero--editorial .u-hero__frame {
+    position:absolute!important;
+    inset:0 0 auto 0!important;
+    width:100%!important;
+    height:64svh!important;
+    min-height:420px!important;
+    max-height:610px!important;
+    z-index:1!important;
+  }
+  .u .u-hero--editorial .u-hero__photo,
+  .u .u-hero--editorial .u-hero__photoShade {
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+  }
+  .u .u-hero--editorial .u-hero__photo img {
+    object-fit:cover!important;
+    object-position:center 48%!important;
+  }
+  .u .u-hero--editorial .u-hero__panel {
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    z-index:8!important;
+    pointer-events:none!important;
+  }
+  .u .u-hero--editorial .u-hero__copy {
+    top:39%!important;
+    left:18px!important;
+    right:18px!important;
+    width:calc(100% - 36px)!important;
+    max-width:340px!important;
+    transform:translateY(-50%)!important;
+    text-align:left!important;
+    pointer-events:none!important;
+  }
+  .u .u-hero--editorial .u-hero__birthData {
+    position:absolute!important;
+    top:calc(64svh + 1px)!important;
+    right:14px!important;
+    left:14px!important;
+    bottom:auto!important;
+    width:auto!important;
+    transform:none!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:0 18px!important;
+    padding:12px 15px 14px!important;
+    border:1px solid rgba(190,224,239,.16)!important;
+    border-top:1px solid rgba(156,231,239,.55)!important;
+    border-radius:0 0 14px 14px!important;
+    background:linear-gradient(135deg,rgba(19,28,39,.96),rgba(8,13,21,.97))!important;
+    box-shadow:0 18px 42px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.025)!important;
+    backdrop-filter:blur(16px)!important;
+    pointer-events:auto!important;
+  }
+  .u .u-hero__birthData .u-birthData__item {
+    min-width:0!important;
+    padding:11px 0 10px!important;
+    border-bottom:1px solid rgba(255,255,255,.085)!important;
+  }
+  .u .u-hero__birthData .u-birthData__item:before { display:none!important; }
+  .u .u-hero__birthData .u-birthData__item small {
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    margin-bottom:8px!important;
+    color:#8c9aaa!important;
+    font:600 7px/1.4 "DM Sans",Tahoma,sans-serif!important;
+    letter-spacing:.13em!important;
+  }
+  .u .u-hero__birthData .u-birthData__item small svg {
+    width:11px!important;height:11px!important;color:#9ce7ef!important;flex:0 0 auto!important;
+  }
+  .u .u-hero__birthData .u-birthData__item strong {
+    display:block!important;
+    margin-top:0!important;
+    color:#f2f4f4!important;
+    font:500 18px/1.25 "Playfair Display",Georgia,serif!important;
+    letter-spacing:-.02em!important;
+    overflow-wrap:anywhere!important;
+  }
+  .u .u-hero__birthData .u-birthData__item strong i {
+    color:#9ce7ef!important;font:500 8px/1 "DM Sans",sans-serif!important;letter-spacing:.1em!important;
+  }
+  .u .u-hero__birthData .u-birthData__item strong span { color:#708091!important; }
+  .u .u-hero__birthData .u-birthData__place {
+    grid-column:1/-1!important;
+    border-bottom:0!important;
+    padding-bottom:2px!important;
+  }
+  .u .u-hero__birthData .u-birthData__place strong {
+    font:500 13px/1.7 var(--fa-font),Tahoma,sans-serif!important;
+  }
+  .u .u-hero__birthData .u-birthData__place em {
+    display:block!important;
+    margin-top:3px!important;
+    color:#8b9aa9!important;
+    font:400 9px/1.6 var(--fa-font),Tahoma,sans-serif!important;
+  }
+  .u .u-hero--editorial .u-hero__fade { display:none!important; }
+  .u .u-hero--editorial .u-hero__cta { display:none!important; }
+  .u .u-hero--editorial .u-hero__ghost { bottom:35svh!important; font-size:56vw!important; }
+}
+@media (max-width: 390px) {
+  .u .u-hero--editorial { min-height:calc(61svh + 205px)!important; }
+  .u .u-hero--editorial .u-hero__frame { height:61svh!important; min-height:390px!important; }
+  .u .u-hero--editorial .u-hero__birthData { top:calc(61svh + 1px)!important; right:10px!important; left:10px!important; padding:9px 12px 12px!important; gap:0 12px!important; }
+  .u .u-hero__birthData .u-birthData__item small { font-size:6px!important; letter-spacing:.08em!important; }
+  .u .u-hero__birthData .u-birthData__item strong { font-size:16px!important; }
+}
