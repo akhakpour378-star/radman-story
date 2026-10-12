@@ -34,7 +34,7 @@ type HeroConfig = {
   yearsTitles: Record<string, string>;
 };
 
-type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; label: string };
+type StorySlide = { eyebrow: string; title: string; lead: string; body: string; image: string; mobileImage?: string; label: string };
 type Chapter = { id:string; period:string; title:string; description:string; image:string };
 
 const defaults: HeroConfig = {
@@ -135,6 +135,7 @@ export async function PUT(req: NextRequest) {
         lead: String(slide.lead || "").trim().slice(0, 500),
         body: String(slide.body || "").trim().slice(0, 500),
         image: String(slide.image || "").trim(),
+        mobileImage: String(slide.mobileImage || "").trim().slice(0, 300),
         label: String(slide.label || "").trim().slice(0, 80),
       })) : current.story || [],
       chapters: Array.isArray(body.chapters) ? body.chapters.slice(0, 20).map((chapter: any, index: number) => ({
