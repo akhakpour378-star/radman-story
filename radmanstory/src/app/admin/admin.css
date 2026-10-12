@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://raw.githubusercontent.com/akiarostami/iransans/master/index.css');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
 
 :root{--admin-bg:#06080c;--admin-line:#ffffff10;--admin-line2:#ffffff08;--admin-text:#eef2f0;--admin-muted:#7e8894;--admin-cyan:#9ce7ef;--admin-violet:#aeb4ff}
 *{box-sizing:border-box}
@@ -2096,3 +2097,37 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
  .admin-dashboard--overview .admin-dashboard__footnote{align-items:flex-start}
  .admin-dashboard--overview .admin-dashboard__footnote>small{display:none}
 }
+
+
+/* ADMIN TYPOGRAPHY — Iran Sans across the complete management panel */
+.admin-login,.admin-login *,.admin-shell,.admin-shell *{font-family:'IRANSans','IRAN Sans','IranSans',Tahoma,sans-serif!important}
+
+/* DASHBOARD — homepage appearance controls */
+.admin-homeAppearance{margin:18px 0 0;padding:24px;border:1px solid #d9e0e4;background:#fff;color:#20272d;box-shadow:0 12px 35px #17202a0b}
+.admin-homeAppearance__head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+.admin-homeAppearance__head>div>span{display:block;margin-bottom:8px;color:#6f7d87;font-size:9px;font-weight:700;letter-spacing:.15em;direction:ltr;text-align:right}
+.admin-homeAppearance__head h2{margin:0;color:#20272d;font-size:19px;font-weight:700}
+.admin-homeAppearance__head p{margin:7px 0 0;color:#77838c;font-size:11px;line-height:1.9}
+.admin-homeAppearance__head>button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 15px;border:1px solid #8ccbd2;background:#eaf9fa;color:#263a3d;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}
+.admin-homeAppearance__head>button:disabled{opacity:.45;cursor:not-allowed}
+.admin-homeAppearance__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.admin-homeAppearance__color,.admin-homeAppearance__favicon{display:grid;align-content:start;gap:10px;padding:17px;border:1px solid #e1e6e9;background:#f8fafb;min-width:0}
+.admin-homeAppearance__color>span,.admin-homeAppearance__favicon>span{color:#37434b;font-size:11px;font-weight:700}
+.admin-homeAppearance__color>div{display:grid;grid-template-columns:54px minmax(0,1fr);gap:9px}
+.admin-homeAppearance__color input[type=color]{width:54px;height:43px;padding:4px;border:1px solid #d5dde1;background:#fff;cursor:pointer}
+.admin-homeAppearance__color input:not([type=color]),.admin-homeAppearance__faviconRow>input{width:100%;min-width:0;height:43px;padding:0 12px;border:1px solid #d5dde1;background:#fff;color:#26323a;font-size:11px;direction:ltr;text-align:left;outline:none}
+.admin-homeAppearance__color input:focus,.admin-homeAppearance__faviconRow>input:focus{border-color:#86cbd2;box-shadow:0 0 0 3px #9ce7ef24}
+.admin-homeAppearance__color>small,.admin-homeAppearance__favicon>small{color:#849099;font-size:9px;line-height:1.8}
+.admin-homeAppearance__favicon{grid-column:1/-1}
+.admin-homeAppearance__faviconRow{display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:10px}
+.admin-homeAppearance__faviconPreview{width:44px;height:44px;display:grid;place-items:center;overflow:hidden;border:1px solid #d7e0e3;background:#fff;color:#81909a}
+.admin-homeAppearance__faviconPreview img{width:100%;height:100%;object-fit:contain;padding:5px}
+.admin-homeAppearance__upload{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:0 13px;border:1px solid #d5dde1;background:#fff;color:#47545d;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.admin-homeAppearance__upload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.admin-homeAppearance__preview{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:14px;padding:20px 23px;overflow:hidden;border:1px solid #e1e6e9;color:#f4f2ed}
+.admin-homeAppearance__preview>span{color:var(--home-accent);font-size:8px;font-weight:700;letter-spacing:.18em;direction:ltr}
+.admin-homeAppearance__preview>strong{font:400 28px/1.1 'Playfair Display',Georgia,serif;direction:ltr}
+.admin-homeAppearance__preview>strong em{color:var(--home-accent);font-style:italic}
+.admin-homeAppearance__preview>i{color:#a4afb7;font-size:10px;font-style:normal}
+.admin-homeAppearance__preview>b{position:absolute;right:0;bottom:0;width:25%;height:2px;background:var(--home-accent)}
+@media(max-width:700px){.admin-homeAppearance{padding:17px}.admin-homeAppearance__head{align-items:stretch;flex-direction:column}.admin-homeAppearance__head>button{align-self:flex-start}.admin-homeAppearance__grid{grid-template-columns:1fr}.admin-homeAppearance__favicon{grid-column:auto}.admin-homeAppearance__faviconRow{grid-template-columns:42px minmax(0,1fr)}.admin-homeAppearance__upload{grid-column:1/-1}}
