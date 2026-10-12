@@ -7536,3 +7536,15 @@
     font-size: 11px !important;
   }
 }
+
+
+/* Mobile birth details: rounded upper corners and no divider under row two */
+@media (max-width: 850px) {
+  .u .u-hero--editorial .u-hero__birthData {
+    border-radius: 12px 12px 12px 12px !important;
+  }
+  .u .u-hero__birthData .u-birthData__weight,
+  .u .u-hero__birthData .u-birthData__height {
+    border-bottom: 0 !important;
+  }
+}
