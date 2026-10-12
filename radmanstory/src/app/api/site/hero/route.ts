@@ -13,6 +13,9 @@ const fallback = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  heroTitle: "Radman",
+  heroTitleAccent: "Forever.",
+  heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
 };
 
 export async function GET() {
