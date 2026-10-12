@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon, Play,
-  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2, RotateCcw, ArchiveRestore,
+  LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2, RotateCcw, ArchiveRestore, BookOpen, Clock3, Film, FolderOpen, Layers3,
 } from "lucide-react";
 import "./admin.css";
 
@@ -655,34 +655,63 @@ export default function AdminPage() {
 
       <section className={`admin-content ${["hero", "story", "memory", "moving", "trash"].includes(activeSection) ? "admin-content--studio" : ""}`}>
         {activeSection === "dashboard" ? (
-          <div className="admin-dashboard">
+          <div className="admin-dashboard admin-dashboard--overview" dir="rtl">
             <header className="admin-dashboard__hero">
-              <div>
-                <span className="admin-kicker">RADMAN / CONTENT SYSTEM</span>
-                <h1>خوش آمدی به <em>داشبورد</em></h1>
-                <p>مرکز مدیریت و کنترل محتوای داستان رادمان.</p>
+              <div className="admin-dashboard__welcome">
+                <span className="admin-kicker">RADMAN / CONTROL CENTER</span>
+                <h1>سلام، به <em>مرکز مدیریت</em> خوش آمدی</h1>
+                <p>نمای کلی محتوای سایت، دسترسی سریع به بخش‌ها و وضعیت رسانه‌ها در یک نگاه.</p>
+                <div className="admin-dashboard__heroActions">
+                  <button type="button" onClick={() => goToSection("hero")}><Sparkles size={15}/> ویرایش صفحه آغازین <ArrowLeft size={14}/></button>
+                  <a href="/" target="_blank" rel="noreferrer"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={14}/></a>
+                </div>
               </div>
-              <div className="admin-dashboard__status"><i /> SYSTEM ONLINE</div>
+              <div className="admin-dashboard__statusPanel">
+                <div className="admin-dashboard__orb"><LayoutDashboard size={25}/></div>
+                <span>وضعیت پنل مدیریت</span>
+                <strong className={error ? "is-warning" : loading ? "is-loading" : "is-ready"}><i/>{error ? "نیاز به بررسی" : loading ? "در حال همگام‌سازی" : "آماده به کار"}</strong>
+                <small>{error ? "ارتباط با یکی از سرویس‌ها با خطا روبه‌رو شده است." : loading ? "در حال دریافت آخرین اطلاعات محتوا" : "برای مدیریت هر بخش از کارت‌های پایین استفاده کن."}</small>
+              </div>
             </header>
-            <div className="admin-dashboard__grid">
-              <button className="admin-dashboard__card admin-dashboard__card--hero" onClick={() => goToSection("hero")}>
-                <div className="admin-dashboard__icon"><ImageIcon size={19} /></div>
-                <span>01 / MODULE</span>
-                <h2>Hero</h2>
-                <p>ویرایش تصویر، تاریخ، ساعت، وزن، قد، محل تولد و متن ورود به داستان.</p>
-                <b>EDIT HERO <ArrowLeft size={14} /></b>
-              </button>
-              <div className="admin-dashboard__card admin-dashboard__card--stat">
-                <span>PUBLIC STATUS</span><strong>LIVE</strong><p>سایت عمومی فعال و متصل به سیستم مدیریت است.</p>
+
+            <section className="admin-dashboard__metrics" aria-label="آمار محتوای سایت">
+              <article className="admin-dashboard__metric admin-dashboard__metric--accent"><span className="admin-dashboard__metricIcon"><Layers3 size={18}/></span><small>بخش‌های قابل مدیریت</small><strong>۰۶</strong><em>ماژول محتوایی</em></article>
+              <article className="admin-dashboard__metric"><span className="admin-dashboard__metricIcon"><BookOpen size={18}/></span><small>اسلایدهای داستان</small><strong>{(config.story || []).length.toLocaleString("fa-IR")}</strong><em>Story</em></article>
+              <article className="admin-dashboard__metric"><span className="admin-dashboard__metricIcon"><Film size={18}/></span><small>خاطرات متحرک</small><strong>{(config.movingMemory || []).length.toLocaleString("fa-IR")}</strong><em>Moving Memory</em></article>
+              <article className="admin-dashboard__metric"><span className="admin-dashboard__metricIcon"><ImageIcon size={18}/></span><small>رسانه‌های کتابخانه</small><strong>{allMedia.length.toLocaleString("fa-IR")}</strong><em>تصویر و ویدیو</em></article>
+              <article className="admin-dashboard__metric"><span className="admin-dashboard__metricIcon"><ArchiveRestore size={18}/></span><small>آیتم‌های سطل زباله</small><strong>{trashItems.length.toLocaleString("fa-IR")}</strong><em>قابل بازیابی</em></article>
+            </section>
+
+            <section className="admin-dashboard__section">
+              <div className="admin-dashboard__sectionHead"><div><span>WORKSPACE / 01</span><h2>دسترسی سریع به بخش‌ها</h2><p>برای رفتن مستقیم به ویرایشگر هر قسمت کلیک کن.</p></div><b>۶ بخش</b></div>
+              <div className="admin-dashboard__modules">
+                <button type="button" className="admin-dashboard__module admin-dashboard__module--hero" onClick={() => goToSection("hero")}><span className="admin-dashboard__moduleTop"><i>01</i><Sparkles size={18}/></span><strong>صفحه آغازین <em>HERO</em></strong><small>تصویر اصلی، اطلاعات تولد و متن ورود به داستان</small><span className="admin-dashboard__moduleFoot">ورود به ویرایشگر <ArrowLeft size={15}/></span></button>
+                <button type="button" className="admin-dashboard__module" onClick={() => goToSection("story")}><span className="admin-dashboard__moduleTop"><i>02</i><BookOpen size={18}/></span><strong>روایت داستان <em>STORY</em></strong><small>{(config.story || []).length.toLocaleString("fa-IR")} اسلاید؛ ویرایش متن‌ها و تصاویر</small><span className="admin-dashboard__moduleFoot">مدیریت Story <ArrowLeft size={15}/></span></button>
+                <button type="button" className="admin-dashboard__module" onClick={() => goToSection("memory")}><span className="admin-dashboard__moduleTop"><i>03</i><ImageIcon size={18}/></span><strong>سیگنال خاطرات <em>MEMORY SIGNAL</em></strong><small>{(config.memorySignal || []).length.toLocaleString("fa-IR")} رسانه انتخاب‌شده برای سایت</small><span className="admin-dashboard__moduleFoot">مدیریت خاطرات <ArrowLeft size={15}/></span></button>
+                <button type="button" className="admin-dashboard__module" onClick={() => goToSection("moving")}><span className="admin-dashboard__moduleTop"><i>04</i><Film size={18}/></span><strong>خاطرات متحرک <em>MOVING MEMORY</em></strong><small>{(config.movingMemory || []).length.toLocaleString("fa-IR")} ویدیوی انتخاب‌شده</small><span className="admin-dashboard__moduleFoot">مدیریت ویدیوها <ArrowLeft size={15}/></span></button>
+                <button type="button" className="admin-dashboard__module" onClick={() => goToSection("years")}><span className="admin-dashboard__moduleTop"><i>05</i><Clock3 size={18}/></span><strong>خط زمان <em>THE YEARS</em></strong><small>{(config.years || []).length.toLocaleString("fa-IR")} قاب در خط زمان</small><span className="admin-dashboard__moduleFoot">مدیریت خط زمان <ArrowLeft size={15}/></span></button>
+                <button type="button" className="admin-dashboard__module" onClick={() => goToSection("chapters")}><span className="admin-dashboard__moduleTop"><i>06</i><Layers3 size={18}/></span><strong>فصل‌های زندگی <em>CHAPTERS</em></strong><small>{(config.chapters || []).length.toLocaleString("fa-IR")} فصل تعریف‌شده</small><span className="admin-dashboard__moduleFoot">مدیریت فصل‌ها <ArrowLeft size={15}/></span></button>
               </div>
-              <button className="admin-dashboard__card" onClick={() => goToSection("chapters")}><div className="admin-dashboard__icon"><Sparkles size={19} /></div><span>02 / MODULE</span><h2>Chapters</h2><p>مدیریت فصل‌های زندگی رادمان؛ ترتیب، عنوان، روایت و تصویر هر فصل.</p><b>EDIT CHAPTERS <ArrowLeft size={14} /></b></button>
-              <div className="admin-dashboard__card admin-dashboard__card--stat"><span>ACTIVE MODULES</span><strong>{(config.chapters || []).length + 3}</strong><p>بخش‌های محتوایی متصل به پنل مدیریت.</p></div>
-            </div>
-            <div className="admin-dashboard__footer">
-              <span>QUICK ACCESS</span>
-              <button onClick={() => goToSection("hero")}><ImageIcon size={15} /> ویرایش Hero <ArrowLeft size={14} /></button>
-              <a href="/" target="_blank" rel="noreferrer"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
-            </div>
+            </section>
+
+            <section className="admin-dashboard__bottomGrid">
+              <div className="admin-dashboard__health">
+                <div className="admin-dashboard__sectionHead"><div><span>SITE OVERVIEW / 02</span><h2>وضعیت محتوای سایت</h2></div><ShieldCheck size={19}/></div>
+                <div className="admin-dashboard__healthList">
+                  <div><span className="admin-dashboard__healthIcon"><Check size={14}/></span><span><b>صفحه آغازین</b><small>اطلاعات اصلی و تصویر قابل ویرایش است.</small></span><em>فعال</em></div>
+                  <div><span className="admin-dashboard__healthIcon"><BookOpen size={14}/></span><span><b>Story</b><small>{(config.story || []).length.toLocaleString("fa-IR")} اسلاید ثبت شده</small></span><em>محتوا</em></div>
+                  <div><span className="admin-dashboard__healthIcon"><ImageIcon size={14}/></span><span><b>Memory Signal</b><small>{(config.memorySignal || []).length.toLocaleString("fa-IR")} رسانه انتخاب شده</small></span><em>{(config.memorySignal || []).length ? "آماده" : "خالی"}</em></div>
+                  <div><span className="admin-dashboard__healthIcon"><Film size={14}/></span><span><b>Moving Memory</b><small>{(config.movingMemory || []).length.toLocaleString("fa-IR")} ویدیو انتخاب شده</small></span><em>{(config.movingMemory || []).length ? "آماده" : "خالی"}</em></div>
+                </div>
+              </div>
+              <div className="admin-dashboard__quick">
+                <div className="admin-dashboard__sectionHead"><div><span>TOOLS / 03</span><h2>ابزارهای پرکاربرد</h2></div><Sparkles size={19}/></div>
+                <button type="button" onClick={() => goToSection("library")}><span><FolderOpen size={17}/></span><b>کتابخانه رسانه</b><small>مرور، جستجو و مدیریت فایل‌ها</small><ArrowLeft size={15}/></button>
+                <button type="button" onClick={() => goToSection("trash")}><span><Trash2 size={17}/></span><b>سطل زباله</b><small>{trashItems.length.toLocaleString("fa-IR")} مورد برای بازیابی یا حذف دائمی</small><ArrowLeft size={15}/></button>
+                <a href="/" target="_blank" rel="noreferrer"><span><Eye size={17}/></span><b>پیش‌نمایش سایت</b><small>مشاهده نسخه عمومی در تب جدید</small><ArrowUpRight size={15}/></a>
+              </div>
+            </section>
+            <footer className="admin-dashboard__footnote"><ShieldCheck size={15}/><span>این داشبورد فقط وضعیت داده‌های دریافت‌شده از پنل را نمایش می‌دهد؛ برای انتشار تغییرات، ذخیره را داخل ویرایشگر همان بخش انجام بده.</span><small>RADMAN CMS</small></footer>
           </div>
         ) : activeSection === "trash" ? (
           <>
