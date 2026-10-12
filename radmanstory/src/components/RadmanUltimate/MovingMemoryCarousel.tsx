@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import "./MovingMemoryCarousel.css";
 
@@ -89,7 +90,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
 
   if (!media.length) return null;
 
-  const startDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+  const startDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     startRef.current = { x: event.clientX, y: event.clientY, index: active, pointerId: event.pointerId };
     movedRef.current = false;
