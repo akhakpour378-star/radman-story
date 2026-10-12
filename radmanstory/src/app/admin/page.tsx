@@ -609,8 +609,8 @@ export default function AdminPage() {
         <div className="admin-login__glow" />
         <form className="admin-login__card" onSubmit={login}>
           <div className="admin-brand"><span>R</span><b>RADMAN</b></div>
-          <p className="admin-kicker">PRIVATE ARCHIVE / ADMIN</p>
-          <h1>مدیریت آرشیو</h1>
+          <p className="admin-kicker">RADMAN / CONTENT STUDIO</p>
+          <h1>مدیریت محتوا</h1>
           <p>برای ورود به پنل مدیریت، رمز عبور را وارد کنید.</p>
           <label>رمز عبور<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus /></label>
           {error && <div className="admin-error">{error}</div>}
