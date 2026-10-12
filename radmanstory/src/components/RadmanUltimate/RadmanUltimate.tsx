@@ -880,7 +880,7 @@ export default function RadmanUltimate() {
             }} aria-label="Previous"><ArrowLeft /></button>
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
-              <div className="u-lightbox__mediaTitle" dir="rtl">
+              <div className="u-lightbox__mediaTitle u-lightbox__mediaTitle--compact" dir="rtl">
                 <b>{selectedGalleryType === "years"
                   ? (heroConfig.yearsTitles?.[selectedMemory.src]?.trim() || selectedMemory.title)
                   : (heroConfig.memoryTitles?.[selectedSignalEntry || ""]?.trim() || heroConfig.memoryTitles?.[selectedMemory.src]?.trim() || selectedMemory.title)}</b>
