@@ -7639,3 +7639,22 @@
     min-height: calc(61svh + 125px) !important;
   }
 }
+
+
+/* Mobile Story: 20px breathing room above the image; keep only the slide title and controls */
+@media (max-width: 600px) {
+  .u .u-storyCinema .radman-story-slider {
+    padding-top: 20px !important;
+  }
+  .u .u-storyCinema .radman-story-slider__media {
+    margin-top: 0 !important;
+  }
+  .u .u-storyCinema .radman-story-slider__media .radman-story-slider__meta {
+    display: none !important;
+  }
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__eyebrow,
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__lead,
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__body {
+    display: none !important;
+  }
+}
