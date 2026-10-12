@@ -13,6 +13,7 @@ type Props = {
 };
 
 const cleanSrc = (entry: string) => entry.startsWith("video:") ? entry.slice(6) : entry;
+const isVideoSrc = (entry: string) => /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(cleanSrc(entry));
 
 export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, onSelect }: Props) {
   const [active, setActive] = useState(0);
@@ -122,8 +123,13 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
 
   const openCard = (index: number) => {
     if (movedRef.current) return;
-    // Any clicked frame becomes the featured frame and opens in the full player.
-    setActive(index);
+    // First click on a side card promotes it to the featured center frame.
+    if (index !== active) {
+      setActive(index);
+      setPaused(true);
+      return;
+    }
+    // Clicking the already featured frame opens the full image/video viewer.
     setPaused(true);
     onSelect(cleanSrc(media[index]));
   };
@@ -174,15 +180,25 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
               onClick={() => openCard(index)}
             >
               <span className="mm3d__image">
-                <video
-                  ref={(node) => { videoRefs.current[index] = node; }}
-                  src={videoSrc}
-                  muted
-                  loop
-                  playsInline
-                  preload={distance <= 1 ? "metadata" : "none"}
-                  aria-hidden="true"
-                />
+                {isVideoSrc(entry) ? (
+                  <video
+                    ref={(node) => { videoRefs.current[index] = node; }}
+                    src={videoSrc}
+                    muted
+                    loop
+                    playsInline
+                    preload={distance <= 1 ? "metadata" : "none"}
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <img
+                    src={videoSrc}
+                    alt=""
+                    loading={distance <= 1 ? "eager" : "lazy"}
+                    draggable={false}
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="mm3d__vignette" />
                 <span className="mm3d__play">{offset === 0 ? <Play size={17} fill="currentColor" /> : <ArrowRight size={16} />}</span>
                 <span className="mm3d__filmno">FRAME / {String(index + 1).padStart(2, "0")}</span>
