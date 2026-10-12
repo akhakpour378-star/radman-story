@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readdir, stat } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { Readable } from "node:stream";
 import path from "node:path";
 
 export const runtime = "nodejs";
@@ -103,14 +105,50 @@ export async function GET(request: NextRequest) {
   if (resolved) {
     const found = resolved.found;
     try {
-      const data = await readFile(found);
+      const fileStat = await stat(found);
       const ext = path.extname(found).toLowerCase();
-      return new NextResponse(data, {
-        headers: {
-          "Content-Type": mime[ext] ?? "application/octet-stream",
-          "Cache-Control": "no-store, max-age=0",
-          "X-Content-Type-Options": "nosniff",
-        },
+      const contentType = mime[ext] ?? "application/octet-stream";
+      const range = request.headers.get("range");
+      const commonHeaders = {
+        "Content-Type": contentType,
+        "Accept-Ranges": "bytes",
+        "Cache-Control": "no-store, max-age=0",
+        "X-Content-Type-Options": "nosniff",
+      };
+
+      // Native video players rely on byte-range responses for reliable playback,
+      // seeking and audio/video streaming.
+      if (range) {
+        const match = /^bytes=(\\d*)-(\\d*)$/.exec(range);
+        if (!match || (!match[1] && !match[2])) {
+          return new NextResponse(null, {
+            status: 416,
+            headers: { ...commonHeaders, "Content-Range": `bytes */${fileStat.size}` },
+          });
+        }
+        let start = match[1] ? Number(match[1]) : Math.max(0, fileStat.size - Number(match[2]));
+        let end = match[2] && match[1] ? Number(match[2]) : fileStat.size - 1;
+        if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 0 || start >= fileStat.size || end < start) {
+          return new NextResponse(null, {
+            status: 416,
+            headers: { ...commonHeaders, "Content-Range": `bytes */${fileStat.size}` },
+          });
+        }
+        end = Math.min(end, fileStat.size - 1);
+        const stream = Readable.toWeb(createReadStream(found, { start, end })) as ReadableStream;
+        return new NextResponse(stream, {
+          status: 206,
+          headers: {
+            ...commonHeaders,
+            "Content-Range": `bytes ${start}-${end}/${fileStat.size}`,
+            "Content-Length": String(end - start + 1),
+          },
+        });
+      }
+
+      const stream = Readable.toWeb(createReadStream(found)) as ReadableStream;
+      return new NextResponse(stream, {
+        headers: { ...commonHeaders, "Content-Length": String(fileStat.size) },
       });
     } catch {}
   }
