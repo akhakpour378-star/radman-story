@@ -11,6 +11,7 @@ type HeroConfig = {
   image: string; date: string; time: string; weight: string;
   height: string; place: string; city: string; cta: string;
   heroTitle: string; heroTitleAccent: string; heroLead: string;
+  siteBackground: string; siteAccent: string; favicon: string;
   movingMemoryTitle?: string;
   movingMemoryEyebrow?: string;
   movingMemoryDescription?: string;
@@ -35,6 +36,7 @@ const defaults: HeroConfig = {
   heroTitle: "Radman",
   heroTitleAccent: "Forever.",
   heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
+  siteBackground: "#05070b", siteAccent: "#9ce7ef", favicon: "/favicon.ico",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   movingMemoryEyebrow: "03 / MOVING MEMORY",
   movingMemoryDescription: "لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.",
@@ -673,6 +675,36 @@ export default function AdminPage() {
                 <small>{error ? "ارتباط با یکی از سرویس‌ها با خطا روبه‌رو شده است." : loading ? "در حال دریافت آخرین اطلاعات محتوا" : "برای مدیریت هر بخش از کارت‌های پایین استفاده کن."}</small>
               </div>
             </header>
+
+            <section className="admin-homeAppearance" aria-labelledby="admin-homeAppearance-title">
+              <div className="admin-homeAppearance__head">
+                <div><span>HOMEPAGE / APPEARANCE</span><h2 id="admin-homeAppearance-title">ویرایش ظاهر صفحه اصلی</h2><p>رنگ پس‌زمینه، رنگ تأکیدی و فاوآیکن سایت را از همین داشبورد تنظیم کن.</p></div>
+                <button type="button" onClick={() => void save()} disabled={!dirty || saving}>{saving ? <LoaderCircle size={15} className="admin-spin"/> : <Save size={15}/>} {saving ? "در حال ذخیره" : saved ? "ذخیره شد" : "ذخیره تنظیمات"}</button>
+              </div>
+              <div className="admin-homeAppearance__grid">
+                <label className="admin-homeAppearance__color">
+                  <span>رنگ پس‌زمینه صفحه</span>
+                  <div><input type="color" value={config.siteBackground || "#05070b"} onChange={e => update("siteBackground", e.target.value)}/><input value={config.siteBackground || "#05070b"} onChange={e => update("siteBackground", e.target.value)} pattern="^#[0-9a-fA-F]{6}$" aria-label="کد رنگ پس‌زمینه"/></div>
+                  <small>پس‌زمینه اصلی تجربه سایت</small>
+                </label>
+                <label className="admin-homeAppearance__color">
+                  <span>رنگ تأکیدی / Accent</span>
+                  <div><input type="color" value={config.siteAccent || "#9ce7ef"} onChange={e => update("siteAccent", e.target.value)}/><input value={config.siteAccent || "#9ce7ef"} onChange={e => update("siteAccent", e.target.value)} pattern="^#[0-9a-fA-F]{6}$" aria-label="کد رنگ تأکیدی"/></div>
+                  <small>برای خطوط، جزئیات و المان‌های برجسته</small>
+                </label>
+                <div className="admin-homeAppearance__favicon">
+                  <span>فاوآیکن سایت</span>
+                  <div className="admin-homeAppearance__faviconRow">
+                    <div className="admin-homeAppearance__faviconPreview">{config.favicon ? <img src={mediaUrl(config.favicon)} alt="پیش‌نمایش فاوآیکن"/> : <Sparkles size={20}/>}</div>
+                    <input value={config.favicon || ""} onChange={e => update("favicon", e.target.value)} placeholder="/memory/hero/favicon.png" aria-label="مسیر فاوآیکن"/>
+                    <label className="admin-homeAppearance__upload">آپلود آیکن<input type="file" accept="image/png,image/jpeg,image/webp,image/avif" onChange={e => { const input=e.currentTarget; const file=input.files?.[0]; if(file) void uploadImage(file,"hero",src => update("favicon",src)); input.value=""; }}/></label>
+                  </div>
+                  <small>تصویر PNG، JPG یا WEBP؛ پس از ذخیره در تب سایت اعمال می‌شود.</small>
+                </div>
+              </div>
+              <div className="admin-homeAppearance__preview" style={{background: config.siteBackground || "#05070b", "--home-accent": config.siteAccent || "#9ce7ef"} as React.CSSProperties}>
+                <span>LIVE COLOR PREVIEW</span><strong>Radman <em>Forever.</em></strong><i>این پیش‌نمایش رنگ‌های انتخاب‌شده را نشان می‌دهد.</i><b/></div>
+            </section>
 
             <section className="admin-dashboard__metrics" aria-label="آمار محتوای سایت">
               <article className="admin-dashboard__metric admin-dashboard__metric--accent"><span className="admin-dashboard__metricIcon"><Layers3 size={18}/></span><small>بخش‌های قابل مدیریت</small><strong>۰۶</strong><em>ماژول محتوایی</em></article>
