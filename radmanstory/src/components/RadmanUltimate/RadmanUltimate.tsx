@@ -282,7 +282,7 @@ export default function RadmanUltimate() {
       link.rel = "icon";
       document.head.appendChild(link);
     }
-    link.href = href;
+    link.href = asset(href);
   }, [heroConfig.favicon]);
 
   useEffect(() => {
