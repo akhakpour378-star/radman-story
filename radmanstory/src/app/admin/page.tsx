@@ -825,7 +825,7 @@ export default function AdminPage() {
                   {config.story.map((slide,index) => (
                     <tr key={index} className={editingStory === index ? "is-editing" : ""} onClick={() => openStoryEditor(index)}><td onClick={(e) => e.stopPropagation()}><input type="checkbox" checked={selectedStoryIndexes.includes(index)} onChange={(e) => setSelectedStoryIndexes(current => e.target.checked ? [...current,index] : current.filter(x => x !== index))} /></td>
                       <td className="admin-storyTable__index">{String(index + 1).padStart(2, "0")}</td>
-                      <td><img className="admin-storyTable__thumb" src={mediaUrl(slide.image)} alt="" /></td>
+                      <td>{slide.image?.trim() ? <img className="admin-storyTable__thumb" src={mediaUrl(slide.image)} alt="" /> : <div className="admin-storyTable__thumb" aria-hidden="true" />}</td>
                       <td><div className="admin-storyTable__title">{slide.title}</div><small>{slide.eyebrow}</small></td>
                       <td>{slide.label}</td>
                       <td>
@@ -846,7 +846,7 @@ export default function AdminPage() {
                   <button type="button" onClick={() => { setEditingStory(null); goToSection("story"); }}>بستن</button>
                 </div>
                 <div className="admin-storyEditPanel__body">
-                  <div className="admin-storyCard__image admin-storyEditVisual"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><div className="admin-storyEditVisual__veil" /><div className="admin-storyEditVisual__meta"><span>RADMAN / STORY</span><i /></div><div className="admin-storyEditVisual__label">MEMORY FRAME</div></div>
+                  <div className="admin-storyCard__image admin-storyEditVisual">{config.story[editingStory].image?.trim() ? <img src={mediaUrl(config.story[editingStory].image)} alt="" /> : <div className="admin-storyEditVisual__placeholder" aria-hidden="true" />}<div className="admin-storyEditVisual__veil" /><div className="admin-storyEditVisual__meta"><span>RADMAN / STORY</span><i /></div><div className="admin-storyEditVisual__label">MEMORY FRAME</div></div>
                   <div className="admin-storyCard__fields">
                     {(["eyebrow","label","title","lead","body","image","mobileImage"] as const).map((key) => {
                       const slide = config.story[editingStory];
