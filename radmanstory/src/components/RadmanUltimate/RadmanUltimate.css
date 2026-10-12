@@ -7927,3 +7927,21 @@
     margin-top: 5px !important;
   }
 }
+
+
+/* Mobile Persian typography: use Iran Sans consistently for all RTL/Persian content */
+@media (max-width: 600px) {
+  .u {
+    --fa-font: 'IRANSans', 'IranSans', Tahoma, sans-serif !important;
+  }
+  .u [dir="rtl"],
+  .u [dir="rtl"] *,
+  .u [lang="fa"],
+  .u [lang="fa"] *,
+  .u .u-hero__lead,
+  .u .u-timeline--editorial .u-timeline__intro p,
+  .u .u-storyCinema__lead,
+  .u .u-storyCinema__body {
+    font-family: 'IRANSans', 'IranSans', Tahoma, sans-serif !important;
+  }
+}
