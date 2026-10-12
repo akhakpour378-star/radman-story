@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { CSSProperties, FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, Eye, Image as ImageIcon, Play,
   LayoutDashboard, LogOut, Save, ShieldCheck, Sparkles, LoaderCircle, Upload, Pencil, Trash2, RotateCcw, ArchiveRestore, BookOpen, Clock3, Film, FolderOpen, Layers3,
@@ -702,7 +702,7 @@ export default function AdminPage() {
                   <small>تصویر PNG، JPG یا WEBP؛ پس از ذخیره در تب سایت اعمال می‌شود.</small>
                 </div>
               </div>
-              <div className="admin-homeAppearance__preview" style={{background: config.siteBackground || "#05070b", "--home-accent": config.siteAccent || "#9ce7ef"} as React.CSSProperties}>
+              <div className="admin-homeAppearance__preview" style={{background: config.siteBackground || "#05070b", "--home-accent": config.siteAccent || "#9ce7ef"} as CSSProperties}>
                 <span>LIVE COLOR PREVIEW</span><strong>Radman <em>Forever.</em></strong><i>این پیش‌نمایش رنگ‌های انتخاب‌شده را نشان می‌دهد.</i><b/></div>
             </section>
 
