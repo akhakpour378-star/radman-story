@@ -18,6 +18,9 @@ type HeroConfig = {
   heroTitle: string;
   heroTitleAccent: string;
   heroLead: string;
+  siteBackground?: string;
+  siteAccent?: string;
+  favicon?: string;
   movingMemoryTitle?: string;
   movingMemoryEyebrow?: string;
   movingMemoryDescription?: string;
