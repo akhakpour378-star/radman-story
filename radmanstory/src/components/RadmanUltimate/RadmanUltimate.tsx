@@ -756,8 +756,7 @@ export default function RadmanUltimate() {
       </section>
       )}
 
-      {(heroConfig.movingMemory || []).length > 0 && (
-        <section id="moving-memory" className="u-film u-film--cinema">
+      <section id="moving-memory" className="u-film u-film--cinema">
           <div className="u-film__heading u-reveal">
             <div className="u-film__copy">
               <span className="u-kicker">03 / MOVING MEMORY</span>
@@ -771,8 +770,7 @@ export default function RadmanUltimate() {
             resolveSrc={asset}
             onSelect={(src) => { setSelected(null); setSelectedGalleryType("moving"); setSelectedMemorySrc(src); }}
           />
-        </section>
-      )}
+      </section>
 
       <section className="u-finale">
         <div className="u-finale__glow" />
