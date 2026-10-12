@@ -1911,3 +1911,9 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-content--studio .admin-movingStudio__grid{padding:14px}
   .admin-content--studio .admin-movingLibrary{padding:18px}
 }
+
+
+/* Clear, high-contrast active save button on the light admin workspace. */
+.admin-content .admin-primary:not(:disabled){background:#17232b!important;color:#ffffff!important;border-color:#17232b!important;opacity:1!important;box-shadow:0 5px 14px #17232b20!important}
+.admin-content .admin-primary:not(:disabled):hover{background:#263b47!important;border-color:#263b47!important;transform:translateY(-1px)}
+.admin-content .admin-primary:disabled{background:#e2e6e9!important;color:#7d878e!important;border-color:#d5dbe0!important;opacity:1!important;box-shadow:none!important}
