@@ -88,8 +88,6 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
     return () => stage?.removeEventListener("keydown", onKey as EventListener);
   }, [move]);
 
-  if (!media.length) return null;
-
   const startDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     const card = (event.target as HTMLElement).closest<HTMLElement>(".mm3d__card");
