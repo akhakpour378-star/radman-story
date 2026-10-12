@@ -1935,3 +1935,53 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-preview__title em{margin:3px 0 0 13px;color:#aee7eb;font:italic 400 clamp(25px,2.6vw,40px)/1 "Cormorant Garamond","Playfair Display",serif;letter-spacing:-.04em}
 .admin-preview__title p{max-width:190px;margin:12px 0 0;color:#e0e5e9;font:400 8px/1.9 var(--admin-font,"IranYekan"),sans-serif;text-shadow:0 2px 10px #0009}
 @media(max-width:720px){.admin-preview__title{top:25%;left:6%;width:52%}.admin-preview__title strong{font-size:38px}.admin-preview__title em{font-size:30px}.admin-preview__title p{font-size:7px;max-width:150px}}
+
+
+/* MOVING MEMORY — section title preview and per-film editorial title controls */
+.admin-movingTitleField{
+  display:grid;
+  gap:10px;
+  margin:0 0 24px;
+  padding:22px;
+  border:1px solid rgba(117,133,214,.22);
+  border-radius:16px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(153,160,255,.12),transparent 45%),
+    linear-gradient(135deg,#111a29,#0a101a);
+}
+.admin-movingTitleField>span{color:#aeb7ff;font-size:11px;font-weight:700;letter-spacing:.04em}
+.admin-movingTitleField>input{
+  width:100%;min-height:48px;padding:12px 14px;
+  border:1px solid rgba(173,184,255,.22);border-radius:10px;
+  background:#070c14;color:#f4f5ff;font:500 14px/1.6 inherit;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.admin-movingTitleField>input:focus{border-color:#aeb7ff;box-shadow:0 0 0 3px rgba(142,151,255,.12)}
+.admin-movingTitleField>small{color:#929fb5;font-size:11px;line-height:1.8}
+.admin-movingTitleField__preview{
+  display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+  margin-top:7px;padding:22px 24px;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(172,184,255,.15);
+  background:radial-gradient(ellipse at 80% 0%,rgba(145,154,255,.15),transparent 55%),linear-gradient(120deg,#111927,#090e17);
+}
+.admin-movingTitleField__preview>small{color:#aeb7ff;font:700 9px/1.5 "DM Sans",sans-serif;letter-spacing:.18em}
+.admin-movingTitleField__preview>strong{max-width:780px;color:#f3f2ed;font:400 clamp(23px,2.5vw,36px)/1.2 "Playfair Display",Georgia,serif;letter-spacing:-.035em}
+.admin-movingTitleField__preview>i{color:#7e8da5;font:500 9px/1.6 "DM Sans",sans-serif;letter-spacing:.16em;font-style:normal}
+.admin-content--studio .admin-movingCard__meta{display:grid;grid-template-columns:1fr auto;gap:9px 10px;padding:15px}
+.admin-content--studio .admin-movingCard__filename{grid-column:1/-1;color:#8998ae;font-size:10px;font-weight:400}
+.admin-content--studio .admin-movingCard__title{grid-column:1/-1;display:grid;gap:7px;margin-top:3px}
+.admin-content--studio .admin-movingCard__title>span{color:#c8d0e8;font-size:10px;font-weight:600}
+.admin-content--studio .admin-movingCard__title input{
+  width:100%;min-width:0;min-height:39px;padding:9px 10px;
+  border:1px solid rgba(165,182,255,.22);border-radius:8px;
+  background:rgba(3,7,13,.8);color:#f3f4ff;font:400 11px/1.6 inherit;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.admin-content--studio .admin-movingCard__title input:focus{border-color:rgba(165,182,255,.75);box-shadow:0 0 0 3px rgba(125,145,255,.1)}
+.admin-content--studio .admin-movingCard__title input::placeholder{color:#65728a}
+.admin-content--studio .admin-movingCard__hint{grid-column:1/-1;color:#75839a;font-size:9px;line-height:1.7}
+.admin-content--studio .admin-movingCard__meta>button{grid-column:1/-1;justify-self:start}
+@media(max-width:600px){
+  .admin-movingTitleField{padding:16px}
+  .admin-movingTitleField__preview{padding:17px}
+}
