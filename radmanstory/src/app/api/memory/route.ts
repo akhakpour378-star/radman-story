@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
       // Native video players rely on byte-range responses for reliable playback,
       // seeking and audio/video streaming.
       if (range) {
-        const match = /^bytes=(\\d*)-(\\d*)$/.exec(range);
+        const match = /^bytes=(\d*)-(\d*)$/.exec(range);
         if (!match || (!match[1] && !match[2])) {
           return new NextResponse(null, {
             status: 416,
