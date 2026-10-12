@@ -1925,3 +1925,13 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-movingTitleField input{width:100%;min-height:48px;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(4,7,14,.65);color:#f4f6ff;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
 .admin-movingTitleField input:focus{border-color:rgba(165,180,255,.65);box-shadow:0 0 0 3px rgba(125,145,255,.1)}
 .admin-movingTitleField small{font-size:11px;line-height:1.8;color:#8f9bb1}
+
+ 
+/* HERO TITLE — admin live preview */
+.admin-preview__title{position:absolute;z-index:3;left:7%;top:28%;width:48%;display:flex;flex-direction:column;align-items:flex-start;direction:ltr;pointer-events:none}
+.admin-preview__title small{display:flex;align-items:center;gap:7px;margin-bottom:12px;color:#c0ccd4;font:600 5px/1.5 "DM Sans",sans-serif;letter-spacing:.18em}
+.admin-preview__title small:before{content:"";display:block;width:18px;height:1px;background:#9ce7ef;box-shadow:0 0 8px #9ce7ef88}
+.admin-preview__title strong{color:#f4f2ed;font:400 clamp(30px,3.3vw,52px)/.92 "Playfair Display",Georgia,serif;letter-spacing:-.06em;text-shadow:0 4px 18px #0008}
+.admin-preview__title em{margin:3px 0 0 13px;color:#aee7eb;font:italic 400 clamp(25px,2.6vw,40px)/1 "Cormorant Garamond","Playfair Display",serif;letter-spacing:-.04em}
+.admin-preview__title p{max-width:190px;margin:12px 0 0;color:#e0e5e9;font:400 8px/1.9 var(--admin-font,"IranYekan"),sans-serif;text-shadow:0 2px 10px #0009}
+@media(max-width:720px){.admin-preview__title{top:25%;left:6%;width:52%}.admin-preview__title strong{font-size:38px}.admin-preview__title em{font-size:30px}.admin-preview__title p{font-size:7px;max-width:150px}}
