@@ -7548,3 +7548,17 @@
     border-bottom: 0 !important;
   }
 }
+
+
+/* Lift mobile birth details slightly over the bottom of the hero image */
+@media (max-width: 850px) {
+  .u .u-hero--editorial .u-hero__birthData {
+    top: calc(64svh - 44px) !important;
+    z-index: 12 !important;
+  }
+}
+@media (max-width: 390px) {
+  .u .u-hero--editorial .u-hero__birthData {
+    top: calc(61svh - 44px) !important;
+  }
+}
