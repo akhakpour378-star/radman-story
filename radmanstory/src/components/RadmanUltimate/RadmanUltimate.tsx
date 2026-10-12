@@ -881,7 +881,9 @@ export default function RadmanUltimate() {
           <div className="u-lightbox__shell" onClick={(e) => e.stopPropagation()}>
             <div className="u-lightbox__main">
               <div className="u-lightbox__mediaTitle" dir="rtl">
-                <b>{selectedGalleryType === "years" ? (heroConfig.yearsTitles?.[selectedMemory.src]?.trim() || selectedMemory.title) : (heroConfig.memoryTitles?.[selectedSignalEntry || selectedMemory.src] || selectedMemory.title)}</b>
+                <b>{selectedGalleryType === "years"
+                  ? (heroConfig.yearsTitles?.[selectedMemory.src]?.trim() || selectedMemory.title)
+                  : (heroConfig.memoryTitles?.[selectedSignalEntry || ""]?.trim() || heroConfig.memoryTitles?.[selectedMemory.src]?.trim() || selectedMemory.title)}</b>
               </div>
               <div
                 className={"u-lightbox__image" + (!selectedIsVideo && imageZoom > 1 ? " is-zoomed" : "") + (isPanningImage ? " is-panning" : "")}
