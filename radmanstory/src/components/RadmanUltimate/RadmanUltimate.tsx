@@ -40,6 +40,9 @@ type HeroConfig = {
   heroTitle: string;
   heroTitleAccent: string;
   heroLead: string;
+  siteBackground?: string;
+  siteAccent?: string;
+  favicon?: string;
   movingMemoryTitle?: string;
   movingMemoryEyebrow?: string;
   movingMemoryDescription?: string;
@@ -74,6 +77,7 @@ const defaultHeroConfig: HeroConfig = {
   heroTitle: "Radman",
   heroTitleAccent: "Forever.",
   heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
+  siteBackground: "#05070b", siteAccent: "#9ce7ef", favicon: "/favicon.ico",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   movingMemoryEyebrow: "03 / MOVING MEMORY",
   movingMemoryDescription: "لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.",
@@ -268,6 +272,18 @@ export default function RadmanUltimate() {
       .catch(() => { if (alive) setSignalItems([]); });
     return () => { alive = false; };
   }, []);
+
+  useEffect(() => {
+    const href = heroConfig.favicon?.trim();
+    if (!href) return;
+    let link = document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  }, [heroConfig.favicon]);
 
   useEffect(() => {
     let alive = true;
@@ -565,7 +581,7 @@ export default function RadmanUltimate() {
   }, [heroConfig.chapters, memories]);
 
   return (
-    <main ref={root} className={"u u-font-" + heroConfig.persianFont}>
+    <main ref={root} className={"u u-font-" + heroConfig.persianFont} style={{ "--bg": heroConfig.siteBackground || "#05070b", "--cyan": heroConfig.siteAccent || "#9ce7ef" } as React.CSSProperties}>
       <div className="u-cursorLight" aria-hidden="true" />
       <div className="u-cursorDot" aria-hidden="true" />
       <div className="u-progress"><i /></div>
