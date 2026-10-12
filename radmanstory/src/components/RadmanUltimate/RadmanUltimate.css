@@ -7224,3 +7224,42 @@
   }
   .u .u-lightbox__main > .u-lightbox__mediaTitle b{font-size:11px!important}
 }
+
+/* High-specificity override for the actual lightbox title row. */
+.u .u-lightbox__main > .u-lightbox__mediaTitle--compact{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 14px!important;
+  height:14px!important;
+  min-height:14px!important;
+  max-height:14px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  overflow:hidden!important;
+  align-items:center!important;
+  line-height:14px!important;
+}
+.u .u-lightbox__main > .u-lightbox__mediaTitle--compact b{
+  box-sizing:border-box!important;
+  display:block!important;
+  height:14px!important;
+  max-height:14px!important;
+  padding:0!important;
+  margin:0!important;
+  font-family:'IranYekan','Iran Yekan','IRANYekan',Tahoma,sans-serif!important;
+  font-size:11px!important;
+  font-weight:400!important;
+  line-height:14px!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.u .u-lightbox__main:has(> .u-lightbox__mediaTitle--compact){gap:2px!important}
+@media(max-width:760px){
+  .u .u-lightbox__main > .u-lightbox__mediaTitle--compact,
+  .u .u-lightbox__main > .u-lightbox__mediaTitle--compact b{
+    flex-basis:12px!important;height:12px!important;min-height:12px!important;max-height:12px!important;line-height:12px!important;font-size:10px!important;
+  }
+}
