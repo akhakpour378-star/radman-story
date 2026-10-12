@@ -10,6 +10,7 @@ import "./admin.css";
 type HeroConfig = {
   image: string; date: string; time: string; weight: string;
   height: string; place: string; city: string; cta: string;
+  heroTitle: string; heroTitleAccent: string; heroLead: string;
   movingMemoryTitle?: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
@@ -29,6 +30,9 @@ const defaults: HeroConfig = {
   date: "DEC / 01 / 2022", time: "14:15", weight: "3.100 kg",
   height: "49 cm", place: "NIKAN AQDASIEH", city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  heroTitle: "Radman",
+  heroTitleAccent: "Forever.",
+  heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   persianFont: "iranyekan",
   story: [
@@ -50,7 +54,10 @@ const defaults: HeroConfig = {
   yearsTitles: {},
 };
 
-const fieldMeta: Record<"date" | "time" | "weight" | "height" | "place" | "city" | "cta", { label: string; hint: string }> = {
+const fieldMeta: Record<"heroTitle" | "heroTitleAccent" | "heroLead" | "date" | "time" | "weight" | "height" | "place" | "city" | "cta", { label: string; hint: string }> = {
+  heroTitle: { label: "عنوان اصلی Hero", hint: "Radman" },
+  heroTitleAccent: { label: "عنوان مکمل", hint: "Forever." },
+  heroLead: { label: "متن زیر عنوان", hint: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود." },
   date: { label: "تاریخ تولد", hint: "DEC / 01 / 2022" },
   time: { label: "ساعت تولد", hint: "14:15" },
   weight: { label: "وزن هنگام تولد", hint: "3.100 kg" },
@@ -947,9 +954,9 @@ export default function AdminPage() {
 
             <div className="admin-fields">
               {(Object.keys(fieldMeta) as Array<keyof typeof fieldMeta>).map((key) => (
-                <label className={`admin-field ${key === "place" || key === "city" || key === "cta" ? "admin-field--wide" : ""}`} key={key}>
+                <label className={`admin-field ${key === "place" || key === "city" || key === "cta" || key === "heroLead" ? "admin-field--wide" : ""}`} key={key}>
                   <span>{fieldMeta[key].label}</span>
-                  <input value={config[key]} onChange={(e) => update(key, e.target.value)} placeholder={fieldMeta[key].hint} maxLength={key === "cta" ? 60 : 180} disabled={loading} />
+                  <input value={config[key]} onChange={(e) => update(key, e.target.value)} placeholder={fieldMeta[key].hint} maxLength={key === "cta" ? 60 : key === "heroLead" ? 300 : 180} disabled={loading} />
                   <small>{fieldMeta[key].hint}</small>
                 </label>
               ))}
@@ -1008,6 +1015,7 @@ export default function AdminPage() {
               <img src={preview} alt="" />
               <div className="admin-preview__shade" />
               <div className="admin-preview__top"><span>RADMAN / MEMORY</span><span>ARCHIVE</span></div>
+              <div className="admin-preview__title"><small>A FATHER’S ARCHIVE</small><strong>{config.heroTitle}</strong><em>{config.heroTitleAccent}</em><p>{config.heroLead}</p></div>
               <div className="admin-preview__data">
                 <small>DATE OF BIRTH</small><strong>{config.date}</strong>
                 <small>TIME OF BIRTH</small><strong>{config.time}</strong>
