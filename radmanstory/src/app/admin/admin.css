@@ -1917,3 +1917,11 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
 .admin-content .admin-primary:not(:disabled){background:#17232b!important;color:#ffffff!important;border-color:#17232b!important;opacity:1!important;box-shadow:0 5px 14px #17232b20!important}
 .admin-content .admin-primary:not(:disabled):hover{background:#263b47!important;border-color:#263b47!important;transform:translateY(-1px)}
 .admin-content .admin-primary:disabled{background:#e2e6e9!important;color:#7d878e!important;border-color:#d5dbe0!important;opacity:1!important;box-shadow:none!important}
+
+
+/* MOVING MEMORY title editor */
+.admin-movingTitleField{display:grid;gap:9px;margin:0 0 24px;padding:20px 22px;border:1px solid rgba(155,173,255,.18);border-radius:16px;background:linear-gradient(135deg,rgba(130,151,255,.075),rgba(255,255,255,.018));}
+.admin-movingTitleField>span{font-size:12px;font-weight:700;color:#e6eaff}
+.admin-movingTitleField input{width:100%;min-height:48px;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(4,7,14,.65);color:#f4f6ff;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+.admin-movingTitleField input:focus{border-color:rgba(165,180,255,.65);box-shadow:0 0 0 3px rgba(125,145,255,.1)}
+.admin-movingTitleField small{font-size:11px;line-height:1.8;color:#8f9bb1}
