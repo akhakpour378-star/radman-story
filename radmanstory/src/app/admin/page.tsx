@@ -231,7 +231,6 @@ export default function AdminPage() {
   };
 
   const save = async () => {
-    if (!dirty) return;
     setSaving(true); setSaved(false); setError("");
     try {
       const r = await fetch("/api/admin/hero", {
@@ -740,7 +739,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">02 / STORY CONTROL</span><h1>ویرایش <em>Story</em></h1><p>متن، عنوان و تصویر هر اسلاید بخش داستان را مستقیم از پنل مدیریت کن.</p></div>
-              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده Story <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <div className="admin-storyToolbar"><div><span>STORY SLIDES</span><small>{config.story.length} / 8 اسلاید فعال</small></div><div className="admin-storyToolbar__actions"><div className="admin-storyFontPicker"><span>فونت فارسی</span>{(Object.keys(fontMeta) as Array<keyof typeof fontMeta>).map((font) => (<button type="button" key={font} className={config.persianFont === font ? "is-selected" : ""} onClick={() => update("persianFont", font)}>{fontMeta[font].label}</button>))}</div><button className="admin-bulkDeleteButton" type="button" onClick={bulkDeleteStory} disabled={!selectedStoryIndexes.length}>حذف انتخاب‌شده ({selectedStoryIndexes.length})</button><button className="admin-addStory" type="button" onClick={addStorySlide} disabled={saving || loading || config.story.length >= 8}>+ افزودن اسلاید</button></div></div>
@@ -787,7 +786,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">05 / EDITORIAL TIMELINE</span><h1>مدیریت مستقل <em>THE YEARS</em></h1><p>تصاویر خط زمان را انتخاب، اضافه، حذف و مرتب کن. ترتیب این فهرست مستقیماً ترتیب کارت‌ها روی خط زمان سایت را تعیین می‌کند.</p></div>
-              <div className="admin-header__actions"><a href="/" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده سایت <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-yearsStudio">
@@ -821,7 +820,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">04 / CHAPTERS CONTENT STUDIO</span><h1>مدیریت <em>فصل‌های زندگی</em></h1><p>ترتیب فصل‌ها، عنوان فارسی، برچسب، روایت و تصویر هر فصل را مدیریت کن. تغییرات پس از ذخیره روی سایت منتشر می‌شوند.</p></div>
-              <div className="admin-header__actions"><a href="/#chapters" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده فصل‌ها <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/#chapters" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده فصل‌ها <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-chaptersStudio">
@@ -870,7 +869,7 @@ export default function AdminPage() {
           </>
         ) : activeSection === "moving" ? (
           <>
-            <header className="admin-header"><div><span className="admin-kicker">03 / MOVING MEMORY CONTROL</span><h1>مدیریت <em>MOVING MEMORY</em></h1><p>ویدیوهای منتخب این بخش را بارگذاری یا از کتابخانه انتخاب کن. فقط رسانه‌های انتخاب‌شده در سایت نمایش داده می‌شوند.</p></div><div className="admin-header__actions"><a href="/#moving-memory" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div></header>
+            <header className="admin-header"><div><span className="admin-kicker">03 / MOVING MEMORY CONTROL</span><h1>مدیریت <em>MOVING MEMORY</em></h1><p>ویدیوهای منتخب این بخش را بارگذاری یا از کتابخانه انتخاب کن. فقط رسانه‌های انتخاب‌شده در سایت نمایش داده می‌شوند.</p></div><div className="admin-header__actions"><a href="/#moving-memory" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div></header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-movingStudio"><div className="admin-movingStudio__toolbar"><div><span>03 / MOVING MEMORY STUDIO</span><h2>گالری خاطرات متحرک</h2><small>{(config.movingMemory || []).length} ویدیوی انتخاب‌شده برای نمایش در سایت</small></div><label className="admin-memoryUploadButton admin-memoryUploadButton--video"><Upload size={14}/>{uploading ? "در حال آپلود..." : "بارگذاری ویدیوی جدید"}<input type="file" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" disabled={uploading} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadMovingMemoryVideo(file); e.currentTarget.value=""; }}/></label></div>
               <div className="admin-movingStudio__grid">{(config.movingMemory || []).map((key,index) => { const src=key.startsWith("video:") ? key.slice(6) : key; return <article className="admin-movingCard" key={key}><video src={mediaUrl(src)} controls playsInline preload="metadata"/><div><span>FILM / {String(index+1).padStart(2,"0")}</span><b title={src.split("/").pop()}>{src.split("/").pop()}</b><button type="button" onClick={() => toggleMovingMemory(key)}>حذف از بخش</button></div></article>; })}{!(config.movingMemory || []).length && <div className="admin-movingEmpty"><Play size={22}/><b>هنوز ویدیویی انتخاب نشده</b><span>از دکمه بارگذاری استفاده کن یا از کتابخانه رسانه‌های موجود را اضافه کن.</span></div>}</div>
@@ -881,7 +880,7 @@ export default function AdminPage() {
           <>
             <header className="admin-header">
               <div><span className="admin-kicker">03 / MEMORY SIGNAL CONTROL</span><h1>مدیریت <em>Memory Signal</em></h1><p>تصاویر و ویدیوهای بخش پایین Story را انتخاب، ویرایش و برای نمایش در سایت مرتب کن.</p></div>
-              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
+              <div className="admin-header__actions"><a href="/#story" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15}/> مشاهده بخش <ArrowUpRight size={13}/></a><button className="admin-primary" onClick={save} disabled={saving || loading}>{saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : "ذخیره تغییرات"}</button></div>
             </header>
             {error && <div className="admin-error admin-error--wide">{error}</div>}
             <section className="admin-memoryManager">
@@ -928,7 +927,7 @@ export default function AdminPage() {
           </div>
           <div className="admin-header__actions">
             <a href="/" target="_blank" rel="noreferrer" className="admin-secondary"><Eye size={15} /> مشاهده سایت <ArrowUpRight size={13} /></a>
-            <button className="admin-primary" onClick={save} disabled={saving || loading || !dirty}>
+            <button className="admin-primary" onClick={save} disabled={saving || loading}>
               {saving ? <LoaderCircle className="admin-spin" size={15} /> : saved ? <Check size={15} /> : <Save size={15} />}
               {saving ? "در حال ذخیره..." : saved ? "ذخیره شد" : dirty ? "ذخیره تغییرات" : "بدون تغییر"}
             </button>
