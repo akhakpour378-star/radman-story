@@ -169,7 +169,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
           const src = cleanSrc(entry);
           const offset = visibleOffset(index);
           const distance = Math.abs(offset);
-          const title = titles[entry]?.trim() || titles[src]?.trim() || src.split("/").pop()?.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ") || `Memory film ${String(index + 1).padStart(2, "0")}`;
+          const title = titles[entry]?.trim() || titles[src]?.trim() || `خاطره متحرک ${String(index + 1).padStart(2, "0")}`;
           const videoSrc = resolveSrc(src);
           return (
             <button
@@ -212,7 +212,6 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
                 <span className="mm3d__play">{offset === 0 ? <Play size={17} fill="currentColor" /> : <ArrowRight size={16} />}</span>
                 <span className="mm3d__filmno">FRAME / {String(index + 1).padStart(2, "0")}</span>
               </span>
-              <span className="mm3d__caption"><span>{title}</span><i>{String(index + 1).padStart(2, "0")}</i></span>
             </button>
           );
         })}
