@@ -850,3 +850,13 @@
     content: none !important;
   }
 }
+
+/* Remove the decorative M/03 marker on every layout; hide play badges on mobile only. */
+.u .u-film--cinema .u-film__heading:before,
+.u .u-film--cinema .u-film__heading:after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 760px) {
+  .u .mm3d__play { display: none !important; }
+}
