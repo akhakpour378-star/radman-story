@@ -151,6 +151,10 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
   return (
     <section className="mm3d" aria-label="Moving Memory 3D video carousel">
       <div className="mm3d__topline"><span>RADMAN / MOVING MEMORY</span><span>SELECT A MOMENT <i /></span></div>
+      {media.length === 0 ? (
+        <div className="mm3d__empty" role="status"><span className="mm3d__emptyMark"><Play size={18} /></span><strong>THE FILM ARCHIVE</strong><p>ویدیوهای این بخش هنوز از پنل مدیریت انتخاب نشده‌اند.</p></div>
+      ) : (
+      <>
       <div
         className={"mm3d__stage" + (dragging ? " is-dragging" : "")}
         role="region"
@@ -223,6 +227,8 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
         <button type="button" className="mm3d__autoplay" aria-label={paused ? "Resume carousel" : "Pause carousel"} onClick={() => setPaused((value) => !value)}>{paused ? <Play size={13} /> : <Pause size={13} />}</button>
       </div>
       <p className="mm3d__hint">DRAG TO EXPLORE <span>·</span> SELECT THE CENTER FRAME TO WATCH</p>
+      </>
+      )}
     </section>
   );
 }
