@@ -7263,3 +7263,31 @@
     flex-basis:12px!important;height:12px!important;min-height:12px!important;max-height:12px!important;line-height:12px!important;font-size:10px!important;
   }
 }
+
+
+/* ADMIN-CONTROLLED THEME — connect saved dashboard colors to visible section backgrounds */
+.u{
+  background-color:var(--bg,#05070b)!important;
+  --line:color-mix(in srgb,var(--ink,#f4f1ea) 9%,transparent);
+}
+.u .u-hero--editorial{background-color:var(--bg,#05070b)!important}
+.u .u-manifesto{background-color:var(--bg,#05070b)!important}
+.u .u-reel{background-color:color-mix(in srgb,var(--bg,#05070b) 94%,white 6%)!important}
+.u .u-chapters{background-color:var(--bg,#05070b)!important}
+.u .u-chapter:nth-child(even){background-color:color-mix(in srgb,var(--bg,#05070b) 96%,white 4%)!important}
+.u .u-timeline{background-color:color-mix(in srgb,var(--bg,#05070b) 94%,white 6%)!important}
+.u .u-film{background-color:var(--bg,#05070b)!important}
+.u .u-film--cinema{background:radial-gradient(ellipse at 85% 0%,color-mix(in srgb,var(--cyan,#9ce7ef) 7%,transparent),transparent 38%),linear-gradient(145deg,color-mix(in srgb,var(--bg,#05070b) 92%,white 8%),var(--bg,#05070b) 75%)!important}
+.u .u-finale{background-color:var(--bg,#05070b)!important}
+.u .u-progress i,.u .u-logo span,.u .u-footer span,.u .u-nav__center i,
+.u .u-hero--editorial .u-hero__copy>.u-kicker span,.u .u-hero__cta:after,
+.u .u-manifesto__enter:after,.u .u-scroll svg,.u .u-hero__birthData__item:before{
+  color:var(--cyan,#9ce7ef);
+}
+.u .u-progress i{background:linear-gradient(90deg,var(--cyan,#9ce7ef),var(--violet,#a7adff))!important}
+.u .u-hero--editorial .u-hero__copy>.u-kicker span,
+.u .u-hero__birthData .u-birthData__item:before,
+.u .u-hero__caption i,.u .u-hero__tattoo i{background-color:var(--cyan,#9ce7ef)!important}
+.u .u-nav__center i{background-color:var(--cyan,#9ce7ef)!important;box-shadow:0 0 12px var(--cyan,#9ce7ef)!important}
+.u .u-hero__cta:after,.u .u-manifesto__enter:after{background:var(--cyan,#9ce7ef)!important;box-shadow:0 0 15px var(--cyan,#9ce7ef)!important}
+.u .u-rule,.u .u-storyCinema__imageLine{background:linear-gradient(90deg,var(--cyan,#9ce7ef),transparent)!important}
