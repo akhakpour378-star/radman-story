@@ -7562,3 +7562,41 @@
     top: calc(61svh - 44px) !important;
   }
 }
+
+
+/* Mobile hero typography: Persian dedication above the birth panel */
+@media (max-width: 850px) {
+  .u .u-hero--editorial .u-hero__lead {
+    position: absolute !important;
+    top: calc(64svh - 84px) !important;
+    left: 18px !important;
+    right: 18px !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    z-index: 13 !important;
+    text-align: center !important;
+    color: rgba(248, 245, 238, 0.96) !important;
+    font: 500 13px/1.7 var(--fa-font), Tahoma, sans-serif !important;
+    letter-spacing: 0 !important;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85) !important;
+  }
+  .u .u-hero--editorial .u-hero__titleLine--soft {
+    font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif !important;
+    font-size: clamp(30px, 8.5vw, 42px) !important;
+    font-style: italic !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.035em !important;
+    color: #c5f0ef !important;
+    text-shadow: 0 2px 24px rgba(156, 231, 239, 0.18) !important;
+  }
+}
+@media (max-width: 390px) {
+  .u .u-hero--editorial .u-hero__lead {
+    top: calc(61svh - 84px) !important;
+    font-size: 12px !important;
+  }
+  .u .u-hero--editorial .u-hero__titleLine--soft {
+    font-size: clamp(28px, 8vw, 34px) !important;
+  }
+}
