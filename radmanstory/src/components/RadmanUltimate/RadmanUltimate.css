@@ -8260,3 +8260,62 @@
     display: none !important;
   }
 }
+
+
+/* TABLET HERO final alignment: remove the English submark, center the Persian line,
+   and force all five birth-data columns to remain on one row. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .u .u-hero--editorial .u-hero__submark {
+    display: none !important;
+  }
+  .u .u-hero--editorial .u-hero__lead {
+    right: 5% !important;
+    left: 5% !important;
+    width: 90% !important;
+    text-align: center !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    grid-auto-flow: column !important;
+    align-items: center !important;
+    gap: 2px !important;
+    overflow: hidden !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item {
+    grid-row: 1 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item small {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    font-size: clamp(5px, .62vw, 7px) !important;
+    letter-spacing: 0 !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item small svg {
+    flex: 0 0 auto !important;
+    width: 9px !important;
+    height: 9px !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item strong {
+    display: block !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: clamp(8px, 1vw, 11px) !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place strong {
+    font-size: clamp(6px, .75vw, 9px) !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place em {
+    display: none !important;
+  }
+}
