@@ -6444,3 +6444,23 @@
   .u-film--cinema .u-film__reel{grid-template-columns:1fr}
   .u-film--cinema .u-filmCard__frame{aspect-ratio:1/1.05}
 }
+
+
+/* STORY: show each complete photograph inside the frame, matching Chapters. */
+.u .radman-story-slider__media{background:#080b10!important}
+.u .radman-story-slider__media img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:12px!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+}
+.u .radman-story-slider__media img.is-active,
+.u .radman-story-slider__media:hover img.is-active{
+  transform:none!important;
+}
+@media(max-width:520px){
+  .u .radman-story-slider__media img{padding:8px!important}
+}
