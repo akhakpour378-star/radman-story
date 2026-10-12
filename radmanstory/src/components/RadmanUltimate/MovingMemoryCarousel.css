@@ -193,3 +193,19 @@
 @media(prefers-reduced-motion:reduce){
   .mm3d__image::before{transition:none!important}
 }
+
+
+/* Empty archive state: keep the section/title visible before videos are assigned. */
+.mm3d__empty{
+  min-height:240px;max-width:1160px;margin:22px auto 0;padding:42px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  text-align:center;border:1px solid rgba(213,228,248,.13);border-radius:8px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(156,231,239,.075),transparent 58%),linear-gradient(135deg,rgba(18,26,39,.8),rgba(7,11,18,.88));
+}
+.mm3d__emptyMark{
+  display:grid;place-items:center;width:46px;height:46px;border:1px solid rgba(184,244,232,.35);
+  border-radius:50%;color:#b8f4e8;background:rgba(184,244,232,.045);box-shadow:0 0 35px rgba(184,244,232,.07);
+}
+.mm3d__empty>strong{font:600 9px/1.6 "DM Sans",sans-serif;letter-spacing:.24em;color:#b8c5d8}
+.mm3d__empty>p{margin:0;color:#8997ab;font-size:12px;line-height:1.9}
+@media(max-width:760px){.mm3d__empty{min-height:200px;margin-top:12px;padding:30px 18px}.mm3d__empty>p{font-size:11px}}
