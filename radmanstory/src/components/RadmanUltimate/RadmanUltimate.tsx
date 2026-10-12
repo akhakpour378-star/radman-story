@@ -114,7 +114,7 @@ export default function RadmanUltimate() {
   });
   const [selected, setSelected] = useState<number | null>(null);
   const [selectedMemorySrc, setSelectedMemorySrc] = useState<string | null>(null);
-  const [selectedGalleryType, setSelectedGalleryType] = useState<"years" | null>(null);
+  const [selectedGalleryType, setSelectedGalleryType] = useState<"years" | "moving" | null>(null);
   const [chapterGallery, setChapterGallery] = useState<{ title:string; period:string; items:string[] } | null>(null);
   const [chapterGalleryIndex, setChapterGalleryIndex] = useState(0);
   const [chapterImageZoom, setChapterImageZoom] = useState(1);
@@ -310,11 +310,11 @@ export default function RadmanUltimate() {
       return { ...(existing || { src, no: String(index + 1).padStart(2, "0"), title: "", tag: "THE YEARS" }), src, no: String(index + 1).padStart(2, "0"), title: title || existing?.title || `The Years · ${String(index + 1).padStart(2, "0")}`, tag: "THE YEARS" };
     });
 
-  const activeLightboxItems = selectedGalleryType === "years" ? timelineMemories.map((item) => item.src) : signalItems;
+  const activeLightboxItems = selectedGalleryType === "years" ? timelineMemories.map((item) => item.src) : selectedGalleryType === "moving" ? (heroConfig.movingMemory || []) : signalItems;
   const selectedSignalEntry = selectedGalleryType === "years"
     ? selectedMemorySrc
     : selectedMemorySrc
-      ? signalItems.find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
+      ? (selectedGalleryType === "moving" ? (heroConfig.movingMemory || []) : signalItems).find((entry) => entry.replace(/^video:/, "") === selectedMemorySrc)
       : null;
   const selectedIsVideo = Boolean(selectedSignalEntry?.startsWith("video:") || /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(selectedMemorySrc || ""));
   const selectedMemory = selectedMemorySrc
@@ -751,7 +751,7 @@ export default function RadmanUltimate() {
             items={heroConfig.movingMemory || []}
             titles={heroConfig.memoryTitles}
             resolveSrc={asset}
-            onSelect={(src) => { setSelected(null); setSelectedGalleryType(null); setSelectedMemorySrc(src); }}
+            onSelect={(src) => { setSelected(null); setSelectedGalleryType("moving"); setSelectedMemorySrc(src); }}
           />
         </section>
       )}
@@ -908,7 +908,7 @@ export default function RadmanUltimate() {
                   </div>
                 )}
                 {selectedIsVideo
-                  ? <video src={asset(selectedMemory.src)} controls autoPlay playsInline preload="metadata" />
+                  ? <video key={selectedMemory.src} src={asset(selectedMemory.src)} controls autoPlay playsInline preload="auto" />
                   : <img src={asset(selectedMemory.src)} alt={selectedMemory.title} draggable={false} style={{ "--lightbox-zoom": imageZoom, "--lightbox-pan-x": `${imagePan.x}px`, "--lightbox-pan-y": `${imagePan.y}px` } as React.CSSProperties} />}
               </div>
             </div>
