@@ -738,3 +738,50 @@
   .mm3d__stage { height:340px!important; }
   .mm3d__card { width: min(74vw,230px)!important; }
 }
+
+
+/* Mobile Moving Memory polish: prevent title overflow and remove counters/navigation arrows */
+@media (max-width: 760px) {
+  .u .u-film--cinema .u-film__heading:before {
+    display: none !important;
+    content: none !important;
+  }
+  .u .u-film--cinema .u-film__copy > .u-kicker {
+    display: none !important;
+  }
+  .u .u-film--cinema .u-film__copy .u-film__customTitle {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 14px !important;
+    padding: 0 0 12px !important;
+    font-size: clamp(25px, 7.1vw, 34px) !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.035em !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    text-wrap: pretty !important;
+  }
+  .u .u-film--cinema .u-film__copy .u-film__customTitle span {
+    display: inline !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+  .mm3d__filmno,
+  .mm3d__controls > button[aria-label="Previous film"],
+  .mm3d__controls > button[aria-label="Next film"] {
+    display: none !important;
+  }
+  .mm3d__controls {
+    justify-content: center !important;
+  }
+  .mm3d__progress {
+    flex: 1 1 auto !important;
+    max-width: 300px !important;
+  }
+}
+@media (max-width: 390px) {
+  .u .u-film--cinema .u-film__copy .u-film__customTitle {
+    font-size: clamp(23px, 6.7vw, 29px) !important;
+  }
+}
