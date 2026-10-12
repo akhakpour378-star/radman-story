@@ -8142,3 +8142,15 @@
     font-family: 'IRANSans', 'IranSans', Tahoma, sans-serif !important;
   }
 }
+
+/* Mobile Story slider: make the image an explicit, reliable tap target. */
+.radman-story-slider__media {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.radman-story-slider__media .radman-story-slider__imageLayer,
+.radman-story-slider__media .radman-story-slider__imageLayer picture,
+.radman-story-slider__media .radman-story-slider__imageLayer img {
+  pointer-events: none;
+}
