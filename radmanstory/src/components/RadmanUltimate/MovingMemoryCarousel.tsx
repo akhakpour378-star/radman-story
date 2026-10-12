@@ -116,14 +116,14 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
   };
 
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!startRef.current || startRef.current.pointerId !== event.pointerId) return;
+    const start = startRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
     startRef.current = null;
     setDragging(false);
     setPaused(false);
     if (movedRef.current) window.setTimeout(() => { movedRef.current = false; }, 80);
     try {
-      const target = startRef.current?.captureTarget;
-      if (target?.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
+      if (start.captureTarget.hasPointerCapture(event.pointerId)) start.captureTarget.releasePointerCapture(event.pointerId);
     } catch {}
   };
 
