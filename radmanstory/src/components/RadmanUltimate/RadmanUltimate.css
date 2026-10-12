@@ -8265,11 +8265,22 @@
 /* TABLET HERO final alignment: remove the English submark, center the Persian line,
    and keep five readable birth-data items in one flex row. */
 @media (min-width: 601px) and (max-width: 1024px) {
+  /* Keep the hero image and its overlays in one shared, fixed-height canvas. */
   .u .u-hero--editorial {
     position: relative !important;
+    height: 76svh !important;
+    min-height: 490px !important;
+    max-height: 760px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
   .u .u-hero--editorial .u-hero__frame {
-    position: relative !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
     z-index: 1 !important;
   }
   .u .u-hero--editorial .u-hero__panel {
