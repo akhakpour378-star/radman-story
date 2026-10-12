@@ -7908,3 +7908,22 @@
     height: 108px !important;
   }
 }
+
+
+/* Mobile YEARS header refinement: remove English eyebrow labels and scale title down */
+@media (max-width: 600px) {
+  .u .u-timeline--editorial .u-timeline__eyebrow,
+  .u .u-timeline--editorial .u-timeline__eyebrow .u-kicker,
+  .u .u-timeline--editorial .u-timeline__headNote {
+    display: none !important;
+  }
+  .u .u-timeline--editorial .u-timeline__head h2 {
+    margin-top: 0 !important;
+    font-size: clamp(32px, 8.5vw, 42px) !important;
+    line-height: 1.06 !important;
+    letter-spacing: -.045em !important;
+  }
+  .u .u-timeline--editorial .u-timeline__head h2 em {
+    margin-top: 5px !important;
+  }
+}
