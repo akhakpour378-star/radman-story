@@ -19,8 +19,8 @@
 .mm3d__card.is-active .mm3d__play{width:50px;height:50px;color:#c9fff4;border-color:rgba(184,244,232,.8);box-shadow:0 0 0 7px rgba(184,244,232,.04)}
 .mm3d__card:hover .mm3d__play{background:rgba(40,64,71,.72);scale:1.06}
 .mm3d__filmno{position:absolute;top:13px;left:13px;color:#edf3ff;font:500 7px/1 "DM Sans",sans-serif;letter-spacing:.18em;padding:7px 8px;background:rgba(3,7,13,.6);backdrop-filter:blur(10px)}
-.mm3d__caption{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:0 2px 11px;border-bottom:1px solid var(--mm3d-line);font:500 8px/1.5 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9ba9bc;opacity:0;transition:opacity .4s ease}
-.mm3d__card.is-active .mm3d__caption{opacity:1}
+.mm3d__caption{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:0 2px 11px;border-bottom:1px solid var(--mm3d-line);font:500 8px/1.5 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9ba9bc;opacity:.82;transition:opacity .4s ease,color .4s ease}
+.mm3d__card.is-active .mm3d__caption{opacity:1;color:#e6f0fb}
 .mm3d__caption i{font-style:normal;color:#b8f4e8}
 .mm3d__controls{display:flex;align-items:center;justify-content:center;gap:16px;max-width:480px;margin:0 auto;padding:12px 16px 0}
 .mm3d__controls button{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border:1px solid var(--mm3d-line);border-radius:50%;background:transparent;color:#c3cede;cursor:pointer;transition:background .25s,border-color .25s,color .25s}
