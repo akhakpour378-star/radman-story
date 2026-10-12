@@ -6470,16 +6470,18 @@
   object-fit:cover!important;
   object-position:center!important;
   transform:scale(1.12)!important;
-  filter:blur(18px) brightness(.42) saturate(.72)!important;
+  filter:blur(12px) brightness(.72) saturate(.9)!important;
+  opacity:1!important;
 }
 .u .radman-story-slider__imageFull{
   object-fit:contain!important;
   object-position:center!important;
-  transform:none!important;
-  filter:saturate(.82) contrast(1.04)!important;
+  transform:scale(1.025)!important;
+  opacity:1!important;
+  filter:saturate(.9) contrast(1.04)!important;
 }
 .u .radman-story-slider__media:hover .radman-story-slider__imageFull{
-  transform:none!important;
+  transform:scale(1.025)!important;
   filter:saturate(.92) contrast(1.07) brightness(1.03)!important;
 }
 
