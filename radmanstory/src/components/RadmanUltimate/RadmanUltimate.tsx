@@ -168,8 +168,8 @@ export default function RadmanUltimate() {
 
   const [storySlide, setStorySlide] = useState(0);
   const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
-  const storyTouchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const storyTouchHandledRef = useRef(false);
+  const storyPointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const storyPointerAdvanceAtRef = useRef(0);
   const storySlides = heroConfig.story?.length ? heroConfig.story : defaultStorySlides;
   const advanceStorySlide = useCallback(() => {
     setStoryDirection(1);
@@ -666,22 +666,23 @@ export default function RadmanUltimate() {
             tabIndex={0}
             aria-label="رفتن به اسلاید بعدی داستان"
             onClick={() => {
-              if (storyTouchHandledRef.current) { storyTouchHandledRef.current = false; return; }
+              // Touch devices may synthesize a click after pointerup; don't advance twice.
+              if (Date.now() - storyPointerAdvanceAtRef.current < 700) return;
               advanceStorySlide();
             }}
-            onTouchStart={(event) => {
-              const touch = event.touches[0];
-              storyTouchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
-              storyTouchHandledRef.current = false;
+            onPointerDown={(event) => {
+              if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+              storyPointerStartRef.current = { x: event.clientX, y: event.clientY };
             }}
-            onTouchEnd={(event) => {
-              const start = storyTouchStartRef.current;
-              const touch = event.changedTouches[0];
-              storyTouchStartRef.current = null;
-              if (!start || !touch || Math.abs(touch.clientX - start.x) > 12 || Math.abs(touch.clientY - start.y) > 12) return;
-              storyTouchHandledRef.current = true;
+            onPointerUp={(event) => {
+              if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+              const start = storyPointerStartRef.current;
+              storyPointerStartRef.current = null;
+              if (!start || Math.abs(event.clientX - start.x) > 12 || Math.abs(event.clientY - start.y) > 12) return;
+              storyPointerAdvanceAtRef.current = Date.now();
               advanceStorySlide();
             }}
+            onPointerCancel={() => { storyPointerStartRef.current = null; }}
             onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); advanceStorySlide(); } }}
           >
             {storySlides.map((slide, i) => (
