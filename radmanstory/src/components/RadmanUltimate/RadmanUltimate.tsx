@@ -591,10 +591,6 @@ export default function RadmanUltimate() {
           <span className="u-logo__mark" aria-hidden="true"><span className="u-logo__r" aria-hidden="true">R</span></span>
           
         </a>
-        <div className="u-nav__center">
-          <a href="#story">STORY</a>
-          <a href="#chapters">CHAPTERS</a>
-        </div>
         <button className="u-nav__sound" onClick={toggleSound} aria-label="Toggle ambient sound">
           {sound ? <Volume2 size={13} /> : <VolumeX size={13} />}<span>{sound ? "ON" : "SOUND"}</span>
         </button>
