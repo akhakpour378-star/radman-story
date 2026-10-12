@@ -654,7 +654,7 @@ export default function RadmanUltimate() {
         <div className="u-storyCinema__noise" aria-hidden="true" />
         <div className="u-storyCinema__glow" aria-hidden="true" />
         <div className="radman-story-slider">
-          <div className="radman-story-slider__media">
+          <div className="radman-story-slider__media" role="button" tabIndex={0} aria-label="رفتن به اسلاید بعدی داستان" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); } }}>
             {storySlides.map((slide, i) => (
               <div key={slide.image} className={`radman-story-slider__imageLayer ${i === storySlide ? "is-active" : ""}`}>
                 <picture style={{ display: "contents" }}>
