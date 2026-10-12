@@ -17,7 +17,6 @@ const cleanSrc = (entry: string) => entry.startsWith("video:") ? entry.slice(6) 
 export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, onSelect }: Props) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [dragging, setDragging] = useState(false);
   const startRef = useRef<{ x: number; y: number; index: number; pointerId: number } | null>(null);
@@ -53,7 +52,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
   }, [media.length]);
 
   useEffect(() => {
-    if (media.length < 2 || paused || hovered || dragging || reducedMotion || document.visibilityState !== "visible") return;
+    if (media.length < 2 || paused || dragging || reducedMotion || document.visibilityState !== "visible") return;
     const timer = window.setInterval(() => { if (document.visibilityState === "visible") move(1); }, 3900);
     const onVisibility = () => { if (document.visibilityState !== "visible") setPaused((value) => value); };
     document.addEventListener("visibilitychange", onVisibility);
@@ -61,7 +60,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
       window.clearInterval(timer);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [active, dragging, hovered, media.length, move, paused, reducedMotion]);
+  }, [active, dragging, media.length, move, paused, reducedMotion]);
 
   useEffect(() => {
     videoRefs.current.forEach((video, index) => {
@@ -116,8 +115,8 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
     if (!startRef.current || startRef.current.pointerId !== event.pointerId) return;
     startRef.current = null;
     setDragging(false);
+    setPaused(false);
     if (movedRef.current) window.setTimeout(() => { movedRef.current = false; }, 80);
-    else setPaused(false);
     try { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); } catch {}
   };
 
@@ -153,10 +152,6 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
         onPointerMove={drag}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
-        onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHovered(false); }}
       >
         <div className="mm3d__ambient" aria-hidden="true" />
         {media.map((entry, index) => {
