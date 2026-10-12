@@ -208,7 +208,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
                   />
                 )}
                 <span className="mm3d__vignette" />
-                <span className="mm3d__titleOverlay" dir="auto">{title}</span>
+                <span className="mm3d__titleOverlay" dir="auto"><span className="mm3d__titleEyebrow">RADMAN · MOVING MEMORY</span><span className="mm3d__titleText">{title}</span><i className="mm3d__titleRule" aria-hidden="true" /></span>
                 <span className="mm3d__play">{offset === 0 ? <Play size={17} fill="currentColor" /> : <ArrowRight size={16} />}</span>
                 <span className="mm3d__filmno">FRAME / {String(index + 1).padStart(2, "0")}</span>
               </span>
