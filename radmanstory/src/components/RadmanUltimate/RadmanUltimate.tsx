@@ -618,7 +618,10 @@ export default function RadmanUltimate() {
         <div className="radman-story-slider">
           <div className="radman-story-slider__media">
             {storySlides.map((slide, i) => (
-              <img key={slide.image} className={i === storySlide ? "is-active" : ""} src={asset(slide.image)} alt={slide.label} />
+              <div key={slide.image} className={`radman-story-slider__imageLayer ${i === storySlide ? "is-active" : ""}`}>
+                <img className="radman-story-slider__imageBackdrop" src={asset(slide.image)} alt="" aria-hidden="true" />
+                <img className="radman-story-slider__imageFull" src={asset(slide.image)} alt={slide.label} />
+              </div>
             ))}
             <div className="radman-story-slider__shade" />
             <div className="radman-story-slider__meta">
