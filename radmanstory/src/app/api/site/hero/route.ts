@@ -16,6 +16,9 @@ const fallback = {
   heroTitle: "Radman",
   heroTitleAccent: "Forever.",
   heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
+  movingMemoryTitle: "Photos hold time. Film holds breath.",
+  movingMemory: [],
+  memoryTitles: {},
 };
 
 export async function GET() {
