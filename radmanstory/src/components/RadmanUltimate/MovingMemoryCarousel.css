@@ -209,3 +209,21 @@
 .mm3d__empty>strong{font:600 9px/1.6 "DM Sans",sans-serif;letter-spacing:.24em;color:#b8c5d8}
 .mm3d__empty>p{margin:0;color:#8997ab;font-size:12px;line-height:1.9}
 @media(max-width:760px){.mm3d__empty{min-height:200px;margin-top:12px;padding:30px 18px}.mm3d__empty>p{font-size:11px}}
+
+/* Per-video descriptive title, displayed directly over each film frame. */
+.mm3d__titleOverlay{
+  position:absolute;z-index:4;right:18px;left:18px;bottom:17px;
+  display:block;overflow:hidden;max-height:3.2em;padding:11px 13px;
+  border:1px solid rgba(230,241,255,.2);border-radius:4px;
+  background:linear-gradient(110deg,rgba(5,10,18,.86),rgba(9,18,29,.68));
+  color:#f6f8fc;text-align:right;font:600 12px/1.65 inherit;
+  letter-spacing:0;white-space:normal;text-overflow:ellipsis;
+  backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.22);
+  pointer-events:none;transition:background .35s ease,border-color .35s ease,transform .35s ease;
+}
+.mm3d__card.is-active .mm3d__titleOverlay{
+  border-color:rgba(184,244,232,.5);background:linear-gradient(110deg,rgba(5,12,20,.94),rgba(9,23,32,.82));
+}
+@media(max-width:760px){
+  .mm3d__titleOverlay{right:12px;left:12px;bottom:12px;padding:8px 10px;font-size:11px;max-height:3.2em}
+}
