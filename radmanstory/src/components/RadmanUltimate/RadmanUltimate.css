@@ -7626,3 +7626,16 @@
     font-size: 12.5px !important;
   }
 }
+
+
+/* Reduce excess vertical gap between mobile hero and the Story section */
+@media (max-width: 600px) {
+  .u .u-hero--editorial {
+    min-height: calc(64svh + 120px) !important;
+  }
+}
+@media (max-width: 390px) {
+  .u .u-hero--editorial {
+    min-height: calc(61svh + 125px) !important;
+  }
+}
