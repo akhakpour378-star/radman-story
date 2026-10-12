@@ -7168,3 +7168,23 @@
 .u-hero__submark i{display:block;width:5px;height:5px;border-radius:50%;background:#a8e8ec;box-shadow:0 0 12px #9ce7efaa}
 @media(max-width:850px){.u-hero--editorial .u-hero__copy{left:22px!important;top:43%!important;bottom:auto!important;width:calc(100% - 44px)!important;max-width:440px!important;transform:translateY(-50%)!important}.u-hero--editorial .u-hero__title{margin:16px 0 12px!important}.u-hero--editorial .u-hero__titleLine{font-size:clamp(60px,14vw,94px)!important}.u-hero--editorial .u-hero__titleLine--soft{font-size:clamp(46px,11vw,72px)!important;margin-left:18px!important}.u-hero--editorial .u-hero__lead{max-width:300px!important;font-size:12px!important;line-height:1.9!important}.u-hero__submark{margin-top:16px;font-size:6px}}
 @media(max-width:480px){.u-hero--editorial .u-hero__copy{top:40%!important;left:18px!important;width:calc(100% - 36px)!important}.u-hero--editorial .u-hero__titleLine{font-size:clamp(56px,15vw,76px)!important}.u-hero--editorial .u-hero__titleLine--soft{font-size:clamp(43px,11vw,58px)!important}.u-hero--editorial .u-hero__lead{max-width:260px!important;font-size:11px!important}.u-hero__submark{display:none}}
+
+/* Compact media title row — reclaim vertical space for the video/image. */
+.u .u-lightbox__mediaTitle{
+  min-height:24px!important;
+  padding:0 4px 4px!important;
+  margin:0!important;
+}
+.u .u-lightbox__mediaTitle b{
+  line-height:1.35!important;
+}
+.u .u-lightbox__mediaTitle:after{
+  bottom:0!important;
+}
+@media(max-width:760px){
+  .u .u-lightbox__mediaTitle{
+    min-height:21px!important;
+    padding:0 3px 3px!important;
+  }
+}
+
