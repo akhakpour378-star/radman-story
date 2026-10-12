@@ -170,11 +170,11 @@ export default function RadmanUltimate() {
   const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
   const storyTouchStartRef = useRef<{ x: number; y: number } | null>(null);
   const storyTouchHandledRef = useRef(false);
+  const storySlides = heroConfig.story?.length ? heroConfig.story : defaultStorySlides;
   const advanceStorySlide = useCallback(() => {
     setStoryDirection(1);
     setStorySlide((current) => (current + 1) % storySlides.length);
   }, [storySlides.length]);
-  const storySlides = heroConfig.story?.length ? heroConfig.story : defaultStorySlides;
   useEffect(() => {
     const timer = window.setInterval(() => {
       setStoryDirection(1);
