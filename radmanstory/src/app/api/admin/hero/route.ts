@@ -15,6 +15,7 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  movingMemoryTitle?: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
   memorySignal?: string[];
@@ -37,6 +38,7 @@ const defaults: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  movingMemoryTitle: "Photos hold time. Film holds breath.",
   persianFont: "iranyekan",
   story: [
     { eyebrow: "THE BEGINNING", title: "Some days / become a lifetime.", lead: "رادمان فقط یک نام در تقویم نیست؛ شروع بخشی از زندگی من است که از همان اولین لحظه، معنای تازه‌ای پیدا کرد.", body: "این داستان از یک روز خاص شروع می‌شود؛ از لحظه‌ای که حضور کوچک او، تمام جهان را برای من تغییر داد.", image: "/memory/radman-main.JPG", label: "THE FIRST FRAME" },
@@ -93,6 +95,7 @@ export async function PUT(req: NextRequest) {
       place: String(body.place || current.place).trim().slice(0, 100),
       city: String(body.city || current.city).trim().slice(0, 100),
       cta: String(body.cta || current.cta).trim().slice(0, 60),
+      movingMemoryTitle: String(body.movingMemoryTitle ?? current.movingMemoryTitle ?? "Photos hold time. Film holds breath.").trim().slice(0, 120) || "Photos hold time. Film holds breath.",
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
       years: Array.from(new Set((Array.isArray(body.years) ? body.years : (current.years || defaults.years)).filter((item: unknown) => typeof item === "string" && item.startsWith("/memory/")))).slice(0, 50),
       yearsTitles: Object.fromEntries(Object.entries(body.yearsTitles && typeof body.yearsTitles === "object" ? body.yearsTitles : (current.yearsTitles || {})).filter(([key, value]) => typeof key === "string" && key.startsWith("/memory/") && typeof value === "string").map(([key, value]) => [key, String(value).trim().slice(0, 120)])),
