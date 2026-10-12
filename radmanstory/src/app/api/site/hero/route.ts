@@ -18,6 +18,7 @@ const fallback = {
   heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   movingMemoryEyebrow: "03 / MOVING MEMORY",
+  movingMemoryDescription: "لحظه‌هایی که در قاب عکس جا نمی‌شوند؛ صدا، حرکت و خاطراتی که دوباره جان می‌گیرند.",
   movingMemory: [],
   memoryTitles: {},
 };
