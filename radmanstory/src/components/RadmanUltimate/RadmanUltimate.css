@@ -8375,4 +8375,9 @@
   .u .u-hero--editorial .u-hero__birthData .u-birthData__place em {
     display: none !important;
   }
+  /* Give Story a little more breathing room below the Hero on tablet. */
+  .u .u-storyCinema {
+    margin-top: 20px !important;
+  }
+
 }
