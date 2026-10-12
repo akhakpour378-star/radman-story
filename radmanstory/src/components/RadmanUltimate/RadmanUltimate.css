@@ -6491,3 +6491,52 @@
 .u .radman-story-slider__imageLayer img.is-active{
   opacity:1!important;
 }
+
+
+/* STORY SLIDER — seamless cinematic image/background blend */
+.u .radman-story-slider__media{
+  position:relative!important;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at center,rgba(45,57,78,.42) 0%,rgba(8,11,18,.92) 72%),
+    #070910!important;
+  border:1px solid rgba(208,222,255,.13)!important;
+  box-shadow:0 28px 80px rgba(0,0,0,.32),inset 0 0 0 1px rgba(255,255,255,.025)!important;
+}
+.u .radman-story-slider__imageBackdrop{
+  object-fit:cover!important;
+  object-position:center!important;
+  transform:scale(1.18)!important;
+  filter:blur(24px) brightness(.58) saturate(.78)!important;
+  opacity:.95!important;
+}
+.u .radman-story-slider__imageFull{
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:scale(1.015)!important;
+  filter:saturate(.94) contrast(1.025) drop-shadow(0 12px 28px rgba(0,0,0,.2))!important;
+  opacity:1!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 3.5%,#000 96.5%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 3.5%,#000 96.5%,transparent 100%);
+  transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s ease!important;
+}
+.u .radman-story-slider__media:after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,7,12,.16),transparent 18%,transparent 82%,rgba(5,7,12,.16)),
+             linear-gradient(0deg,rgba(5,7,12,.12),transparent 15%,transparent 85%,rgba(5,7,12,.12));
+}
+.u .radman-story-slider__media:hover .radman-story-slider__imageFull{
+  transform:scale(1.025)!important;
+  filter:saturate(1) contrast(1.045) drop-shadow(0 15px 32px rgba(0,0,0,.24))!important;
+}
+@media(max-width:600px){
+  .u .radman-story-slider__imageBackdrop{filter:blur(18px) brightness(.6) saturate(.8)!important}
+  .u .radman-story-slider__imageFull{
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 2%,#000 98%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0%,#000 2%,#000 98%,transparent 100%);
+  }
+}
