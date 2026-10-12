@@ -122,11 +122,8 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
 
   const openCard = (index: number) => {
     if (movedRef.current) return;
-    if (index !== active) {
-      setActive(index);
-      setPaused(false);
-      return;
-    }
+    // Any clicked frame becomes the featured frame and opens in the full player.
+    setActive(index);
     setPaused(true);
     onSelect(cleanSrc(media[index]));
   };
