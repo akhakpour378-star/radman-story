@@ -8154,3 +8154,75 @@
 .radman-story-slider__media .radman-story-slider__imageLayer img {
   pointer-events: none;
 }
+
+/* TABLET HERO — move all overlaid copy to the right, clear of the father/son photo. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .u .u-hero--editorial .u-hero__copy {
+    position: absolute !important;
+    top: 15% !important;
+    right: 5% !important;
+    left: auto !important;
+    width: 42% !important;
+    max-width: 42% !important;
+    z-index: 12 !important;
+    text-align: right !important;
+    align-items: flex-end !important;
+  }
+  .u .u-hero--editorial .u-hero__title,
+  .u .u-hero--editorial .u-hero__titleLine,
+  .u .u-hero--editorial .u-hero__titleLine--soft,
+  .u .u-hero--editorial .u-hero__submark {
+    text-align: right !important;
+    justify-content: flex-end !important;
+  }
+  .u .u-hero--editorial .u-hero__lead {
+    top: 47% !important;
+    bottom: auto !important;
+    right: 5% !important;
+    left: auto !important;
+    width: 42% !important;
+    max-width: 440px !important;
+    margin: 0 !important;
+    text-align: right !important;
+    font-size: clamp(12px, 1.45vw, 15px) !important;
+    line-height: 1.8 !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData {
+    right: 16px !important;
+    left: 16px !important;
+    bottom: 16px !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    padding: 10px 8px !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item {
+    min-width: 0 !important;
+    width: auto !important;
+    padding: 0 2px !important;
+    text-align: center !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item small {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    font-size: clamp(6px, .75vw, 8px) !important;
+    white-space: nowrap !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__item strong {
+    font-size: clamp(10px, 1.35vw, 14px) !important;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place strong {
+    font-size: clamp(8px, 1.05vw, 11px) !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData .u-birthData__place em {
+    display: block !important;
+    font-size: clamp(7px, .8vw, 9px) !important;
+    white-space: nowrap !important;
+  }
+}
