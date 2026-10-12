@@ -8265,6 +8265,38 @@
 /* TABLET HERO final alignment: remove the English submark, center the Persian line,
    and keep five readable birth-data items in one flex row. */
 @media (min-width: 601px) and (max-width: 1024px) {
+  .u .u-hero--editorial {
+    position: relative !important;
+  }
+  .u .u-hero--editorial .u-hero__frame {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  .u .u-hero--editorial .u-hero__panel {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 10 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+  }
+  .u .u-hero--editorial .u-hero__birthData {
+    position: absolute !important;
+    z-index: 20 !important;
+    top: auto !important;
+    right: 5% !important;
+    bottom: clamp(18px, 3.2vh, 38px) !important;
+    left: 5% !important;
+    width: 90% !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    border-radius: 14px !important;
+    background: rgba(5, 9, 16, .68) !important;
+    backdrop-filter: blur(16px) saturate(125%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(125%) !important;
+    box-shadow: 0 12px 34px rgba(0,0,0,.24) !important;
+  }
   .u .u-hero--editorial .u-hero__submark {
     display: none !important;
   }
