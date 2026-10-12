@@ -7660,7 +7660,7 @@
 }
 
 
-/* Mobile Story layout — enforce real top spacing and put a compact title above the image */
+/* Mobile Story: image first, compact title underneath, retain the animated blue progress line */
 @media (max-width: 600px) {
   .u .u-storyCinema {
     padding-top: 20px !important;
@@ -7674,10 +7674,21 @@
     padding-top: 0 !important;
     min-height: 0 !important;
   }
-  .u .u-storyCinema .radman-story-slider__content {
+  .u .u-storyCinema .radman-story-slider__media {
     order: 0 !important;
     width: 100% !important;
-    margin: 0 0 14px !important;
+    height: 54svh !important;
+    min-height: 300px !important;
+    max-height: 520px !important;
+    margin: 0 !important;
+  }
+  .u .u-storyCinema .radman-story-slider__media .radman-story-slider__meta {
+    display: none !important;
+  }
+  .u .u-storyCinema .radman-story-slider__content {
+    order: 1 !important;
+    width: 100% !important;
+    margin: 12px 0 0 !important;
   }
   .u .u-storyCinema .radman-story-slider__slides {
     height: auto !important;
@@ -7697,23 +7708,25 @@
     opacity: 1 !important;
     visibility: visible !important;
   }
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__eyebrow,
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__lead,
+  .u .u-storyCinema .radman-story-slider__slides article > .u-storyCinema__body {
+    display: none !important;
+  }
   .u .u-storyCinema .radman-story-slider__slides article h2 {
     margin: 0 !important;
-    font-size: clamp(23px, 6.2vw, 30px) !important;
-    line-height: 1.25 !important;
-    letter-spacing: -.035em !important;
+    font-size: clamp(19px, 5.1vw, 24px) !important;
+    line-height: 1.35 !important;
+    letter-spacing: -.025em !important;
     text-align: right !important;
   }
-  .u .u-storyCinema .radman-story-slider__media {
-    order: 1 !important;
-    width: 100% !important;
-    height: 54svh !important;
-    min-height: 300px !important;
-    max-height: 520px !important;
-    margin: 0 !important;
-  }
-  .u .u-storyCinema .radman-story-slider__nav,
-  .u .u-storyCinema .radman-story-slider__progress {
+  .u .u-storyCinema .radman-story-slider__nav {
     display: none !important;
+  }
+  .u .u-storyCinema .radman-story-slider__progress {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+    overflow: hidden !important;
   }
 }
