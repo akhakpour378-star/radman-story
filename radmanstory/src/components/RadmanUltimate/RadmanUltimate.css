@@ -8339,14 +8339,14 @@
     min-width: 0 !important;
     overflow: hidden !important;
     white-space: nowrap !important;
-    font-size: clamp(8px, .9vw, 10px) !important;
+    font-size: clamp(10px, 1.05vw, 12px) !important;
     line-height: 1.5 !important;
     letter-spacing: 0 !important;
   }
   .u .u-hero--editorial .u-hero__birthData .u-birthData__item small svg {
     flex: 0 0 auto !important;
-    width: clamp(10px, 1.1vw, 13px) !important;
-    height: clamp(10px, 1.1vw, 13px) !important;
+    width: clamp(12px, 1.25vw, 15px) !important;
+    height: clamp(12px, 1.25vw, 15px) !important;
   }
   .u .u-hero--editorial .u-hero__birthData .u-birthData__item strong {
     display: block !important;
@@ -8355,11 +8355,11 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    font-size: clamp(11px, 1.25vw, 15px) !important;
+    font-size: clamp(13px, 1.45vw, 17px) !important;
     line-height: 1.5 !important;
   }
   .u .u-hero--editorial .u-hero__birthData .u-birthData__place strong {
-    font-size: clamp(9px, 1vw, 12px) !important;
+    font-size: clamp(10px, 1.15vw, 14px) !important;
   }
   .u .u-hero--editorial .u-hero__birthData .u-birthData__place em {
     display: none !important;
