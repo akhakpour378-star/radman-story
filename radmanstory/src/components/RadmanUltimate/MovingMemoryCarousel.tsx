@@ -92,11 +92,14 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
 
   const startDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    startRef.current = { x: event.clientX, y: event.clientY, index: active, pointerId: event.pointerId };
+    const card = (event.target as HTMLElement).closest<HTMLElement>(".mm3d__card");
+    const captureTarget = card || event.currentTarget;
+    startRef.current = { x: event.clientX, y: event.clientY, index: active, pointerId: event.pointerId, captureTarget };
     movedRef.current = false;
     setDragging(true);
     setPaused(true);
-    try { event.currentTarget.setPointerCapture(event.pointerId); } catch {}
+    // Capture on the card itself so pointer capture doesn't swallow its click.
+    try { captureTarget.setPointerCapture(event.pointerId); } catch {}
   };
 
   const drag = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -118,7 +121,10 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
     setDragging(false);
     setPaused(false);
     if (movedRef.current) window.setTimeout(() => { movedRef.current = false; }, 80);
-    try { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); } catch {}
+    try {
+      const target = startRef.current?.captureTarget;
+      if (target?.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
+    } catch {}
   };
 
   const openCard = (index: number) => {
