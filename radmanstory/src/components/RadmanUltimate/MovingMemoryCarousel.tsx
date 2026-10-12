@@ -54,7 +54,7 @@ export default function MovingMemoryCarousel({ items, titles = {}, resolveSrc, o
 
   useEffect(() => {
     if (media.length < 2 || paused || hovered || dragging || reducedMotion || document.visibilityState !== "visible") return;
-    const timer = window.setInterval(() => move(1), 3900);
+    const timer = window.setInterval(() => { if (document.visibilityState === "visible") move(1); }, 3900);
     const onVisibility = () => { if (document.visibilityState !== "visible") setPaused((value) => value); };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
