@@ -168,6 +168,12 @@ export default function RadmanUltimate() {
 
   const [storySlide, setStorySlide] = useState(0);
   const [storyDirection, setStoryDirection] = useState<1 | -1>(1);
+  const storyTouchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const storyTouchHandledRef = useRef(false);
+  const advanceStorySlide = useCallback(() => {
+    setStoryDirection(1);
+    setStorySlide((current) => (current + 1) % storySlides.length);
+  }, [storySlides.length]);
   const storySlides = heroConfig.story?.length ? heroConfig.story : defaultStorySlides;
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -654,7 +660,30 @@ export default function RadmanUltimate() {
         <div className="u-storyCinema__noise" aria-hidden="true" />
         <div className="u-storyCinema__glow" aria-hidden="true" />
         <div className="radman-story-slider">
-          <div className="radman-story-slider__media" role="button" tabIndex={0} aria-label="رفتن به اسلاید بعدی داستان" onClick={() => { setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setStoryDirection(1); setStorySlide(s => (s + 1) % storySlides.length); } }}>
+          <div
+            className="radman-story-slider__media"
+            role="button"
+            tabIndex={0}
+            aria-label="رفتن به اسلاید بعدی داستان"
+            onClick={() => {
+              if (storyTouchHandledRef.current) { storyTouchHandledRef.current = false; return; }
+              advanceStorySlide();
+            }}
+            onTouchStart={(event) => {
+              const touch = event.touches[0];
+              storyTouchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+              storyTouchHandledRef.current = false;
+            }}
+            onTouchEnd={(event) => {
+              const start = storyTouchStartRef.current;
+              const touch = event.changedTouches[0];
+              storyTouchStartRef.current = null;
+              if (!start || !touch || Math.abs(touch.clientX - start.x) > 12 || Math.abs(touch.clientY - start.y) > 12) return;
+              storyTouchHandledRef.current = true;
+              advanceStorySlide();
+            }}
+            onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); advanceStorySlide(); } }}
+          >
             {storySlides.map((slide, i) => (
               <div key={slide.image} className={`radman-story-slider__imageLayer ${i === storySlide ? "is-active" : ""}`}>
                 <picture style={{ display: "contents" }}>
