@@ -24,7 +24,7 @@ type HeroConfig = {
   years: string[];
   yearsTitles: Record<string, string>;
 };
-type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; label:string };
+type StorySlide = { eyebrow:string; title:string; lead:string; body:string; image:string; mobileImage?:string; label:string };
 type Chapter = { id:string; period:string; title:string; description:string; image:string; gallery?: string[] };
 type TrashItem = { id:string; src:string; original:string; trashedAt:string; file:string };
 
@@ -848,9 +848,9 @@ export default function AdminPage() {
                 <div className="admin-storyEditPanel__body">
                   <div className="admin-storyCard__image admin-storyEditVisual"><img src={mediaUrl(config.story[editingStory].image)} alt="" /><div className="admin-storyEditVisual__veil" /><div className="admin-storyEditVisual__meta"><span>RADMAN / STORY</span><i /></div><div className="admin-storyEditVisual__label">MEMORY FRAME</div></div>
                   <div className="admin-storyCard__fields">
-                    {(["eyebrow","label","title","lead","body","image"] as const).map((key) => {
+                    {(["eyebrow","label","title","lead","body","image","mobileImage"] as const).map((key) => {
                       const slide = config.story[editingStory];
-                      return <label className={`admin-field ${key === "image" ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : "مسیر تصویر"}</span>{key === "image" ? (<div className="admin-imagePathRow"><input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} /><button type="button" className="admin-libraryMini" onClick={() => openLibrary({type:"story",index:editingStory})}>انتخاب از Library</button><label className="admin-uploadMini"><Upload size={13} /> آپلود تصویر<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "story", (src) => updateStory(editingStory, "image", src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
+                      return <label className={`admin-field ${(key === "image" || key === "mobileImage") ? "admin-field--image" : ""}`} key={key}><span>{key === "eyebrow" ? "برچسب بالا" : key === "label" ? "برچسب تصویر" : key === "title" ? "تیتر" : key === "lead" ? "متن اصلی" : key === "body" ? "متن توضیحی" : key === "mobileImage" ? "تصویر مخصوص موبایل (اختیاری)" : "تصویر دسکتاپ"}</span>{key === "image" || key === "mobileImage" ? (<div className="admin-imagePathRow"><input value={slide[key] || ""} placeholder={key === "mobileImage" ? "خالی بماند تا تصویر دسکتاپ استفاده شود" : "/memory/story/..."} onChange={e => updateStory(editingStory,key,e.target.value)} />{key === "image" && <button type="button" className="admin-libraryMini" onClick={() => openLibrary({type:"story",index:editingStory})}>انتخاب از Library</button>}<label className="admin-uploadMini"><Upload size={13} /> {key === "mobileImage" ? "آپلود تصویر موبایل" : "آپلود تصویر دسکتاپ"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadImage(f, "story", (src) => updateStory(editingStory, key, src)); e.currentTarget.value = ""; }} /></label></div>) : (<input value={slide[key]} onChange={e => updateStory(editingStory,key,e.target.value)} />)}</label>;
                     })}
                   </div>
                 </div>
