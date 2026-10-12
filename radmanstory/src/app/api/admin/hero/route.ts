@@ -19,6 +19,7 @@ type HeroConfig = {
   heroTitleAccent: string;
   heroLead: string;
   movingMemoryTitle?: string;
+  movingMemoryEyebrow?: string;
   persianFont: "iranyekan" | "iransans";
   story: StorySlide[];
   memorySignal?: string[];
@@ -45,6 +46,7 @@ const defaults: HeroConfig = {
   heroTitleAccent: "Forever.",
   heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
+  movingMemoryEyebrow: "03 / MOVING MEMORY",
   persianFont: "iranyekan",
   story: [
     { eyebrow: "THE BEGINNING", title: "Some days / become a lifetime.", lead: "رادمان فقط یک نام در تقویم نیست؛ شروع بخشی از زندگی من است که از همان اولین لحظه، معنای تازه‌ای پیدا کرد.", body: "این داستان از یک روز خاص شروع می‌شود؛ از لحظه‌ای که حضور کوچک او، تمام جهان را برای من تغییر داد.", image: "/memory/radman-main.JPG", label: "THE FIRST FRAME" },
@@ -105,6 +107,7 @@ export async function PUT(req: NextRequest) {
       heroTitleAccent: String(body.heroTitleAccent ?? current.heroTitleAccent ?? "Forever.").trim().slice(0, 80) || "Forever.",
       heroLead: String(body.heroLead ?? current.heroLead ?? "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.").trim().slice(0, 300),
       movingMemoryTitle: String(body.movingMemoryTitle ?? current.movingMemoryTitle ?? "Photos hold time. Film holds breath.").trim().slice(0, 120) || "Photos hold time. Film holds breath.",
+      movingMemoryEyebrow: String(body.movingMemoryEyebrow ?? current.movingMemoryEyebrow ?? "03 / MOVING MEMORY").trim().slice(0, 80) || "03 / MOVING MEMORY",
       persianFont: body.persianFont === "iransans" ? "iransans" : "iranyekan",
       years: Array.from(new Set((Array.isArray(body.years) ? body.years : (current.years || defaults.years)).filter((item: unknown) => typeof item === "string" && item.startsWith("/memory/")))).slice(0, 50),
       yearsTitles: Object.fromEntries(Object.entries(body.yearsTitles && typeof body.yearsTitles === "object" ? body.yearsTitles : (current.yearsTitles || {})).filter(([key, value]) => typeof key === "string" && key.startsWith("/memory/") && typeof value === "string").map(([key, value]) => [key, String(value).trim().slice(0, 120)])),
