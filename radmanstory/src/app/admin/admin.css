@@ -1985,3 +1985,9 @@ button.admin-dashboard__card{font:inherit;cursor:pointer}
   .admin-movingTitleField{padding:16px}
   .admin-movingTitleField__preview{padding:17px}
 }
+
+
+/* Moving Memory description editor */
+.admin-movingTitleField>textarea{width:100%;min-height:82px;resize:vertical;padding:12px 13px;border:1px solid rgba(173,184,255,.22);border-radius:10px;background:#070c14;color:#f4f5ff;font:400 13px/1.9 inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+.admin-movingTitleField>textarea:focus{border-color:#aeb7ff;box-shadow:0 0 0 3px rgba(142,151,255,.12)}
+.admin-movingTitleField__preview>p{max-width:700px;margin:0;color:#aab5c6;font:400 12px/2 inherit}
