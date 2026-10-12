@@ -7188,3 +7188,39 @@
   }
 }
 
+
+/* Definitive compact lightbox title: fixed-height row and IranYekan typography. */
+.u .u-lightbox__main > .u-lightbox__mediaTitle{
+  display:flex!important;
+  flex:0 0 18px!important;
+  height:18px!important;
+  min-height:18px!important;
+  max-height:18px!important;
+  align-items:center!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  line-height:1.2!important;
+}
+.u .u-lightbox__main > .u-lightbox__mediaTitle b{
+  display:block!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  font-family:var(--fa-font),'IranYekan',sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+  letter-spacing:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.u .u-lightbox__main{gap:5px!important}
+@media(max-width:760px){
+  .u .u-lightbox__main > .u-lightbox__mediaTitle{
+    flex-basis:16px!important;height:16px!important;min-height:16px!important;max-height:16px!important;
+  }
+  .u .u-lightbox__main > .u-lightbox__mediaTitle b{font-size:11px!important}
+}
