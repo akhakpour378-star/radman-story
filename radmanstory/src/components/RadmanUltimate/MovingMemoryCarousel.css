@@ -32,3 +32,162 @@
 @media(max-width:760px){.mm3d{padding-top:22px}.mm3d__topline{margin:0 18px;font-size:6px}.mm3d__stage{height:350px;perspective:1000px}.mm3d__card{width:clamp(175px,53vw,250px)}.mm3d__card{transition-duration:.65s}.mm3d__caption{margin-top:12px}.mm3d__image{aspect-ratio:1.12/1}.mm3d__filmno{top:9px;left:9px;font-size:6px}.mm3d__play{width:38px;height:38px}.mm3d__card.is-active .mm3d__play{width:44px;height:44px}.mm3d__controls{gap:10px}.mm3d__hint{font-size:5px;letter-spacing:.14em;margin-top:14px}}
 @media(max-width:390px){.mm3d__stage{height:310px}.mm3d__card{width:178px}.mm3d__caption{margin-top:12px}.mm3d__topline span:last-child{letter-spacing:.1em}}
 @media(prefers-reduced-motion:reduce){.mm3d__card,.mm3d__image video,.mm3d__play,.mm3d__progress>i b{transition:none!important}.mm3d__stage{perspective:none}}
+
+
+/* Art direction 2026 — enlarged, gallery-grade cinematic carousel */
+.mm3d{
+  --mm3d-ink:#f4f6fc;
+  --mm3d-muted:#9aa8bb;
+  --mm3d-line:rgba(213,228,248,.17);
+  padding-top:clamp(38px,5.2vw,76px);
+}
+.mm3d__topline{
+  max-width:1320px;
+  padding:0 10px 21px;
+  font-size:8px;
+  letter-spacing:.24em;
+}
+.mm3d__topline span:first-child{color:#d3deee}
+.mm3d__stage{
+  max-width:1320px;
+  height:clamp(430px,49vw,640px);
+  perspective:1900px;
+  perspective-origin:50% 44%;
+}
+.mm3d__ambient{
+  width:min(80vw,900px);
+  height:330px;
+  background:radial-gradient(ellipse,rgba(103,142,222,.2),rgba(103,142,222,.075) 34%,rgba(111,237,211,.035) 55%,transparent 73%);
+  filter:blur(34px);
+}
+.mm3d__card{
+  width:clamp(270px,31vw,405px);
+  filter:drop-shadow(0 22px 28px rgba(0,0,0,.16));
+  transition:transform 1s cubic-bezier(.16,.78,.2,1),opacity .7s ease,filter .7s ease;
+}
+.mm3d__card.is-active{
+  filter:drop-shadow(0 35px 44px rgba(0,0,0,.35));
+}
+.mm3d__image{
+  aspect-ratio:1.27/1;
+  overflow:hidden;
+  border-radius:7px;
+  border:1px solid rgba(216,232,255,.2);
+  box-shadow:0 28px 75px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.025);
+}
+.mm3d__image::before{
+  content:"";
+  position:absolute;
+  z-index:3;
+  inset:7px;
+  border:1px solid rgba(235,244,255,.12);
+  border-radius:3px;
+  pointer-events:none;
+  transition:inset .7s cubic-bezier(.2,.7,.2,1),border-color .5s ease;
+}
+.mm3d__card.is-active .mm3d__image::before{
+  inset:10px;
+  border-color:rgba(210,248,241,.24);
+}
+.mm3d__card.is-active .mm3d__image{
+  border-color:rgba(188,239,230,.72);
+  box-shadow:0 35px 95px rgba(0,0,0,.48),0 0 0 1px rgba(184,244,232,.08),0 0 80px rgba(126,160,232,.14);
+}
+.mm3d__image video{
+  transform:scale(1.025);
+  filter:saturate(.72) contrast(1.08);
+}
+.mm3d__card.is-active .mm3d__image video{
+  transform:scale(1);
+  filter:saturate(1.02) contrast(1.06);
+}
+.mm3d__vignette{
+  background:linear-gradient(180deg,rgba(3,6,12,.22),transparent 24%,transparent 56%,rgba(3,6,12,.74)),linear-gradient(115deg,rgba(184,244,232,.075),transparent 40%,rgba(174,183,255,.12));
+}
+.mm3d__play{
+  width:52px;
+  height:52px;
+  border-color:rgba(245,249,255,.72);
+  background:rgba(7,13,22,.38);
+  box-shadow:0 8px 32px rgba(0,0,0,.2),inset 0 0 0 5px rgba(255,255,255,.035);
+}
+.mm3d__card.is-active .mm3d__play{
+  width:60px;
+  height:60px;
+  border-color:rgba(194,250,239,.9);
+  box-shadow:0 0 0 8px rgba(184,244,232,.055),0 0 36px rgba(184,244,232,.12);
+}
+.mm3d__filmno{
+  top:18px;
+  left:18px;
+  padding:9px 11px;
+  border:1px solid rgba(225,237,255,.13);
+  border-radius:2px;
+  font-size:8px;
+  letter-spacing:.2em;
+  background:rgba(3,7,13,.52);
+}
+.mm3d__caption{
+  margin-top:17px;
+  padding:0 4px 13px;
+  font-size:9px;
+  letter-spacing:.15em;
+}
+.mm3d__caption span{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.mm3d__caption i{font-size:10px}
+.mm3d__controls{
+  max-width:560px;
+  gap:19px;
+  padding-top:18px;
+}
+.mm3d__controls button{
+  width:39px;
+  height:39px;
+  flex-basis:39px;
+  border-color:rgba(213,228,248,.22);
+  background:rgba(255,255,255,.018);
+}
+.mm3d__controls .mm3d__autoplay{
+  width:31px;
+  height:31px;
+  flex-basis:31px;
+}
+.mm3d__progress{font-size:9px;gap:15px}
+.mm3d__progress>i{height:2px}
+.mm3d__progress>i b{height:2px}
+.mm3d__hint{
+  margin-top:21px;
+  font-size:7px;
+  letter-spacing:.24em;
+}
+@media(max-width:1000px){
+  .mm3d__stage{height:clamp(400px,54vw,520px)}
+  .mm3d__card{width:clamp(245px,35vw,330px)}
+}
+@media(max-width:760px){
+  .mm3d{padding-top:30px}
+  .mm3d__topline{padding-bottom:15px;font-size:6px}
+  .mm3d__stage{height:420px;perspective:1250px}
+  .mm3d__card{width:clamp(215px,62vw,290px)}
+  .mm3d__image{aspect-ratio:1.13/1;border-radius:5px}
+  .mm3d__image::before{inset:6px}
+  .mm3d__card.is-active .mm3d__image::before{inset:8px}
+  .mm3d__filmno{top:12px;left:12px;font-size:7px}
+  .mm3d__play{width:44px;height:44px}
+  .mm3d__card.is-active .mm3d__play{width:52px;height:52px}
+  .mm3d__caption{margin-top:13px;font-size:8px}
+  .mm3d__controls{max-width:420px;padding-top:13px;gap:11px}
+  .mm3d__hint{font-size:5px;letter-spacing:.15em}
+}
+@media(max-width:390px){
+  .mm3d__stage{height:365px}
+  .mm3d__card{width:205px}
+  .mm3d__caption{margin-top:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .mm3d__image::before{transition:none!important}
+}
