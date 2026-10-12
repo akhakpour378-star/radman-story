@@ -37,6 +37,9 @@ type HeroConfig = {
   place: string;
   city: string;
   cta: string;
+  heroTitle: string;
+  heroTitleAccent: string;
+  heroLead: string;
   movingMemoryTitle?: string;
   persianFont: "iranyekan" | "iransans";
   story?: Array<{ eyebrow:string; title:string; lead:string; body:string; image:string; label:string }>;
@@ -66,6 +69,9 @@ const defaultHeroConfig: HeroConfig = {
   place: "NIKAN AQDASIEH",
   city: "Tehran · Iran",
   cta: "ENTER THE STORY",
+  heroTitle: "Radman",
+  heroTitleAccent: "Forever.",
+  heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
   movingMemoryTitle: "Photos hold time. Film holds breath.",
   persianFont: "iranyekan",
 };
@@ -109,6 +115,9 @@ export default function RadmanUltimate() {
     place: "NIKAN AQDASIEH",
     city: "Tehran · Iran",
     cta: "ENTER THE STORY",
+    heroTitle: "Radman",
+    heroTitleAccent: "Forever.",
+    heroLead: "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود.",
     movingMemoryTitle: "Photos hold time. Film holds breath.",
     persianFont: "iranyekan",
   });
@@ -582,6 +591,15 @@ export default function RadmanUltimate() {
           
         </div>
         <div className="u-hero__panel">
+          <div className="u-hero__copy">
+            <span className="u-kicker"><span aria-hidden="true" /> A PERSONAL ARCHIVE</span>
+            <h1 className="u-hero__title">
+              <span className="u-hero__titleLine">{heroConfig.heroTitle || "Radman"}</span>
+              <span className="u-hero__titleLine--soft">{heroConfig.heroTitleAccent || "Forever."}</span>
+            </h1>
+            <p className="u-hero__lead">{heroConfig.heroLead || "تو آغاز قصه‌ای هستی که در قلب من هرگز تمام نمی‌شود."}</p>
+            <div className="u-hero__submark"><i aria-hidden="true" /><span>EVERY MOMENT, A PART OF YOU</span></div>
+          </div>
           <div className="u-hero__birthData" aria-label="Radman birth details">
             <div className="u-birthData__item u-birthData__date">
               <small><CalendarDays size={11} /> DATE OF BIRTH</small>
