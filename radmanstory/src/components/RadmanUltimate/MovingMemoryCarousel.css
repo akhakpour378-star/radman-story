@@ -785,3 +785,56 @@
     font-size: clamp(23px, 6.7vw, 29px) !important;
   }
 }
+
+
+/* Tablet Moving Memory: apply the mobile cleanup without compressing the tablet stage */
+@media (min-width: 761px) and (max-width: 1024px) {
+  .u .u-film--cinema .u-film__heading:before {
+    display: none !important;
+    content: none !important;
+  }
+  .u .u-film--cinema .u-film__copy > .u-kicker { display: none !important; }
+  .u .u-film--cinema .u-film__copy .u-film__customTitle {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 16px !important;
+    padding: 0 0 14px !important;
+    font-size: clamp(30px, 4.2vw, 44px) !important;
+    line-height: 1.18 !important;
+    letter-spacing: -.04em !important;
+    overflow-wrap: anywhere !important;
+    text-wrap: pretty !important;
+  }
+  .u .u-film--cinema .u-film__copy .u-film__customTitle span {
+    display: inline !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+  .mm3d__filmno,
+  .mm3d__controls > button[aria-label="Previous film"],
+  .mm3d__controls > button[aria-label="Next film"] {
+    display: none !important;
+  }
+  .mm3d__topline { display: none !important; }
+  .mm3d__titleEyebrow,
+  .mm3d__hint { display: none !important; }
+  .mm3d__titleOverlay {
+    min-height: 0 !important;
+    gap: 0 !important;
+    padding: 16px 16px 17px !important;
+    border-top: 0 !important;
+    background: linear-gradient(180deg, transparent, rgba(5,10,18,.72)) !important;
+  }
+  .mm3d__card.is-active .mm3d__titleOverlay { padding-bottom: 18px !important; }
+  .mm3d__titleText,
+  .mm3d__card.is-active .mm3d__titleText {
+    font-size: clamp(13px, 1.7vw, 16px) !important;
+    line-height: 1.65 !important;
+    max-height: 3.3em !important;
+    overflow-wrap: anywhere !important;
+  }
+  .mm3d__stage { height: clamp(420px, 54vw, 560px) !important; }
+  .mm3d__controls { justify-content: center !important; margin-top: 0 !important; padding-top: 12px !important; }
+  .mm3d__progress { flex: 1 1 auto !important; max-width: 380px !important; }
+}
